@@ -13,6 +13,9 @@ d3.json('data/small_net.json').then(data => {
     //     .linkWidth(link => link.average)
     //     .zoom(1.5);
 
+    // TODO: Create color scale for means, std will be colored as mean with lighter opacity 
+    // TODO: See if I can encorporate fegaussianblur 
+    // TODO: Make uncertainty viz appear on demand to help scale
 
     // Graph with links that have a width/color based on mean and bluriness based on std
     Graph(document.getElementById('graph'))
@@ -87,11 +90,8 @@ d3.json('data/small_net.json').then(data => {
             // ]
 
 
-
             // draw text label (with background rect)
             ctx.save();
-            // ctx.translate(midPos.x, midPos.y);
-            // ctx.rotate(textAngle);
 
             //Line for mean
             const line = d3.line()
