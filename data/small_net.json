@@ -1,0 +1,47 @@
+{
+    "nodes": [
+      {
+        "id": "ser1"
+      },
+      {
+        "id": "ser2"
+      },
+      {
+        "id": "ser3"
+      },
+      {
+        "id": "ser4"
+      },
+      {
+        "id": "ser5"
+      }
+    ],
+
+    "links": [
+      {
+        "source": "ser1",
+        "target": "ser3",
+        "value": "10"
+      },
+      {
+        "source": "ser1",
+        "target": "ser5",
+        "value": "10"
+      },
+      {
+        "source": "ser2",
+        "target": "ser4",
+        "value": "30"
+      },
+      {
+        "source": "ser3",
+        "target": "ser4",
+        "value": "10"
+      },
+      {
+        "source": "ser3",
+        "target": "ser5",
+        "value": "10"
+      }
+    ]
+  }
