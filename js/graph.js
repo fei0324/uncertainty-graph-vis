@@ -124,45 +124,44 @@ class Graph{
                 let colorStd = d3.color(this.color(link.average)).copy({opacity: 0.45});
                 // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
 
-                //Line for mean
-                const line = d3.line()
-                    .curve(d3.curveBasisClosed); //good one
-                // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
-                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                line.context(ctx); // for canvas
-                ctx.beginPath();
-                line(mean_data);
-                ctx.lineWidth = 0.1
-                ctx.fillStyle = colorM 
-                //Shadow effect 
-                // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
-                // ctx.shadowBlur = 100;
-                ctx.fill();
-                //ctx.stroke();
-
                 //Line for first std dev
-                const line2 = d3.line()
+                const lineStd = d3.line()
                     .curve(d3.curveBasisClosed); //good one
-                    //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                line2.context(ctx); // for canvas
+                //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
+                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineStd.context(ctx); // for canvas
                 ctx.beginPath();
-                line(std_data);
+                lineStd(std_data);
                 ctx.lineWidth = 0.1
                 ctx.fillStyle = colorStd;
+                //ctx.strokeStyle = "white"
                 //Shadow effect 
                 // ctx.shadowColor = 'red';
                 // ctx.shadowBlur = 100;
                 ctx.fill();
                 //ctx.stroke();
 
+                //Line for mean
+                const lineM = d3.line()
+                    .curve(d3.curveBasisClosed); //good one
+                // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
+                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineM.context(ctx); // for canvas
+                ctx.beginPath();
+                lineM(mean_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorM
+                ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                ctx.stroke();
+
                 ctx.restore();
 
 
-
-            })
-            // .linkColor(() => "#4E4E54")
-            // .linkWidth(link => link.average)
+                })
             .zoom(1.5);
 
 
