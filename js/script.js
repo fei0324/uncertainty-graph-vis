@@ -26,7 +26,9 @@ d3.json('data/small_net.json').then(data => {
         .linkCanvasObjectMode(() => 'replace')
         .linkCanvasObject((link, ctx) => {
 
+            // Path node margin is how far out the edge uncertainty starts to taper
             const PATH_NODE_MARGIN = 5;
+            // start and end coordinates
             const start = link.source;
             const end = link.target;
 
@@ -44,13 +46,13 @@ d3.json('data/small_net.json').then(data => {
 
             // I need to calculate the positiong of the 2 outer-most path points
             let textAngle = Math.atan2(relLink.y, relLink.x);
-            // Edge angle is separate to inerpolate inner edge points
+            // Edge angle is separate to interpolate inner edge points
             let edgeAngle = textAngle;
 
-            // maintain label vertical orientation for legibility
-            if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
-            if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
-            
+            // Maintains orientation
+            if (textAngle > 0) textAngle = (Math.PI - textAngle);
+            if (textAngle < 0) textAngle = (-Math.PI - textAngle);
+
             const scaling = 1
             //const mean_val = link.average * mean_scaling;
             const mean_val = link.value * scaling;
@@ -77,17 +79,17 @@ d3.json('data/small_net.json').then(data => {
                 [start.x , start.y ] // back to start
             ]
 
-            // std_data = [
-            //     [start.x , start.y ], // point near the end 
-            //     [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-            //     [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
-            //     [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-            //     [ end.x , end.y ], // other point near the end
-            //     [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-            //     [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
-            //     [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-            //     [start.x , start.y ] // back to start
-            // ]
+            std_data = [
+                [start.x , start.y ], // point near the end 
+                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
+                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                [ end.x , end.y ], // other point near the end
+                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
+                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                [start.x , start.y ] // back to start
+            ]
 
 
             // draw text label (with background rect)
@@ -106,18 +108,18 @@ d3.json('data/small_net.json').then(data => {
             //ctx.fill();
             ctx.stroke();
 
-            // Line for first std dev
-            // const line2 = d3.line()
-            //     .curve(d3.curveBasisClosed); //good one
-            //     //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-            //     //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-            // line2.context(ctx); // for canvas
-            // ctx.beginPath();
-            // line(std_data);
-            // //line([[1, 3], [2, 7], [3, 2], [5, 2]]);
-            // ctx.lineWidth = 0.1
-            // //ctx.fill();
-            // ctx.stroke();
+            //Line for first std dev
+            const line2 = d3.line()
+                .curve(d3.curveBasisClosed); //good one
+                //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
+                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+            line2.context(ctx); // for canvas
+            ctx.beginPath();
+            line(std_data);
+            //line([[1, 3], [2, 7], [3, 2], [5, 2]]);
+            ctx.lineWidth = 0.1
+            //ctx.fill();
+            ctx.stroke();
 
             ctx.restore();
 
