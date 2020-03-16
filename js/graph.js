@@ -38,9 +38,12 @@ class Graph{
         const myGraph = ForceGraph();
         let data = this.data;
 
-        // TODO: Create color scale for means, std will be colored as mean with lighter opacity 
         // TODO: See if I can incorporate gaussian blurring
         // TODO: Make uncertainty viz appear on demand to help scale
+
+        // For link highlighting
+        let highlightLink = null;
+        let highlightNodes = [];
 
         // Graph with links that have a width/color based on mean 
         myGraph(document.getElementById('graph'))
@@ -48,10 +51,15 @@ class Graph{
             .nodeRelSize(2)
             .nodeColor(() => "black")
             .nodeLabel(node => node.id)
-            .linkCanvasObjectMode(() => 'replace')
-            .linkCanvasObject((link, ctx) => {
+            .onLinkHover(link => {
+                highlightLink = link;
+                highlightNodes = link ? [link.source, link.target] : [];
+              })
+            .linkWidth(link => link === highlightLink ? 5 : 1)
+            .linkCanvasObjectMode(link => link === highlightLink ? 'replace': undefined)
+            .linkCanvasObject((highlightLink, ctx) => {
                 // This draws the links' uncertainty viz
-
+                let link = highlightLink
                 // Path node margin is how far out the edge uncertainty starts to taper
                 const PATH_NODE_MARGIN = 5;
                 // start and end coordinates
@@ -139,7 +147,7 @@ class Graph{
                 // ctx.shadowColor = 'red';
                 // ctx.shadowBlur = 100;
                 ctx.fill();
-                //ctx.stroke();
+                // ctx.stroke();
 
                 //Line for mean
                 const lineM = d3.line()
@@ -151,12 +159,12 @@ class Graph{
                 lineM(mean_data);
                 ctx.lineWidth = 0.1
                 ctx.fillStyle = colorM
-                ctx.strokeStyle = "white"
+                // ctx.strokeStyle = "white"
                 //Shadow effect 
                 // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
                 // ctx.shadowBlur = 100;
                 ctx.fill();
-                ctx.stroke();
+                // ctx.stroke();
 
                 ctx.restore();
 
