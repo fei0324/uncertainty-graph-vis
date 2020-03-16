@@ -6,16 +6,17 @@ class Graph{
      *
      * @param data the full dataset - node/link info
      */
-    constructor(data) {
+    constructor(data,location) {
 
         //Stores data
-        this.data = data
-        console.log("Graph data:",this.data)
+        this.data = data;
+        this.location = location;
+        console.log("Graph data:",this.data);
 
         // Creating scales
 
         //finding max and min of mean
-        let avg_array = this.data.links.map( d=> d.average)
+        let avg_array = this.data.links.map( d=> d.average);
         let maxMean = d3.max(avg_array);
         let minMean = d3.min(avg_array);
         let medMean = d3.median(avg_array)
@@ -53,6 +54,8 @@ class Graph{
             // https://github.com/vasturiano/force-graph/blob/master/example/dynamic/index.html
         // TODO: implement drag and stay 
         // TODO: better color scheme + legend
+        // TODO: Implement some functionality that checks to see what type of graph we're drawing 
+        //      and adjusts things accordingly (i.e. not coloring original graph)
 
         // Canvas width and height
         let WIDTH = 800;
@@ -64,7 +67,7 @@ class Graph{
         let highlightNodes = [];
 
         // Graph with links that have a width/color based on mean 
-        myGraph(document.getElementById('graph-processed'))
+        myGraph(document.getElementById(this.location))
             .width(WIDTH)
             .height(HEIGHT)
             .graphData(data)
