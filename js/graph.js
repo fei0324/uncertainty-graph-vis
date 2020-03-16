@@ -25,7 +25,10 @@ class Graph{
         //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
         //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
         this.color = d3.scaleSequential(d3.interpolatePlasma).domain([minMean,maxMean]);
-        // console.log(d3.color(this.color(10)).formatHex())
+    
+        // linear scale for mean
+        this.meanScale = d3.scaleLinear().domain([minMean,maxMean]).range([1,10])
+
     
     }
 
@@ -34,12 +37,15 @@ class Graph{
      * @param 
      */
     drawGraph(){
+        let that = this;
 
         const myGraph = ForceGraph();
         let data = this.data;
 
         // TODO: See if I can incorporate gaussian blurring
-        // TODO: Make uncertainty viz appear on demand to help scale
+        // TODO: Clear on background click
+        // TODO: Add animations
+        // TODO: Add infobox
 
         // For link highlighting
         let highlightLink = null;
@@ -52,11 +58,12 @@ class Graph{
             .nodeRelSize(2)
             .nodeColor(() => "black")
             .nodeLabel(node => node.id)
-            .linkHoverPrecision(10)
+            .linkHoverPrecision(4)
             .onLinkHover(link => {
                 highlightLink = link;
                 // TODO: Add node highlighting
                 highlightNodes = link ? [link.source, link.target] : [];
+                //event()
             })
             .onLinkClick(link => {
                 //console.log(link)
@@ -71,7 +78,8 @@ class Graph{
                 
             })
             // Draw width based on mean
-            .linkWidth(link => link === highlightLink ? 5 : 1)
+            .linkWidth(link => this.meanScale(link.average))
+            .linkColor(link => this.color(link.average))
             .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
             .linkCanvasObject((link, ctx) => {
                 // This draws the links' uncertainty viz
@@ -145,8 +153,8 @@ class Graph{
                 ctx.save();
 
                 //Retrieve color and adjust opacity
-                let colorM = d3.color(this.color(link.average)).copy({opacity: 0.7})
-                let colorStd = d3.color(this.color(link.average)).copy({opacity: 0.45});
+                let colorM = d3.color(that.color(link.average)).copy({opacity: 0.7})
+                let colorStd = d3.color(that.color(link.average)).copy({opacity: 0.45});
                 // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
 
                 //Line for first std dev
@@ -185,11 +193,8 @@ class Graph{
 
                 ctx.restore();
 
-
                 })
             .zoom(1.5);
-
-
 
     }
 
