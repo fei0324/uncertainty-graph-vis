@@ -1,0 +1,99 @@
+/* Site layout CSS */
+.container{
+
+    /* font-family:'Helvetica Neue', sans-serif; */
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    /* font-family: "Montserrat", sans-serif; */
+    /* font-weight: 300; */
+
+    margin-right: auto; /* 1 */
+    margin-left:  auto; /* 1 */
+    max-width: 2400px;
+
+    /* padding-right: 10px; 
+    padding-left:  10px; */
+    
+    display: grid;
+    grid-template-columns: repeat(3, 800px);
+    grid-template-rows: 0.5fr 225px 1000px;
+    grid-template-areas: 
+            "title title title"
+            "info info info "
+            "orig processed local_";
+    /* width: 100vw;
+    height: 100vh; */
+
+}
+
+/* Setting variables */
+:root{
+    --border-color: rgb(186, 186, 186);
+    --border-width: 1px;
+}
+
+/* title styling */
+.title{
+    grid-area: title;
+    text-align: center;
+    font-size: 70px;
+    padding-top: 20px;
+    font-weight: 600;
+    /* font-style: normal; */
+}
+
+/* INFO div styling */
+.info{
+    grid-area: info;
+    font-size: 40px;
+    font-weight: 100;
+}
+
+#full-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: left; */
+    position: relative;
+    top: 160px;
+    left: 300px;
+}
+
+#processed-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: center; */
+    position: relative;
+    top: 160px;
+    left: 925px;
+}
+
+#local-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: right; */
+    position: relative;
+    top: 160px;
+    left: 1600px;
+}
+
+
+/* Graph styling */
+#graph-orig{
+    grid-area: orig;
+    border: var(--border-width) solid var(--border-color);
+    border-bottom-left-radius: 80px 80px;
+    border-top-left-radius: 80px 80px;
+}
+
+#graph-processed{
+    grid-area: processed;
+    border-top: var(--border-width) solid var(--border-color);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+#graph-local{
+    grid-area: local_;
+    border: var(--border-width)  solid var(--border-color);
+    border-bottom-right-radius: 80px 80px;
+    border-top-right-radius: 80px 80px;
+}
+

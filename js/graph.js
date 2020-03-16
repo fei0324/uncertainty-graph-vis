@@ -6,16 +6,17 @@ class Graph{
      *
      * @param data the full dataset - node/link info
      */
-    constructor(data) {
+    constructor(data,location) {
 
         //Stores data
-        this.data = data
-        console.log("Graph data:",this.data)
+        this.data = data;
+        this.location = location;
+        console.log("Graph data:",this.data);
 
         // Creating scales
 
         //finding max and min of mean
-        let avg_array = this.data.links.map( d=> d.average)
+        let avg_array = this.data.links.map( d=> d.average);
         let maxMean = d3.max(avg_array);
         let minMean = d3.min(avg_array);
         let medMean = d3.median(avg_array)
@@ -27,7 +28,8 @@ class Graph{
         this.color = d3.scaleSequential(d3.interpolatePlasma).domain([minMean,maxMean]);
     
         // linear scale for mean
-        this.meanScale = d3.scaleLinear().domain([minMean,maxMean]).range([1,10])
+        // may need to find way to adjust range automatically based on network size
+        this.meanScale = d3.scaleLinear().domain([minMean,maxMean]).range([1,5])
 
     
     }
@@ -46,6 +48,18 @@ class Graph{
         // TODO: Clear on background click
         // TODO: Add animations
         // TODO: Add infobox
+        // TODO: implement zooming on on node (or edge) 
+            // Could be cool idea that when we click on a node, only the nodes neighbors are rendered
+            // Same with links - look into if I can do this....
+            // https://github.com/vasturiano/force-graph/blob/master/example/dynamic/index.html
+        // TODO: implement drag and stay 
+        // TODO: better color scheme + legend
+        // TODO: Implement some functionality that checks to see what type of graph we're drawing 
+        //      and adjusts things accordingly (i.e. not coloring original graph)
+
+        // Canvas width and height
+        let WIDTH = 800;
+        let HEIGHT = 1000;
 
         // For link highlighting
         let highlightLink = null;
@@ -53,12 +67,14 @@ class Graph{
         let highlightNodes = [];
 
         // Graph with links that have a width/color based on mean 
-        myGraph(document.getElementById('graph'))
+        myGraph(document.getElementById(this.location))
+            .width(WIDTH)
+            .height(HEIGHT)
             .graphData(data)
             .nodeRelSize(2)
             .nodeColor(() => "black")
             .nodeLabel(node => node.id)
-            .linkHoverPrecision(4)
+            .linkHoverPrecision(4) //May need to adjust based on network size
             .onLinkHover(link => {
                 highlightLink = link;
                 // TODO: Add node highlighting
@@ -112,7 +128,10 @@ class Graph{
                 if (textAngle > 0) textAngle = (Math.PI - textAngle);
                 if (textAngle < 0) textAngle = (-Math.PI - textAngle);
 
+                // Set this to change the scaling of uncertainty vis
+                // May need to have this automatically adjust based on network size
                 const scaling = 1
+
                 const mean_val = link.average * scaling;
                 const std_val = link.standard_deviation * scaling;
                 let x_prime = Math.sin(textAngle)*mean_val;
