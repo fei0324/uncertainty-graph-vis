@@ -43,6 +43,7 @@ class Graph{
 
         // For link highlighting
         let highlightLink = null;
+        let clickedLink = [];
         let highlightNodes = [];
 
         // Graph with links that have a width/color based on mean 
@@ -51,15 +52,31 @@ class Graph{
             .nodeRelSize(2)
             .nodeColor(() => "black")
             .nodeLabel(node => node.id)
+            .linkHoverPrecision(10)
             .onLinkHover(link => {
                 highlightLink = link;
+                // TODO: Add node highlighting
                 highlightNodes = link ? [link.source, link.target] : [];
-              })
+            })
+            .onLinkClick(link => {
+                //console.log(link)
+                // checks if link already been clicked
+                if (clickedLink.includes(link)){
+                    let prevIdx = clickedLink.indexOf(link)
+                    clickedLink.splice(prevIdx,1)
+                }
+                else{
+                    clickedLink.push(link)
+                }
+                
+            })
+            // Draw width based on mean
             .linkWidth(link => link === highlightLink ? 5 : 1)
-            .linkCanvasObjectMode(link => link === highlightLink ? 'replace': undefined)
-            .linkCanvasObject((highlightLink, ctx) => {
+            .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
+            .linkCanvasObject((link, ctx) => {
                 // This draws the links' uncertainty viz
-                let link = highlightLink
+                //console.log("in link canvas object")
+
                 // Path node margin is how far out the edge uncertainty starts to taper
                 const PATH_NODE_MARGIN = 5;
                 // start and end coordinates
@@ -171,6 +188,7 @@ class Graph{
 
                 })
             .zoom(1.5);
+
 
 
     }
