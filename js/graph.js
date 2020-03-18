@@ -6,11 +6,12 @@ class Graph{
      *
      * @param data the full dataset - node/link info
      */
-    constructor(data,location) {
+    constructor(data,location,type) {
 
         //Stores data
         this.data = data;
         this.location = location;
+        this.type = type;
         console.log("Graph data:",this.data);
 
         // Creating scales
@@ -25,7 +26,7 @@ class Graph{
         //Color scale for means
         //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
         //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-        this.color = d3.scaleSequential(d3.interpolatePlasma).domain([minMean,maxMean]);
+        this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMean,maxMean]);
     
         // linear scale for mean
         // may need to find way to adjust range automatically based on network size
@@ -48,7 +49,7 @@ class Graph{
         // TODO: Clear on background click
         // TODO: Add animations
         // TODO: Add infobox
-        // TODO: implement zooming on on node (or edge) 
+        // TODO: implement zooming on node (or edge) 
             // Could be cool idea that when we click on a node, only the nodes neighbors are rendered
             // Same with links - look into if I can do this....
             // https://github.com/vasturiano/force-graph/blob/master/example/dynamic/index.html
@@ -57,17 +58,21 @@ class Graph{
         // TODO: Implement some functionality that checks to see what type of graph we're drawing 
         //      and adjusts things accordingly (i.e. not coloring original graph)
 
-        // Canvas width and height
-        let WIDTH = 800;
-        let HEIGHT = 1000;
-
         // For link highlighting
         let highlightLink = null;
         let clickedLink = [];
         let highlightNodes = [];
 
+        //Location of canvas (parent div)
+        let location = document.getElementById(this.location)
+
+        // Canvas width and height
+        let WIDTH = location.offsetWidth;//800;
+        let HEIGHT = location.offsetHeight;//1000;
+        // console.log(WIDTH,HEIGHT)
+
         // Graph with links that have a width/color based on mean 
-        myGraph(document.getElementById(this.location))
+        myGraph(location)
             .width(WIDTH)
             .height(HEIGHT)
             .graphData(data)

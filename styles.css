@@ -6,16 +6,16 @@
     /* font-family: "Montserrat", sans-serif; */
     /* font-weight: 300; */
 
-    margin-right: auto; /* 1 */
-    margin-left:  auto; /* 1 */
-    max-width: 2400px;
+    margin-right: auto; 
+    margin-left:  auto; 
+    max-width: 2800px; /*2400*/
 
     /* padding-right: 10px; 
     padding-left:  10px; */
     
     display: grid;
-    grid-template-columns: repeat(3, 800px);
-    grid-template-rows: 0.5fr 225px 1000px;
+    grid-template-columns: repeat(3, 1fr); /*800px*/
+    grid-template-rows: 120px 225px 1000px;
     grid-template-areas: 
             "title title title"
             "info info info "
@@ -25,16 +25,21 @@
 
 }
 
+/* canvas{
+    width: auto;
+    height: auto;
+} */
+
 /* Setting variables */
 :root{
     --border-color: rgb(186, 186, 186);
-    --border-width: 1px;
+    --border-width: thin;
 }
 
 /* title styling */
 .title{
     grid-area: title;
-    text-align: center;
+    text-align: left;
     font-size: 70px;
     padding-top: 20px;
     font-weight: 600;
@@ -78,6 +83,7 @@
 
 /* Graph styling */
 #graph-orig{
+    position: relative;
     grid-area: orig;
     border: var(--border-width) solid var(--border-color);
     border-bottom-left-radius: 80px 80px;
@@ -85,12 +91,14 @@
 }
 
 #graph-processed{
+    position: relative;
     grid-area: processed;
     border-top: var(--border-width) solid var(--border-color);
     border-bottom: var(--border-width) solid var(--border-color);
 }
 
 #graph-local{
+    position: relative;
     grid-area: local_;
     border: var(--border-width)  solid var(--border-color);
     border-bottom-right-radius: 80px 80px;
