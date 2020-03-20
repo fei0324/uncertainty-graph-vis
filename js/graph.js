@@ -274,12 +274,35 @@ class Graph{
                 .height(HEIGHT)
                 .nodeRelSize(node_rel_size)
                 .nodeVal(node => this.meanScale(node.uncertainty_mean))
-                .nodeColor(node => this.color(node.uncertainty_mean))
                 .nodeLabel(node => node.id)
+                .nodeColor(node => this.color(node.uncertainty_mean))
+                .onNodeHover(node => {
+                    highlightNodes = node ? [node] : []
+
+                    // console.log(node)
+                    if (node){
+                        // Need to select node with id that is node.cluster
+                        let my_data = this.reference.myGraph.graphData();
+                        // console.log(my_data.nodes)
+                        let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                        // console.log("selected node",da_node)
+                        this.reference.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                    }
+                    else{
+                        highlightNodes = []
+                        // Need to reset da_node's color to what it was
+                        this.reference.myGraph
+                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                            // .nodeColor( ref_node => 'black');
+                    }
+
+                })
+                // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
                 .nodeCanvasObjectMode(()=> 'before')
                 .nodeCanvasObject((node, ctx) => {
                     // Calculate radius for std
-                    let stdSCALING = 1000;
+                    let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
                     let NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size+node.uncertainty_std*stdSCALING;
                     // add a halo for stdev
                     ctx.beginPath();
@@ -305,46 +328,42 @@ class Graph{
                 .width(WIDTH)
                 .height(HEIGHT)
                 .nodeRelSize(NODE_R)
-                .nodeColor(() => "black")
                 .nodeLabel(node => node.id)
+                .nodeColor(()=> "black")
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : [];
 
                     if (node){
-                        // console.log(node)
-                        // console.log(node.cluster)
-                    
                         // Need to select node with id that is node.cluster
                         let my_data = this.reference.myGraph.graphData();
                         // console.log(my_data.nodes)
                         let da_node = my_data.nodes.filter(l => l.id == node.cluster); // extract node with correct id
-                        console.log("selected node",da_node)
-                        // Save previous color 
-                        let prev_color = da_node.__indexColor
+                        // console.log("selected node",da_node)
                         this.reference.myGraph
                             .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.reference.color(ref_node.uncertainty_mean));
                     }
                     else{
-                        // Need to reset da_node's color to what it was
-                        console.log("null")
+                        highlightNodes = []
+                        // Need to reset da_node's color to what it was and ena
                         this.reference.myGraph
                             .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
                     }
                     
                 })
+                // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : 'black')
+                // Uncomment for halo on highlight
                 .nodeCanvasObjectMode(node => highlightNodes.indexOf(node) !== -1 ? 'before' : undefined)
                 .nodeCanvasObject((node, ctx) => {
 
                     // add ring just for highlighted nodes
                     ctx.beginPath();
-                    ctx.arc(node.x, node.y, NODE_R * 1.5, 0, 2 * Math.PI, false);
-                    ctx.fillStyle = '#EA0000';
+                    ctx.arc(node.x, node.y, NODE_R * 2, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = '#EA000080';
                     ctx.fill();
                 })
                 .linkWidth(1)
                 .linkColor(() => '#878787')
                 .zoom(1.5);
-
         }
 
     }
