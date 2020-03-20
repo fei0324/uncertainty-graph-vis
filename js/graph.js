@@ -260,7 +260,7 @@ class Graph{
                     ctx.restore();
 
                     })
-                .zoom(1.5);
+                .zoom(3);
         }
 
         //This is the graph for node clustered data
@@ -302,17 +302,27 @@ class Graph{
                 .nodeCanvasObjectMode(()=> 'before')
                 .nodeCanvasObject((node, ctx) => {
                     // Calculate radius for std
-                    let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
-                    let NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size+node.uncertainty_std*stdSCALING;
+                    //let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
+                    let stdSCALING = 1000;
+                    let NODE_R = 0;
+                    let halo_color = null;
+                    if (highlightNodes.indexOf(node) !== -1){
+                        NODE_R = 18;
+                        halo_color = '#EA000080'
+                    }
+                    else{
+                        NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size+node.uncertainty_std*stdSCALING;
+                        halo_color = d3.color(this.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                    }
                     // add a halo for stdev
                     ctx.beginPath();
                     ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
-                    ctx.fillStyle = d3.color(this.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                    ctx.fillStyle = halo_color;
                     ctx.fill();
                 })
                 .linkWidth(link => this.linkweightScale(link.weight))
                 .linkColor(() => '#878787')
-                .zoom(2);
+                .zoom(4);
 
 
         }
