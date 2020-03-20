@@ -16,6 +16,9 @@ class Graph{
         this.type = type;
         console.log("Graph data:",this.data);
 
+        //Creating forcegraph object
+        this.myGraph = ForceGraph();
+
         // Creating scales
 
         //Scales for sparsification
@@ -70,10 +73,15 @@ class Graph{
      * Renders the graph
      * @param 
      */
-    drawGraph(){
+    drawGraph(reference){
+
         let that = this;
 
-        let myGraph = ForceGraph();
+        // Reference to other graph object
+        this.reference = reference
+        console.log(this.reference)
+
+        // let myGraph = ForceGraph();
         let data = this.data;
 
         // TODO: See if I can incorporate gaussian blurring
@@ -89,6 +97,7 @@ class Graph{
         // TODO: Implement some functionality that checks to see what type of graph we're drawing 
         //      and adjusts things accordingly (i.e. not coloring original graph)
         // TODO: Implement linked views...think critical thing here is to have data available
+        // TODO: Adjust the way I'm scaling stdev possibly?
 
         // For link highlighting
         let highlightLink = null;
@@ -105,7 +114,7 @@ class Graph{
 
         // Graph for sparsification
         if (this.type == 'spars'){
-            myGraph(location)
+            this.myGraph(location)
                 .width(WIDTH)
                 .height(HEIGHT)
                 .graphData(data)
@@ -259,7 +268,7 @@ class Graph{
             console.log("node clustering")
 
             let node_rel_size = 4;
-            myGraph(location)
+            this.myGraph(location)
                 .graphData(data)
                 .width(WIDTH)
                 .height(HEIGHT)
@@ -279,8 +288,8 @@ class Graph{
                     ctx.fill();
                 })
                 .linkWidth(link => this.linkweightScale(link.weight))
-                .linkColor(() => "#4E4E54")
-                .zoom(1.5);
+                .linkColor(() => '#878787')
+                .zoom(2);
 
 
         }
@@ -288,15 +297,52 @@ class Graph{
         // This is the original, full, un-annotated graph
         else if (this.type == 'orig'){
 
-            myGraph(location)
+            //TODO: when I highlight node here, it highlights corresoinding supercluster
+            const NODE_R = 8;
+
+            this.myGraph(location)
                 .graphData(data)
                 .width(WIDTH)
                 .height(HEIGHT)
-                .nodeRelSize(2)
+                .nodeRelSize(NODE_R)
                 .nodeColor(() => "black")
                 .nodeLabel(node => node.id)
+                .onNodeHover(node => {
+                    highlightNodes = node ? [node] : [];
+
+                    if (node){
+                        // console.log(node)
+                        // console.log(node.cluster)
+                    
+                        // Need to select node with id that is node.cluster
+                        let my_data = this.reference.myGraph.graphData();
+                        // console.log(my_data.nodes)
+                        let da_node = my_data.nodes.filter(l => l.id == node.cluster); // extract node with correct id
+                        console.log("selected node",da_node)
+                        // Save previous color 
+                        let prev_color = da_node.__indexColor
+                        this.reference.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.reference.color(ref_node.uncertainty_mean));
+                    }
+                    else{
+                        // Need to reset da_node's color to what it was
+                        console.log("null")
+                        this.reference.myGraph
+                            .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
+                    }
+                    
+                })
+                .nodeCanvasObjectMode(node => highlightNodes.indexOf(node) !== -1 ? 'before' : undefined)
+                .nodeCanvasObject((node, ctx) => {
+
+                    // add ring just for highlighted nodes
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, NODE_R * 1.5, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = '#EA0000';
+                    ctx.fill();
+                })
                 .linkWidth(1)
-                .linkColor(() => "#4E4E54")
+                .linkColor(() => '#878787')
                 .zoom(1.5);
 
         }

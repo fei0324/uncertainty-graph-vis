@@ -28,15 +28,22 @@ Promise.all([
     
 ]).then(function(files){
 
+    // Need to shape cluster assignment data
+    // Goal is when I highlight cluster in processed graph, it highlights corresponding 
+    // clusters in the original graph
+    // original data 'cluster' info corresponds to clustered nodes id 
+
     //Instantiates graph object with data
     let full_graph = new Graph(files[0],'graph-orig','orig');
-    full_graph.drawGraph();
-    
     let processed_graph = new Graph(files[1],'graph-processed','clust');
-    processed_graph.drawGraph();
-
     // let processed_graph = new Graph(files[2],'graph-processed','spars');
-    // processed_graph.drawGraph();
+
+    // Draws graph and passes in references to other objects
+    full_graph.drawGraph(processed_graph);
+    processed_graph.drawGraph(full_graph);
+    //processed_graph.drawGraph(full_graph);
+    
+    
 
     
 
