@@ -118,3 +118,9 @@
     top: var(--button-top);
 }
 
+.edge-btn-group{
+    display: inline-block;
+    position: relative;
+    top: var(--button-top);
+}
+
