@@ -14,12 +14,12 @@
     padding-left:  10px; */
     
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /*800px*/
-    grid-template-rows: 120px 225px 1000px;
+    grid-template-columns: repeat(2, 1fr); /*800px*/
+    grid-template-rows: 75px 75px 600px;
     grid-template-areas: 
-            "title title title"
-            "info info info "
-            "orig processed local_";
+            "title selections"
+            "info info  "
+            "orig processed ";
     /* width: 100vw;
     height: 100vh; */
 
@@ -32,24 +32,33 @@
 
 /* Setting variables */
 :root{
+    /* graph borders */
     --border-color: rgb(186, 186, 186);
     --border-width: thin;
+    /* dropdown alignment */
+    --button-top: 45%;
+
 }
 
 /* title styling */
 .title{
     grid-area: title;
     text-align: left;
-    font-size: 70px;
-    padding-top: 20px;
+    font-size: 40px;
+    padding-top: 10px;
     font-weight: 600;
     /* font-style: normal; */
+}
+
+/* selections div styling */
+.selections{
+    grid-area: selections;
 }
 
 /* INFO div styling */
 .info{
     grid-area: info;
-    font-size: 40px;
+    font-size: 25px;
     font-weight: 100;
 }
 
@@ -58,8 +67,8 @@
     /* width: 100px; */
     /* text-align: left; */
     position: relative;
-    top: 160px;
-    left: 300px;
+    top: 40%;
+    left: 23%;
 }
 
 #processed-label{
@@ -67,19 +76,9 @@
     /* width: 100px; */
     /* text-align: center; */
     position: relative;
-    top: 160px;
-    left: 925px;
+    top: 40%;
+    left: 65%;
 }
-
-#local-label{
-    display: inline-block;
-    /* width: 100px; */
-    /* text-align: right; */
-    position: relative;
-    top: 160px;
-    left: 1600px;
-}
-
 
 /* Graph styling */
 #graph-orig{
@@ -93,15 +92,29 @@
 #graph-processed{
     position: relative;
     grid-area: processed;
-    border-top: var(--border-width) solid var(--border-color);
-    border-bottom: var(--border-width) solid var(--border-color);
-}
-
-#graph-local{
-    position: relative;
-    grid-area: local_;
     border: var(--border-width)  solid var(--border-color);
     border-bottom-right-radius: 80px 80px;
     border-top-right-radius: 80px 80px;
+}
+
+
+/* dropdown stylings */
+
+.data-btn-group{
+    display: inline-block;
+    position: relative;
+    top: var(--button-top);
+}
+
+.alg-btn-group{
+    display: inline-block;
+    position: relative;
+    top: var(--button-top);
+}
+
+.uncertainty-btn-group{
+    display: inline-block;
+    position: relative;
+    top: var(--button-top);
 }
 

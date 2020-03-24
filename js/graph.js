@@ -55,7 +55,7 @@ class Graph{
         
             // linear scale for mean of node
             // may need to find way to adjust range automatically based on network size
-            this.meanScale = d3.scaleLinear().domain([minMeanN,maxMeanN]).range([1,5])
+            this.meanScale = d3.scaleLinear().domain([minMeanN,maxMeanN]).range([1,4])
 
             //finding max and min of mean for link weights
             let avg_arrayLW = this.data.links.map( d => d.weight );
@@ -94,10 +94,8 @@ class Graph{
             // https://github.com/vasturiano/force-graph/blob/master/example/dynamic/index.html
         // TODO: implement drag and stay 
         // TODO: better color scheme + legend
-        // TODO: Implement some functionality that checks to see what type of graph we're drawing 
-        //      and adjusts things accordingly (i.e. not coloring original graph)
-        // TODO: Implement linked views...think critical thing here is to have data available
         // TODO: Adjust the way I'm scaling stdev possibly?
+        // TODO: Add dropdowns for data, type of algorith, type of uncertainty, type of edge vis
 
         // For link highlighting
         let highlightLink = null;
@@ -322,7 +320,7 @@ class Graph{
                 })
                 .linkWidth(link => this.linkweightScale(link.weight))
                 .linkColor(() => '#878787')
-                .zoom(4);
+                .zoom(2);
 
 
         }
@@ -373,7 +371,7 @@ class Graph{
                 })
                 .linkWidth(1)
                 .linkColor(() => '#878787')
-                .zoom(1.5);
+                .zoom(1);
         }
 
     }
