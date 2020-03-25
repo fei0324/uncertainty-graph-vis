@@ -15,7 +15,7 @@
     
     display: grid;
     grid-template-columns: repeat(2, 1fr); /*800px*/
-    grid-template-rows: 75px 75px 600px;
+    grid-template-rows: 75px 120px 600px;
     grid-template-areas: 
             "title selections"
             "info info  "
@@ -58,8 +58,9 @@
 /* INFO div styling */
 .info{
     grid-area: info;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: 100;
+    color: gray;
 }
 
 #full-label{
@@ -67,8 +68,8 @@
     /* width: 100px; */
     /* text-align: left; */
     position: relative;
-    top: 40%;
-    left: 23%;
+    top: 60%;
+    left: 10%;
 }
 
 #processed-label{
@@ -76,8 +77,8 @@
     /* width: 100px; */
     /* text-align: center; */
     position: relative;
-    top: 40%;
-    left: 65%;
+    top: 60%;
+    left: 73%;
 }
 
 /* Graph styling */
@@ -122,5 +123,21 @@
     display: inline-block;
     position: relative;
     top: var(--button-top);
+}
+
+/* legend styling */
+
+#legend-SVG{
+    display: inline-block;
+    position: absolute;
+    left: 37%;
+    height:120px;
+    width:400px;
+}
+
+.caption{
+    font-size: 20px;
+    font-weight: lighter;
+    fill: grey;
 }
 

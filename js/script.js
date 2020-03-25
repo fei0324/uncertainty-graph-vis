@@ -35,13 +35,13 @@ Promise.all([
 
     //Instantiates graph object with data
     let full_graph = new Graph(files[0],'graph-orig','orig');
-    // let processed_graph = new Graph(files[1],'graph-processed','clust');
-    let processed_graph = new Graph(files[2],'graph-processed','spars');
+    let processed_graph = new Graph(files[1],'graph-processed','clust');
+    // let processed_graph = new Graph(files[2],'graph-processed','spars');
 
     // Draws graph and passes in references to other objects
     full_graph.drawGraph(processed_graph);
-    // processed_graph.drawGraph(full_graph);
     processed_graph.drawGraph(full_graph);
+    // processed_graph.drawGraph(full_graph);
     
     
 

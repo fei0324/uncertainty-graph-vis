@@ -46,7 +46,7 @@ class Graph{
             let maxMeanN = d3.max(avg_array);
             let minMeanN = d3.min(avg_array);
             let medMeanN = d3.median(avg_array)
-            console.log("max:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
+            console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
 
             //Color scale for means of node
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
@@ -65,7 +65,7 @@ class Graph{
 
             this.linkweightScale = d3.scaleLinear().domain([minMeanLW,maxMeanLW]).range([1,7])
         }
-
+        
     
     }
 
@@ -81,11 +81,16 @@ class Graph{
         this.reference = reference
         console.log(this.reference)
 
+        // Creating legend selection
+        let legendSVG = d3.select("#legend-SVG");
+
+
         // let myGraph = ForceGraph();
         let data = this.data;
 
         // TODO: See if I can incorporate gaussian blurring
-        // TODO: Clear on background click
+        // TODO: Clear on background click for node or link selectiin
+        // TODO: Node selection on click
         // TODO: Add animations
         // TODO: Add infobox
         // TODO: implement zooming on node (or edge) 
@@ -265,6 +270,15 @@ class Graph{
         else if (this.type == 'clust'){
             console.log("node clustering")
 
+            // Creating legend
+            let clust_legend = legendSVG.append("g")
+                .attr("class","clust-legend")
+                .attr("transform", "translate(50,90)");
+
+            //calls legend
+            this.legend(clust_legend,this,this.color,'clust');
+            // this.legend(le_legend,this,this.color_le,"le");
+
             let node_rel_size = 4;
             this.myGraph(location)
                 .graphData(data)
@@ -305,7 +319,7 @@ class Graph{
                     let NODE_R = 0;
                     let halo_color = null;
                     if (highlightNodes.indexOf(node) !== -1){
-                        NODE_R = 18;
+                        NODE_R = 12;
                         halo_color = '#EA000080'
                     }
                     else{
@@ -376,6 +390,52 @@ class Graph{
 
     }
 
+    // Legend Function from: https://observablehq.com/@mbostock/population-change-2017-2018
+    legend (g,indic,color,text){
+        let that = indic;
+        const width = 300;
+
+
+        //Sets multiplication factor
+        let factor = null;
+        let tick_count = 6;
+        
+
+        g.append("image")
+            .attr("width", width)
+            .attr("height", 10)
+            .attr("preserveAspectRatio", "none")
+            .attr("xlink:href", that.ramp(color.interpolator()).toDataURL());
+      
+        g.append("text")
+            .attr("class", "caption")
+            .attr("y", -10)
+            .attr("text-anchor", "start")
+            .text((text=="clust") ? 'node mean' : 'edge mean');
+        console.log(color.domain())
+        g.call(d3.axisBottom(d3.scaleLinear(color.domain(), [0,width]))
+            .ticks(tick_count)
+            // .tickFormat(d => d.toFixed(3))
+            // .tickFormat(d => (text=="eg") ? (`${d > 0 ? "" : ""}${Math.abs((d * factor).toFixed(0))}`) : (d.toFixed(0) == 3) ? `${d.toFixed(0)}+`:`${d.toFixed(0)}`)
+            .tickSize(13))
+          .select(".domain")
+            .remove();
+      }
+
+    ramp(color, n = 512) {
+        const {DOM, require} = new observablehq.Library;
+        const canvas = DOM.canvas(n, 1); //This seems to be an issue
+        const context = canvas.getContext("2d");
+        canvas.style.margin = "0 -14px";
+        canvas.style.width = "calc(100% + 28px)";
+        canvas.style.height = "40px";
+        canvas.style.imageRendering = "pixelated";
+        for (let i = 0; i < n; ++i) {
+          context.fillStyle = color(i / (n - 1));
+          context.fillRect(i, 0, 1, 1);
+        }
+        return canvas;
+    }
 
 
 }
