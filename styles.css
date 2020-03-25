@@ -60,7 +60,7 @@
     grid-area: info;
     font-size: 30px;
     font-weight: 100;
-    color: gray;
+    
 }
 
 #full-label{
@@ -70,6 +70,7 @@
     position: relative;
     top: 60%;
     left: 10%;
+    color: gray;
 }
 
 #processed-label{
@@ -79,6 +80,7 @@
     position: relative;
     top: 60%;
     left: 73%;
+    color: gray;
 }
 
 /* Graph styling */

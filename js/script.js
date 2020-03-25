@@ -43,6 +43,40 @@ Promise.all([
     processed_graph.drawGraph(full_graph);
     // processed_graph.drawGraph(full_graph);
     
+    // Data dropdown
+    $('#datasetDrop').on('hide.bs.dropdown', function (e) {
+        // do something...
+        let target = e.clickEvent.target.id
+        console.log(target)
+        if (target == 'rectangle'){
+
+            //Instantiates graph object with data
+            let full_graph = new Graph(files[0],'graph-orig','orig');
+            let processed_graph = new Graph(files[1],'graph-processed','clust');
+            // let processed_graph = new Graph(files[2],'graph-processed','spars');
+
+            // Draws graph and passes in references to other objects
+            full_graph.drawGraph(processed_graph);
+            processed_graph.drawGraph(full_graph);
+            
+        }
+        else if(target =='lesmis'){
+            console.log('coming soon')
+
+        }
+        else if(target =='small'){
+
+            //Instantiates graph object with data
+            let full_graph = new Graph(files[0],'graph-orig','orig');
+            let processed_graph = new Graph(files[2],'graph-processed','spars');
+
+            // Draws graph and passes in references to other objects
+            full_graph.drawGraph(processed_graph);
+            processed_graph.drawGraph(full_graph);
+
+        }
+
+      })
     
 
     
