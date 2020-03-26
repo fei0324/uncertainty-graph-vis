@@ -16,8 +16,6 @@ class Graph{
         this.type = type;
         console.log("Graph data:",this.data);
 
-        // //Creating forcegraph object
-        // this.myGraph = ForceGraph();
 
         //Setting width and height of canvas object
         this.LOCATION = document.getElementById(this.location)
@@ -149,11 +147,11 @@ class Graph{
                     kids.removeClass( "active" );
                     $(`#${target}`).addClass("active")
 
-
+                    // console.log(that.active)
                 }
             });
 
-            // console.log(this.active);
+            console.log("active edge-vis",this.active);
 
             this.myGraph(location)
                 .width(WIDTH)
