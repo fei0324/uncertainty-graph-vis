@@ -1,0 +1,1 @@
+{"nodes": [{"id": 0, "weight": 50, "cluster": 0.0, "uncertainty_mean": 0.4741793893129771, "uncertainty_std": 0.12487741060585136}, {"id": 1, "weight": 50, "cluster": 0.0, "uncertainty_mean": 0.4948358778625955, "uncertainty_std": 0.024975482121170272}], "links": [{"source": 0, "target": 1, "weight": 50.0, "mean": 50.0, "std": 0.0}]}
