@@ -28,52 +28,53 @@ Promise.all([
     
 ]).then(function(files){
 
-    // Need to shape cluster assignment data
-    // Goal is when I highlight cluster in processed graph, it highlights corresponding 
-    // clusters in the original graph
-    // original data 'cluster' info corresponds to clustered nodes id 
-
     //Instantiates graph object with data
+    //original
     let full_graph = new Graph(files[0],'graph-orig','orig');
-    let processed_graph = new Graph(files[1],'graph-processed','clust');
-    // let processed_graph = new Graph(files[2],'graph-processed','spars');
+    //rectangle
+    let rect_graph = new Graph(files[1],'graph-processed','clust');
+    //small net
+    let small_graph = new Graph(files[2],'graph-processed','spars');
+
+
+    // Code below dictates what dataset loads at the beginning
 
     // Draws graph and passes in references to other objects
-    full_graph.drawGraph(processed_graph);
-    processed_graph.drawGraph(full_graph);
-    // processed_graph.drawGraph(full_graph);
+    full_graph.drawGraph(rect_graph);
+    rect_graph.drawGraph(full_graph);
     
     // Data dropdown
     $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         // do something...
-        let target = e.clickEvent.target.id
-        console.log(target)
-        if (target == 'rectangle'){
-
-            //Instantiates graph object with data
-            let full_graph = new Graph(files[0],'graph-orig','orig');
-            let processed_graph = new Graph(files[1],'graph-processed','clust');
-            // let processed_graph = new Graph(files[2],'graph-processed','spars');
-
-            // Draws graph and passes in references to other objects
-            full_graph.drawGraph(processed_graph);
-            processed_graph.drawGraph(full_graph);
-            
+        let targetClass = null;
+        if (e.clickEvent){
+            targetClass = $(e.clickEvent.target).attr('class')
         }
-        else if(target =='lesmis'){
-            console.log('coming soon')
+        if (targetClass == 'dropdown-item'){
+            let target = e.clickEvent.target.id
+            console.log(target)
 
-        }
-        else if(target =='small'){
+            // changes active highlighting
+            let kids = $('#datasetDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
 
-            //Instantiates graph object with data
-            let full_graph = new Graph(files[0],'graph-orig','orig');
-            let processed_graph = new Graph(files[2],'graph-processed','spars');
+            if (target == 'rectangle'){
+                // Draws graph and passes in references to other objects
+                full_graph.drawGraph(rect_graph);
+                rect_graph.drawGraph(full_graph);
+                
+            }
+            else if(target =='lesmis'){
+                console.log('coming soon')
 
-            // Draws graph and passes in references to other objects
-            full_graph.drawGraph(processed_graph);
-            processed_graph.drawGraph(full_graph);
+            }
+            else if(target =='small'){
 
+                // Draws graph and passes in references to other objects
+                full_graph.drawGraph(small_graph);
+                small_graph.drawGraph(full_graph);
+            }
         }
 
       })

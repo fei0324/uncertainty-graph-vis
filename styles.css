@@ -15,7 +15,7 @@
     
     display: grid;
     grid-template-columns: repeat(2, 1fr); /*800px*/
-    grid-template-rows: 75px 120px 600px;
+    grid-template-rows: 75px 120px 575px;
     grid-template-areas: 
             "title selections"
             "info info  "
@@ -36,7 +36,7 @@
     --border-color: rgb(186, 186, 186);
     --border-width: thin;
     /* dropdown alignment */
-    --button-top: 45%;
+    --button-top: 35%;
 
 }
 
@@ -46,6 +46,7 @@
     text-align: left;
     font-size: 40px;
     padding-top: 10px;
+    padding-left: 10px;
     font-weight: 600;
     /* font-style: normal; */
 }
@@ -88,16 +89,16 @@
     position: relative;
     grid-area: orig;
     border: var(--border-width) solid var(--border-color);
-    border-bottom-left-radius: 80px 80px;
-    border-top-left-radius: 80px 80px;
+    border-bottom-left-radius: 20px 20px;
+    border-top-left-radius: 20px 20px;
 }
 
 #graph-processed{
     position: relative;
     grid-area: processed;
     border: var(--border-width)  solid var(--border-color);
-    border-bottom-right-radius: 80px 80px;
-    border-top-right-radius: 80px 80px;
+    border-bottom-right-radius: 20px 20px;
+    border-top-right-radius: 20px 20px;
 }
 
 

@@ -19,10 +19,22 @@ class Graph{
         //Creating forcegraph object
         this.myGraph = ForceGraph();
 
+        //Setting width and height of canvas object
+        this.LOCATION = document.getElementById(this.location)
+
+        // Canvas width and height
+        let boundingRect = this.LOCATION.getBoundingClientRect()
+        this.WIDTH = boundingRect.width;
+        this.HEIGHT = boundingRect.height;
+
         // Creating scales
 
         //Scales for sparsification
         if (this.type == 'spars'){
+
+            //Sets active variable for edge vis type - this appears first on load
+            this.active = 'squareOD';
+
             //finding max and min of mean for links 
             let avg_array = this.data.links.map( d => d.average);
             let maxMeanL = d3.max(avg_array);
@@ -38,32 +50,33 @@ class Graph{
             // linear scale for mean of links
             // may need to find way to adjust range automatically based on network size
             this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
+            this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
         }
         //Scales for clustering
         else if (this.type == 'clust'){
             //finding max and min of mean for nodes
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
-            let maxMeanN = d3.max(avg_array);
-            let minMeanN = d3.min(avg_array);
-            let medMeanN = d3.median(avg_array)
-            console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
+            // let maxMeanN = d3.max(avg_array);
+            // let minMeanN = d3.min(avg_array);
+            // let medMeanN = d3.median(avg_array);
+            // console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
 
             //Color scale for means of node
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-            this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMeanN,maxMeanN]);
+            this.color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_array));
         
             // linear scale for mean of node
             // may need to find way to adjust range automatically based on network size
-            this.meanScale = d3.scaleLinear().domain([minMeanN,maxMeanN]).range([1,4])
+            this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range([1,4])
 
             //finding max and min of mean for link weights
             let avg_arrayLW = this.data.links.map( d => d.weight );
-            let maxMeanLW = d3.max(avg_arrayLW);
-            let minMeanLW = d3.min(avg_arrayLW);
-            let medMeanLW = d3.median(avg_arrayLW)
+            // let maxMeanLW = d3.max(avg_arrayLW);
+            // let minMeanLW = d3.min(avg_arrayLW);
+            // let medMeanLW = d3.median(avg_arrayLW)
 
-            this.linkweightScale = d3.scaleLinear().domain([minMeanLW,maxMeanLW]).range([1,7])
+            this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7])
         }
         
     
@@ -79,7 +92,7 @@ class Graph{
 
         // Reference to other graph object
         this.reference = reference
-        console.log(this.reference)
+        // console.log(this.reference)
 
         // Creating legend selection
         let legendSVG = d3.select("#legend-SVG");
@@ -107,16 +120,38 @@ class Graph{
         let clickedLink = [];
         let highlightNodes = [];
 
-        //Location of canvas (parent div)
-        let location = document.getElementById(this.location)
+        
+        let location = this.LOCATION;
+        let WIDTH = this.WIDTH;
+        let HEIGHT = this.HEIGHT;
 
-        // Canvas width and height
-        let WIDTH = location.offsetWidth;//800;
-        let HEIGHT = location.offsetHeight;//1000;
-        // console.log(WIDTH,HEIGHT)
-
-        // Graph for sparsification
+        // Graph for SPARSIFICATION
         if (this.type == 'spars'){
+
+            // Detect which edge vis type is active and store in active variable
+            // changes current active highlight in dropdown
+            $('#edgeDrop').on('hide.bs.dropdown', function (e) {
+                // console.log(e)
+                let targetClass = null;
+                if (e.clickEvent){
+                    targetClass = $(e.clickEvent.target).attr('class')
+                }
+                if (targetClass == 'dropdown-item'){
+                    let target = e.clickEvent.target.id;
+                    // console.log(target)
+                    that.active = target;
+
+                    // changes active highlighting
+                    let kids = $('#edgeDrop').find('a')
+                    kids.removeClass( "active" );
+                    $(`#${target}`).addClass("active")
+
+
+                }
+            });
+
+            // console.log(this.active);
+
             this.myGraph(location)
                 .width(WIDTH)
                 .height(HEIGHT)
@@ -180,10 +215,13 @@ class Graph{
 
                     // Set this to change the scaling of uncertainty vis
                     // May need to have this automatically adjust based on network size
-                    const scaling = 1
+                    // const scaling = 1
+                    // const mean_val = link.average * scaling;
+                    // const std_val = link.standard_deviation * scaling;
 
-                    const mean_val = link.average * scaling;
-                    const std_val = link.standard_deviation * scaling;
+                    const mean_val = this.meanScaleSpline(link.average);
+                    const std_val = this.meanScaleSpline(link.standard_deviation);
+
                     let x_prime = Math.sin(textAngle)*mean_val;
                     let y_prime = Math.cos(textAngle)*mean_val;
                     let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
@@ -273,7 +311,7 @@ class Graph{
             // Creating legend
             let clust_legend = legendSVG.append("g")
                 .attr("class","clust-legend")
-                .attr("transform", "translate(50,90)");
+                .attr("transform", "translate(45,90)");
 
             //calls legend
             this.legend(clust_legend,this,this.color,'clust');
@@ -315,7 +353,7 @@ class Graph{
                 .nodeCanvasObject((node, ctx) => {
                     // Calculate radius for std
                     //let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
-                    let stdSCALING = 1000;
+                    let stdSCALING = 1;
                     let NODE_R = 0;
                     let halo_color = null;
                     if (highlightNodes.indexOf(node) !== -1){
@@ -323,8 +361,10 @@ class Graph{
                         halo_color = '#EA000080'
                     }
                     else{
-                        NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size+node.uncertainty_std*stdSCALING;
+                        // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size+node.uncertainty_std*node_rel_size;
+                        NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
                         halo_color = d3.color(this.color(node.uncertainty_mean)).copy({opacity: 0.45});
+
                     }
                     // add a halo for stdev
                     ctx.beginPath();
@@ -413,7 +453,7 @@ class Graph{
             .attr("text-anchor", "start")
             .text((text=="clust") ? 'node mean' : 'edge mean');
         console.log(color.domain())
-        g.call(d3.axisBottom(d3.scaleLinear(color.domain(), [0,width]))
+        g.call(d3.axisBottom(d3.scaleLinear().domain(color.domain()).range([0,width]))
             .ticks(tick_count)
             // .tickFormat(d => d.toFixed(3))
             // .tickFormat(d => (text=="eg") ? (`${d > 0 ? "" : ""}${Math.abs((d * factor).toFixed(0))}`) : (d.toFixed(0) == 3) ? `${d.toFixed(0)}+`:`${d.toFixed(0)}`)
