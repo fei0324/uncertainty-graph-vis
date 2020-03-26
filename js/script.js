@@ -52,8 +52,7 @@ Promise.all([
         }
         if (targetClass == 'dropdown-item'){
             let target = e.clickEvent.target.id
-            console.log(target)
-
+            // console.log(target)
             // changes active highlighting
             let kids = $('#datasetDrop').find('a')
             kids.removeClass( "active" );
@@ -61,8 +60,11 @@ Promise.all([
 
             if (target == 'rectangle'){
                 // Draws graph and passes in references to other objects
-                full_graph.drawGraph(rect_graph);
+                // full_graph.drawGraph(rect_graph);
+                console.log(rect_graph)
                 rect_graph.drawGraph(full_graph);
+
+                // Think I can do better...
                 
             }
             else if(target =='lesmis'){
@@ -72,7 +74,7 @@ Promise.all([
             else if(target =='small'){
 
                 // Draws graph and passes in references to other objects
-                full_graph.drawGraph(small_graph);
+                // full_graph.drawGraph(small_graph);
                 small_graph.drawGraph(full_graph);
             }
         }

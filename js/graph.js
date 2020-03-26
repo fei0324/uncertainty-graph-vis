@@ -16,8 +16,8 @@ class Graph{
         this.type = type;
         console.log("Graph data:",this.data);
 
-        //Creating forcegraph object
-        this.myGraph = ForceGraph();
+        // //Creating forcegraph object
+        // this.myGraph = ForceGraph();
 
         //Setting width and height of canvas object
         this.LOCATION = document.getElementById(this.location)
@@ -96,6 +96,9 @@ class Graph{
 
         // Creating legend selection
         let legendSVG = d3.select("#legend-SVG");
+
+        //Creating forcegraph object
+        this.myGraph = ForceGraph();
 
 
         // let myGraph = ForceGraph();
@@ -411,6 +414,7 @@ class Graph{
                             .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
                     }
                     
+                    
                 })
                 // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : 'black')
                 // Uncomment for halo on highlight
@@ -476,6 +480,5 @@ class Graph{
         }
         return canvas;
     }
-
 
 }
