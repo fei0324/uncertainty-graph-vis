@@ -14,7 +14,7 @@ class Graph{
         this.location = location;
         // Indicates what type of graph: orig (original) or clust (clustered) or spars (sparsified)
         this.type = type;
-        console.log("Graph data:",this.data);
+        // console.log("Graph data:",this.data);
 
 
         //Setting width and height of canvas object
@@ -98,7 +98,6 @@ class Graph{
 
         //Creating forcegraph object
         this.myGraph = ForceGraph();
-
 
         // let myGraph = ForceGraph();
         let data = this.data;

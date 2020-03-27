@@ -33,7 +33,6 @@ class kBar {
 	Draw the k bar
 	*/
 	drawkBar() {
-		console.log("draw k bar.", this.activeK);
 
 		let that = this;
 
@@ -41,7 +40,7 @@ class kBar {
 
         let kScale = d3.scaleLinear().domain([2, 8]).range([0, 300]);
 
-        let kSlider = d3.select('#activeK-bar')
+        this.kSlider = d3.select('#activeK-bar')
             .append('div').classed('slider-wrap', true)
             .append('input').classed('slider', true)
             .attr('type', 'range')
@@ -63,9 +62,7 @@ class kBar {
         sliderText.attr('x', 150);
         sliderText.attr('y', 20);
 
-        kSlider.on('input', function() {
-
-            // that.updateYear(this.value);
+        this.kSlider.on('input', function() {
 
             sliderText.text(`k-clusters: ${this.value}`)
                     // .attr('x', kScale(this.value));
