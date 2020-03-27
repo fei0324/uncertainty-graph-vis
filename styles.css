@@ -15,7 +15,7 @@
     
     display: grid;
     grid-template-columns: repeat(2, 1fr); /*800px*/
-    grid-template-rows: 75px 120px 575px;
+    grid-template-rows: 120px 90px 575px;
     grid-template-areas: 
             "title selections"
             "info info  "
@@ -36,7 +36,9 @@
     --border-color: rgb(186, 186, 186);
     --border-width: thin;
     /* dropdown alignment */
-    --button-top: 35%;
+    --button-top: 20%;
+    --slider-top: 25%;
+    --slider-left: 10%;
 
 }
 
@@ -69,7 +71,7 @@
     /* width: 100px; */
     /* text-align: left; */
     position: relative;
-    top: 60%;
+    top: 50%;
     left: 10%;
     color: gray;
 }
@@ -79,7 +81,7 @@
     /* width: 100px; */
     /* text-align: center; */
     position: relative;
-    top: 60%;
+    top: 50%;
     left: 73%;
     color: gray;
 }
@@ -144,3 +146,82 @@
     fill: grey;
 }
 
+/* slider styling */
+
+.slider {
+    -webkit-appearance: none;
+    width: 300px;
+    height: 10px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    /* margin-left: 425px; */
+    /* margin-right: 50%; */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    /*background: #4CAF50;*/
+    background: #3484EA;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    /*background: #D4E157;*/
+    /*background: #3484EA;*/
+    cursor: pointer;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider-label svg {
+    width: 300px;
+    height: 35px;
+
+}
+
+.slider-label svg text {
+    text-anchor: middle;
+    font-weight: lighter;
+}
+
+/* .slider-wrap {
+    display: inline-block;
+    float: center;
+    width: 500px;
+    margin-right: 50px;
+
+    position:relative;
+    top: 50%;
+
+    padding-top:25px;
+
+} */
+
+.kBar{
+    display: inline-block;
+    position: relative;
+    top: var(--slider-top);
+    left: var(--slider-left);
+    font-size: 20px;
+    fill: gray;
+}
+
+/*End slider styling*/
+
+/*year bar stylein*/
+
+
+/*End year bar styling*/

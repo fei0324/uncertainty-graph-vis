@@ -63,7 +63,8 @@ class Graph{
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
             this.color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_array));
-        
+            // d3.interpolateRgb("orange", "blue")
+
             // linear scale for mean of node
             // may need to find way to adjust range automatically based on network size
             this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range([1,4])
@@ -312,7 +313,7 @@ class Graph{
             // Creating legend
             let clust_legend = legendSVG.append("g")
                 .attr("class","clust-legend")
-                .attr("transform", "translate(45,90)");
+                .attr("transform", "translate(45,60)");
 
             //calls legend
             this.legend(clust_legend,this,this.color,'clust');
