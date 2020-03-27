@@ -22,7 +22,7 @@ Node:
 
 + id - an unique id
 + weight - the initial weight of the node, all 1 in this case
-+ cluster - the cluster id it is assigned to in the central clustering ranging from 0 to `num_cluster - 1`
++ cluster - the cluster id it is assigned to in the central clustering ranging from 0 to `num_clusters - 1`
 + uncertainty_mean - all 0
 + uncertainty_std - all 0
 
