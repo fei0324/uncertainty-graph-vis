@@ -1,4 +1,4 @@
-__clu_[num_clusters]__ is the clustered graph with uncertainty information on both the nodes and the edges.
+**clu_[num_clusters]** is the clustered graph with uncertainty information on both the nodes and the edges.
 
 Node:
 
@@ -16,7 +16,7 @@ Edge:
 + mean - average weight of the corresponding edges from all uncertainty runs
 + std - standard deviation of the corresponding edges from all uncertainty runs
 
-__original_[num_clusters]__ is the original graph with clustering information.
+**original_[num_clusters]** is the original graph with clustering information.
 
 Node:
 
