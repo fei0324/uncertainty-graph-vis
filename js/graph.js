@@ -14,7 +14,7 @@ class Graph{
         this.location = location;
         // Indicates what type of graph: orig (original) or clust (clustered) or spars (sparsified)
         this.type = type;
-        // console.log("Graph data:",this.data);
+        console.log("Graph data:",this.data);
 
 
         //Setting width and height of canvas object
@@ -76,6 +76,14 @@ class Graph{
             // let medMeanLW = d3.median(avg_arrayLW)
 
             this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7])
+
+            // Creating legend selection
+            let legendSVG = d3.select("#legend-SVG");
+            
+            // Creating legend
+            this.clust_legend = legendSVG.append("g")
+                .attr("class","clust-legend")
+                .attr("transform", "translate(45,60)");
         }
         
     
@@ -92,9 +100,6 @@ class Graph{
         // Reference to other graph object
         this.reference = reference
         // console.log(this.reference)
-
-        // Creating legend selection
-        let legendSVG = d3.select("#legend-SVG");
 
         //Creating forcegraph object
         this.myGraph = ForceGraph();
@@ -113,8 +118,12 @@ class Graph{
             // https://github.com/vasturiano/force-graph/blob/master/example/dynamic/index.html
         // TODO: implement drag and stay 
         // TODO: better color scheme + legend
-        // TODO: Adjust the way I'm scaling stdev possibly?
-        // TODO: Add dropdowns for data, type of algorith, type of uncertainty, type of edge vis
+        // TODO: Adjust the way I've built this class to contain a 'draw graph' and an 'update graph'
+            // Then I can just pass in new data and have 1 graph class per dataset
+        // TODO: Think of a way that I don't have to redraw the graph every time, maybe 
+            // Just make a canvas object and class it uniquely, then class as hidden when it's off screen
+            // This way won't force computer to redraw everything
+        // TODO: add std dev scaling bar?
 
         // For link highlighting
         let highlightLink = null;
@@ -305,17 +314,14 @@ class Graph{
                 .zoom(3);
         }
 
-        //This is the graph for node clustered data
+        //graph for NODE CLUSTERING
         else if (this.type == 'clust'){
             console.log("node clustering")
 
-            // Creating legend
-            let clust_legend = legendSVG.append("g")
-                .attr("class","clust-legend")
-                .attr("transform", "translate(45,60)");
+            
 
             //calls legend
-            this.legend(clust_legend,this,this.color,'clust');
+            this.legend(this.clust_legend,this,this.color,'clust');
             // this.legend(le_legend,this,this.color_le,"le");
 
             let node_rel_size = 4;
@@ -327,6 +333,10 @@ class Graph{
                 .nodeVal(node => this.meanScale(node.uncertainty_mean))
                 .nodeLabel(node => node.id)
                 .nodeColor(node => this.color(node.uncertainty_mean))
+                .onNodeClick(node => {
+                    
+                    console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+                })
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : []
 
@@ -362,8 +372,12 @@ class Graph{
                         halo_color = '#EA000080'
                     }
                     else{
-                        // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size+node.uncertainty_std*node_rel_size;
-                        NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
+                        let std_perc = node.uncertainty_std/node.uncertainty_mean;
+                        let mean_radius = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size;
+                        let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                        // console.log(std_radius)
+                        NODE_R = std_radius;
+                        // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
                         halo_color = d3.color(this.color(node.uncertainty_mean)).copy({opacity: 0.45});
 
                     }
@@ -442,7 +456,7 @@ class Graph{
         let factor = null;
         let tick_count = 6;
         
-
+        
         g.append("image")
             .attr("width", width)
             .attr("height", 10)

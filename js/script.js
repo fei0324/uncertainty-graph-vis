@@ -38,11 +38,16 @@ Promise.all([
 ]).then(function(files){
 
     //Instantiates graph objects with data
-    //originals
+
+    // TODO: Going to try a different tactic - create only one graph object then pass in
+    // the relevant data - need to reorganize graph class to do this
+
+    //originals - rectangles
     let full_rect_2 = new Graph(files[3],'graph-orig','orig');
     let full_rect_4 = new Graph(files[4],'graph-orig','orig');
     let full_rect_6 = new Graph(files[5],'graph-orig','orig');
     let full_rect_8 = new Graph(files[6],'graph-orig','orig');
+    
     //rectangles
     let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
     let proc_rect_4 = new Graph(files[8],'graph-processed','clust');
@@ -52,51 +57,99 @@ Promise.all([
     //small net
     let small_graph = new Graph(files[2],'graph-processed','spars');
 
+
+    // Data dropdown
+    $('#datasetDrop').on('hide.bs.dropdown', function (e) {
+        // do something...
+        let targetClass = null;
+        if (e.clickEvent){
+            targetClass = $(e.clickEvent.target).attr('class')
+        }
+        if (targetClass == 'dropdown-item'){
+            let target = e.clickEvent.target.id
+            // console.log(target)
+            // changes active highlighting
+            let start_active = $('#datasetDrop').find('active');
+            console.log("actibe start",start_active)
+            let kids = $('#datasetDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            if (target == 'rectangle'){
+
+                //Sets default k
+                this.k = 2
+                let that = this;
+
+                //Creates k bar
+                let k_Bar = new kBar(this.k);
+
+                // Initial k is 2, so draws this
+                full_rect_2.drawGraph(proc_rect_2);
+                proc_rect_2.drawGraph(full_rect_2);
+
+                // detects change on bar and updates data show accordingly
+                d3.select('#activeK-bar').on('input', function(d){
+                    that.k = k_Bar.activeK;
+                    console.log('in script',that.k)
+                    
+                    
+                    if(k_Bar.activeK == 2){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_2.data = files[3]
+                        // proc_rect_2.data = files[7]
+
+                        full_rect_2.drawGraph(proc_rect_2);
+                        proc_rect_2.drawGraph(full_rect_2);
+                        
+                
+                    }
+                    else if(k_Bar.activeK == 4){
+                        // Draws graph and passes in references to other objects
+                        full_rect_4.drawGraph(proc_rect_4);
+                        proc_rect_4.drawGraph(full_rect_4);
+
+                        // // Passes in new data
+                        // full_rect_2.data = files[4]
+                        // proc_rect_2.data = files[8]
+                        // // Then redraws the graph
+                        // full_rect_2.drawGraph(proc_rect_2);
+                        // proc_rect_2.drawGraph(full_rect_2);
+                    }
+                    else if(k_Bar.activeK == 6){
+                        // Draws graph and passes in references to other objects
+                        full_rect_6.drawGraph(proc_rect_6);
+                        proc_rect_6.drawGraph(full_rect_6);
+                    }
+                    else if(k_Bar.activeK == 8){
+                        // Draws graph and passes in references to other objects
+                        full_rect_8.drawGraph(proc_rect_8);
+                        proc_rect_8.drawGraph(full_rect_8);
+                    }
+
+                })
+
+
+
+                // Think I can do better...
+                
+            }
+            else if(target =='lesmis'){
+                console.log('coming soon')
+
+            }
+            else if(target =='small'){
+
+                // Draws graph and passes in references to other objects
+                // full_graph.drawGraph(small_graph);
+                small_graph.drawGraph(full_rect_2);
+            }
+        }
+
+      })
+
     
-    //Sets default k
-    this.k = 2
-    let that = this;
-
-    //Creates k bar
-    let k_Bar = new kBar(this.k);
-
-    // Initial k is 2, so draws this
-    full_rect_2.drawGraph(proc_rect_2);
-    proc_rect_2.drawGraph(full_rect_2);
-
-    // detects change on bar and updates data show accordingly
-    d3.select('#activeK-bar').on('input', function(d){
-        that.k = k_Bar.activeK;
-        console.log('in script',that.k)
-
-        
-        if(k_Bar.activeK == 2){
-            // Draws graph and passes in references to other objects
-            full_rect_2.drawGraph(proc_rect_2);
-            proc_rect_2.drawGraph(full_rect_2);
     
-        }
-        else if(k_Bar.activeK == 4){
-            // Draws graph and passes in references to other objects
-            full_rect_4.drawGraph(proc_rect_4);
-            proc_rect_4.drawGraph(full_rect_4);
-        }
-        else if(k_Bar.activeK == 6){
-            // Draws graph and passes in references to other objects
-            full_rect_6.drawGraph(proc_rect_6);
-            proc_rect_6.drawGraph(full_rect_6);
-        }
-        else if(k_Bar.activeK == 8){
-            // Draws graph and passes in references to other objects
-            full_rect_8.drawGraph(proc_rect_8);
-            proc_rect_8.drawGraph(full_rect_8);
-        }
-
-
-
-
-
-    })
 
 
 

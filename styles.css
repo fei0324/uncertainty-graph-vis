@@ -38,7 +38,7 @@
     /* dropdown alignment */
     --button-top: 20%;
     --slider-top: 25%;
-    --slider-left: 10%;
+    --slider-left: 18%;
 
 }
 
@@ -129,6 +129,11 @@
     position: relative;
     top: var(--button-top);
 }
+.node-btn-group{
+    display: inline-block;
+    position: relative;
+    top: var(--button-top);
+}
 
 /* legend styling */
 
@@ -211,7 +216,7 @@
 } */
 
 .kBar{
-    display: inline-block;
+    display: inline-flex;
     position: relative;
     top: var(--slider-top);
     left: var(--slider-left);
