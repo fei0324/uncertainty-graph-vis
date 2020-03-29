@@ -50,6 +50,8 @@ Promise.all([
     // let full_rect_8 = new Graph(files[6],'graph-orig','orig');
     let full_rect_2 = files[3];
     let full_rect_4 = files[4];
+    let full_rect_6 = files[5];
+    let full_rect_8 = files[6];
     
     //rectangles
     // let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
@@ -58,6 +60,8 @@ Promise.all([
     // let proc_rect_8 = new Graph(files[10],'graph-processed','clust');
     let proc_rect_2 = files[7];
     let proc_rect_4 = files[8];
+    let proc_rect_6 = files[9];
+    let proc_rect_8 = files[10];
 
     //small net
     // let small_graph = new Graph(files[2],'graph-processed','spars');
@@ -118,11 +122,11 @@ Promise.all([
                         full_rect.data = full_rect_2;
                         proc_rect.data = proc_rect_2;
                         
-                        full_rect.prepGraph(proc_rect);
-                        proc_rect.prepGraph(full_rect);
+                        // full_rect.prepGraph(proc_rect);
+                        // proc_rect.prepGraph(full_rect);
 
-                        full_rect.drawGraph(proc_rect);
-                        proc_rect.drawGraph(full_rect);
+                        // full_rect.drawGraph(proc_rect);
+                        // proc_rect.drawGraph(full_rect);
                         
                 
                     }
@@ -133,10 +137,10 @@ Promise.all([
 
                         full_rect.data = full_rect_4;
                         proc_rect.data = proc_rect_4;
-                        full_rect.prepGraph(proc_rect);
-                        proc_rect.prepGraph(full_rect);
-                        full_rect.drawGraph(proc_rect);
-                        proc_rect.drawGraph(full_rect);
+                        // full_rect.prepGraph(proc_rect);
+                        // proc_rect.prepGraph(full_rect);
+                        // full_rect.drawGraph(proc_rect);
+                        // proc_rect.drawGraph(full_rect);
 
                         // // Passes in new data
                         // full_rect_2.data = files[4]
@@ -147,14 +151,26 @@ Promise.all([
                     }
                     else if(k_Bar.activeK == 6){
                         // Draws graph and passes in references to other objects
-                        full_rect_6.drawGraph(proc_rect_6);
-                        proc_rect_6.drawGraph(full_rect_6);
+                        // full_rect_6.drawGraph(proc_rect_6);
+                        // proc_rect_6.drawGraph(full_rect_6);
+                        full_rect.data = full_rect_6;
+                        proc_rect.data = proc_rect_6;
+
                     }
                     else if(k_Bar.activeK == 8){
                         // Draws graph and passes in references to other objects
-                        full_rect_8.drawGraph(proc_rect_8);
-                        proc_rect_8.drawGraph(full_rect_8);
+                        // full_rect_8.drawGraph(proc_rect_8);
+                        // proc_rect_8.drawGraph(full_rect_8);
+                        full_rect.data = full_rect_8;
+                        proc_rect.data = proc_rect_8;
+
+
                     }
+                    full_rect.prepGraph(proc_rect);
+                    proc_rect.prepGraph(full_rect);
+                    full_rect.drawGraph(proc_rect);
+                    proc_rect.drawGraph(full_rect);
+
 
                 })
 
