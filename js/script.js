@@ -40,22 +40,30 @@ Promise.all([
     //Instantiates graph objects with data
 
     // TODO: Going to try a different tactic - create only one graph object then pass in
-    // the relevant data - need to reorganize graph class to do this
+        // the relevant data - need to reorganize graph class to do this
+        // Think this will solve some of my problems....
 
     //originals - rectangles
-    let full_rect_2 = new Graph(files[3],'graph-orig','orig');
-    let full_rect_4 = new Graph(files[4],'graph-orig','orig');
-    let full_rect_6 = new Graph(files[5],'graph-orig','orig');
-    let full_rect_8 = new Graph(files[6],'graph-orig','orig');
+    // let full_rect_2 = new Graph(files[3],'graph-orig','orig');
+    // let full_rect_4 = new Graph(files[4],'graph-orig','orig');
+    // let full_rect_6 = new Graph(files[5],'graph-orig','orig');
+    // let full_rect_8 = new Graph(files[6],'graph-orig','orig');
+    let full_rect_2 = files[3];
+    let full_rect_4 = files[4];
     
     //rectangles
-    let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
-    let proc_rect_4 = new Graph(files[8],'graph-processed','clust');
-    let proc_rect_6 = new Graph(files[9],'graph-processed','clust');
-    let proc_rect_8 = new Graph(files[10],'graph-processed','clust');
+    // let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
+    // let proc_rect_4 = new Graph(files[8],'graph-processed','clust');
+    // let proc_rect_6 = new Graph(files[9],'graph-processed','clust');
+    // let proc_rect_8 = new Graph(files[10],'graph-processed','clust');
+    let proc_rect_2 = files[7];
+    let proc_rect_4 = files[8];
 
     //small net
-    let small_graph = new Graph(files[2],'graph-processed','spars');
+    // let small_graph = new Graph(files[2],'graph-processed','spars');
+
+    let full_rect = new Graph(files[3],'graph-orig','orig');
+    let proc_rect = new Graph(files[7],'graph-processed','clust');
 
 
     // Data dropdown
@@ -70,7 +78,7 @@ Promise.all([
             // console.log(target)
             // changes active highlighting
             let start_active = $('#datasetDrop').find('active');
-            console.log("actibe start",start_active)
+            console.log("active start",start_active)
             let kids = $('#datasetDrop').find('a')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
@@ -85,8 +93,10 @@ Promise.all([
                 let k_Bar = new kBar(this.k);
 
                 // Initial k is 2, so draws this
-                full_rect_2.drawGraph(proc_rect_2);
-                proc_rect_2.drawGraph(full_rect_2);
+                // let full_rect = new Graph(files[3],'graph-orig','orig');
+                // let proc_rect = new Graph(files[7],'graph-processed','clust');
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(full_rect);
 
                 // detects change on bar and updates data show accordingly
                 d3.select('#activeK-bar').on('input', function(d){
@@ -98,16 +108,35 @@ Promise.all([
                         // Draws graph and passes in references to other objects
                         // full_rect_2.data = files[3]
                         // proc_rect_2.data = files[7]
+                        // let full_rect = new Graph(files[3],'graph-orig','orig');
+                        // let proc_rect = new Graph(files[7],'graph-processed','clust');
 
-                        full_rect_2.drawGraph(proc_rect_2);
-                        proc_rect_2.drawGraph(full_rect_2);
+
+                        // full_rect.drawGraph(proc_rect);
+                        // proc_rect.drawGraph(full_rect);
+
+                        full_rect.data = full_rect_2;
+                        proc_rect.data = proc_rect_2;
+                        
+                        full_rect.prepGraph(proc_rect);
+                        proc_rect.prepGraph(full_rect);
+
+                        full_rect.drawGraph(proc_rect);
+                        proc_rect.drawGraph(full_rect);
                         
                 
                     }
                     else if(k_Bar.activeK == 4){
                         // Draws graph and passes in references to other objects
-                        full_rect_4.drawGraph(proc_rect_4);
-                        proc_rect_4.drawGraph(full_rect_4);
+                        // let full_rect = new Graph(files[4],'graph-orig','orig');
+                        // let proc_rect = new Graph(files[8],'graph-processed','clust');
+
+                        full_rect.data = full_rect_4;
+                        proc_rect.data = proc_rect_4;
+                        full_rect.prepGraph(proc_rect);
+                        proc_rect.prepGraph(full_rect);
+                        full_rect.drawGraph(proc_rect);
+                        proc_rect.drawGraph(full_rect);
 
                         // // Passes in new data
                         // full_rect_2.data = files[4]

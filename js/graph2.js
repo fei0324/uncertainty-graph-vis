@@ -25,77 +25,6 @@ class Graph{
         this.WIDTH = boundingRect.width;
         this.HEIGHT = boundingRect.height;
 
-        // // Creating scales
-
-        // //Scales for sparsification
-        // if (this.type == 'spars'){
-
-        //     //Sets active variable for edge vis type - this appears first on load
-        //     this.active = 'squareOD';
-
-        //     //finding max and min of mean for links 
-        //     let avg_array = this.data.links.map( d => d.average);
-        //     let maxMeanL = d3.max(avg_array);
-        //     let minMeanL = d3.min(avg_array);
-        //     let medMeanL = d3.median(avg_array)
-        //     console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
-
-        //     //Color scale for means of links
-        //     //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
-        //     //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-        //     this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMeanL,maxMeanL]);
-        
-        //     // linear scale for mean of links
-        //     // may need to find way to adjust range automatically based on network size
-        //     this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
-        //     this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
-        // }
-        // //Scales for clustering
-        // else if (this.type == 'clust'){
-        //     //finding max and min of mean for nodes
-        //     let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
-        //     // let maxMeanN = d3.max(avg_array);
-        //     // let minMeanN = d3.min(avg_array);
-        //     // let medMeanN = d3.median(avg_array);
-        //     // console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
-
-        //     //Color scale for means of node
-        //     //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
-        //     //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-        //     this.color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_array));
-        //     // d3.interpolateRgb("orange", "blue")
-
-        //     // linear scale for mean of node
-        //     // may need to find way to adjust range automatically based on network size
-        //     this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range([1,4])
-
-        //     //finding max and min of mean for link weights and means 
-        //     let avg_arrayLW = this.data.links.map( d => d.weight );
-        //     let avg_arrayLM = this.data.links.map( d => d.mean );
-        //     // let maxMeanLW = d3.max(avg_arrayLW);
-        //     // let minMeanLW = d3.min(avg_arrayLW);
-        //     // let medMeanLW = d3.median(avg_arrayLW)
-
-        //     // Color scale for links
-        //     this.linkColor = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_arrayLM));
-
-        //     this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7]);
-        //     this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,5]);
-        //     this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,15])
-
-        //     // Creating legend selection
-        //     let legendSVG = d3.select("#legend-SVG");
-            
-        //     // Creating legend
-        //     this.clust_legend = legendSVG.append("g")
-        //         .attr("class","clust-legend")
-        //         .attr("transform", "translate(45,60)");
-        // }
-        
-        this.prepGraph();
-    }
-
-    prepGraph(){
         // Creating scales
 
         //Scales for sparsification
@@ -162,13 +91,16 @@ class Graph{
                 .attr("class","clust-legend")
                 .attr("transform", "translate(45,60)");
         }
+        
+    this.drawGraph()
+    
     }
 
     /**
      * Renders the graph
      * @param 
      */
-    drawGraph(reference){
+    drawGraph(){
 
         //Allows me to access this scope inside deeper functions
         let that = this;
