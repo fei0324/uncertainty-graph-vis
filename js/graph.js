@@ -25,73 +25,6 @@ class Graph{
         this.WIDTH = boundingRect.width;
         this.HEIGHT = boundingRect.height;
 
-        // // Creating scales
-
-        // //Scales for sparsification
-        // if (this.type == 'spars'){
-
-        //     //Sets active variable for edge vis type - this appears first on load
-        //     this.active = 'squareOD';
-
-        //     //finding max and min of mean for links 
-        //     let avg_array = this.data.links.map( d => d.average);
-        //     let maxMeanL = d3.max(avg_array);
-        //     let minMeanL = d3.min(avg_array);
-        //     let medMeanL = d3.median(avg_array)
-        //     console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
-
-        //     //Color scale for means of links
-        //     //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
-        //     //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-        //     this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMeanL,maxMeanL]);
-        
-        //     // linear scale for mean of links
-        //     // may need to find way to adjust range automatically based on network size
-        //     this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
-        //     this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
-        // }
-        // //Scales for clustering
-        // else if (this.type == 'clust'){
-        //     //finding max and min of mean for nodes
-        //     let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
-        //     // let maxMeanN = d3.max(avg_array);
-        //     // let minMeanN = d3.min(avg_array);
-        //     // let medMeanN = d3.median(avg_array);
-        //     // console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
-
-        //     //Color scale for means of node
-        //     //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
-        //     //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-        //     this.color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_array));
-        //     // d3.interpolateRgb("orange", "blue")
-
-        //     // linear scale for mean of node
-        //     // may need to find way to adjust range automatically based on network size
-        //     this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range([1,4])
-
-        //     //finding max and min of mean for link weights and means 
-        //     let avg_arrayLW = this.data.links.map( d => d.weight );
-        //     let avg_arrayLM = this.data.links.map( d => d.mean );
-        //     // let maxMeanLW = d3.max(avg_arrayLW);
-        //     // let minMeanLW = d3.min(avg_arrayLW);
-        //     // let medMeanLW = d3.median(avg_arrayLW)
-
-        //     // Color scale for links
-        //     this.linkColor = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_arrayLM));
-
-        //     this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7]);
-        //     this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,5]);
-        //     this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,15])
-
-        //     // Creating legend selection
-        //     let legendSVG = d3.select("#legend-SVG");
-            
-        //     // Creating legend
-        //     this.clust_legend = legendSVG.append("g")
-        //         .attr("class","clust-legend")
-        //         .attr("transform", "translate(45,60)");
-        // }
-
         // Creating legend selection
         let legendSVG = d3.select("#legend-SVG");
             
@@ -133,33 +66,46 @@ class Graph{
         else if (this.type == 'clust'){
             //finding max and min of mean for nodes
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
+            let std_array = this.data.nodes.map( d => d.uncertainty_std );
             // let maxMeanN = d3.max(avg_array);
             // let minMeanN = d3.min(avg_array);
             // let medMeanN = d3.median(avg_array);
             // console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
 
+            // NODE
+
             //Color scale for means of node
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
             this.color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_array));
+            this.stdColor = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(std_array));
             // d3.interpolateRgb("orange", "blue")
 
             // linear scale for mean of node
             // may need to find way to adjust range automatically based on network size
             this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range([1,4])
+            this.nodeStdScale = d3.scaleLinear().domain(d3.extent(std_array)).range([1,4])
+
+
+            // LINK
 
             //finding max and min of mean for link weights and means 
             let avg_arrayLW = this.data.links.map( d => d.weight );
             let avg_arrayLM = this.data.links.map( d => d.mean );
+            let std_arrayL = this.data.links.map( d => d.std );
             // let maxMeanLW = d3.max(avg_arrayLW);
             // let minMeanLW = d3.min(avg_arrayLW);
             // let medMeanLW = d3.median(avg_arrayLW)
 
             // Color scale for links
             this.linkColor = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_arrayLM));
+            this.linkColorStd = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(std_arrayL));
 
+            // Link scales
             this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7]);
             this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,5]);
+            this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,2.5]);
+            this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range([1,5]);
             this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,15])
 
             // // Creating legend selection
@@ -226,29 +172,31 @@ class Graph{
         // Graph for SPARSIFICATION
         if (this.type == 'spars'){
 
-            // Detect which edge vis type is active and store in active variable
-            // changes current active highlight in dropdown
-            $('#edgeDrop').on('hide.bs.dropdown', function (e) {
-                // console.log(e)
-                let targetClass = null;
-                if (e.clickEvent){
-                    targetClass = $(e.clickEvent.target).attr('class')
-                }
-                if (targetClass == 'dropdown-item'){
-                    let target = e.clickEvent.target.id;
-                    // console.log(target)
-                    that.active = target;
+            let thatNode = this;
 
-                    // changes active highlighting
-                    let kids = $('#edgeDrop').find('a')
-                    kids.removeClass( "active" );
-                    $(`#${target}`).addClass("active")
+            // // Detect which edge vis type is active and store in active variable
+            // // changes current active highlight in dropdown
+            // $('#edgeDrop').on('hide.bs.dropdown', function (e) {
+            //     // console.log(e)
+            //     let targetClass = null;
+            //     if (e.clickEvent){
+            //         targetClass = $(e.clickEvent.target).attr('class')
+            //     }
+            //     if (targetClass == 'dropdown-item'){
+            //         let target = e.clickEvent.target.id;
+            //         // console.log(target)
+            //         that.active = target;
 
-                    // console.log(that.active)
-                }
-            });
+            //         // changes active highlighting
+            //         let kids = $('#edgeDrop').find('a')
+            //         kids.removeClass( "active" );
+            //         $(`#${target}`).addClass("active")
 
-            console.log("active edge-vis",this.active);
+            //         // console.log(that.active)
+            //     }
+            // });
+
+            // console.log("active edge-vis",this.active);
 
             this.myGraph(location)
                 .width(WIDTH)
@@ -257,149 +205,23 @@ class Graph{
                 .nodeRelSize(2)
                 .nodeColor(() => "black")
                 .nodeLabel(node => node.id)
-                .linkHoverPrecision(4) //May need to adjust based on network size
-                // Sets link hover behavoir based on type
-                .onLinkHover(link => {
-                    highlightLink = link;
-                    // TODO: Add node highlighting
-                    highlightNodes = link ? [link.source, link.target] : [];
-                    //event()
-                })
-                .onLinkClick(link => {
-                    //console.log(link)
-                    // checks if link already been clicked
-                    if (clickedLink.includes(link)){
-                        let prevIdx = clickedLink.indexOf(link)
-                        clickedLink.splice(prevIdx,1)
-                    }
-                    else{
-                        clickedLink.push(link)
-                    }
-                })
-                // Draw width based on mean
-                .linkWidth(link => this.meanScale(link.average))
-                .linkColor(link => this.color(link.average))
-                .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
-                .linkCanvasObject((link, ctx) => {
-                    // This draws the links' uncertainty viz
-                    //console.log("in link canvas object")
 
-                    // Path node margin is how far out the edge uncertainty starts to taper
-                    const PATH_NODE_MARGIN = 5;
-                    // start and end coordinates
-                    const start = link.source;
-                    const end = link.target;
+            // Link styling 
+            // Determine which is active, style by that.....
+            let edge_active = $('#edgeDrop').find('a.active').attr('id');
+            console.log("edge active",edge_active)
 
-                    // ignore unbound links
-                    if (typeof start !== 'object' || typeof end !== 'object') return;
+            if (edge_active == 'splineOD'){
 
-                    // calculate path midpoint
-                    const midPos = Object.assign(...['x', 'y'].map(c => ({
-                        [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-                    })));
-                    //console.log(midPos.x)
+                that.splineOD(thatNode.myGraph,that)
+                
+            }
+            else if( edge_active == 'spline'){
 
-                    // Relative positioning along line
-                    const relLink = { x: end.x - start.x, y: end.y - start.y };
+                that.spline(thatNode.myGraph,that)
 
-                    // I need to calculate the positiong of the 2 outer-most path points
-                    let textAngle = Math.atan2(relLink.y, relLink.x);
-                    // Edge angle is separate to interpolate inner edge points
-                    let edgeAngle = textAngle;
+            }
 
-                    // Maintains orientation
-                    if (textAngle > 0) textAngle = (Math.PI - textAngle);
-                    if (textAngle < 0) textAngle = (-Math.PI - textAngle);
-
-                    // Set this to change the scaling of uncertainty vis
-                    // May need to have this automatically adjust based on network size
-                    // const scaling = 1
-                    // const mean_val = link.average * scaling;
-                    // const std_val = link.standard_deviation * scaling;
-
-                    const mean_val = this.meanScaleSpline(link.average);
-                    const std_val = this.meanScaleSpline(link.standard_deviation);
-
-                    let x_prime = Math.sin(textAngle)*mean_val;
-                    let y_prime = Math.cos(textAngle)*mean_val;
-                    let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
-                    let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
-
-                    // Calculating points that are in from the edges
-                    let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
-                    let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
-
-                    //line data for the mean shape
-                    let mean_data = [
-                        [start.x , start.y ], // point at the end
-                        [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                        [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
-                        [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                        [ end.x , end.y ], // point at other end
-                        [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                        [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
-                        [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                        [start.x , start.y ] // back to start
-                    ]
-
-                    let std_data = [
-                        [start.x , start.y ], // point near the end 
-                        [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                        [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
-                        [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                        [ end.x , end.y ], // other point near the end
-                        [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                        [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
-                        [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                        [start.x , start.y ] // back to start
-                    ]
-
-                    // draw edge uncertainties
-                    ctx.save();
-
-                    //Retrieve color and adjust opacity
-                    let colorM = d3.color(that.color(link.average)).copy({opacity: 0.7})
-                    let colorStd = d3.color(that.color(link.average)).copy({opacity: 0.45});
-                    // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
-
-                    //Line for first std dev
-                    const lineStd = d3.line()
-                        .curve(d3.curveBasisClosed); //good one
-                    //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                    lineStd.context(ctx); // for canvas
-                    ctx.beginPath();
-                    lineStd(std_data);
-                    ctx.lineWidth = 0.1
-                    ctx.fillStyle = colorStd;
-                    //ctx.strokeStyle = "white"
-                    //Shadow effect 
-                    // ctx.shadowColor = 'red';
-                    // ctx.shadowBlur = 100;
-                    ctx.fill();
-                    // ctx.stroke();
-
-                    //Line for mean
-                    const lineM = d3.line()
-                        .curve(d3.curveBasisClosed); //good one
-                    // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
-                        //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                    lineM.context(ctx); // for canvas
-                    ctx.beginPath();
-                    lineM(mean_data);
-                    ctx.lineWidth = 0.1
-                    ctx.fillStyle = colorM
-                    // ctx.strokeStyle = "white"
-                    //Shadow effect 
-                    // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
-                    // ctx.shadowBlur = 100;
-                    ctx.fill();
-                    // ctx.stroke();
-
-                    ctx.restore();
-
-                    })
-                .zoom(3);
         }
 
         //graph for NODE CLUSTERING
@@ -420,64 +242,67 @@ class Graph{
 
                 // NODE STYLING - default
 
-                .nodeRelSize(node_rel_size)
-                .nodeVal(node => this.meanScale(node.uncertainty_mean))
-                .nodeLabel(node => node.id)
-                .nodeColor(node => this.color(node.uncertainty_mean))
-                .onNodeClick(node => {
-                    
-                    console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
-                })
-                .onNodeHover(node => {
-                    highlightNodes = node ? [node] : []
+                // Determine which is active, style by that.....
+                let node_active = $('#nodeDrop').find('a.active').attr('id');
+                console.log("node active",node_active)
 
-                    // console.log(node)
-                    if (node){
-                        // Need to select node with id that is node.cluster
-                        let my_data = this.reference.myGraph.graphData();
-                        // console.log(my_data.nodes)
-                        let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
-                        // console.log("selected node",da_node)
-                        this.reference.myGraph
-                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                if (node_active == 'mstdev'){
+
+                    that.mstdev(thatNode.myGraph,that,node_rel_size)
+                  
+                }
+                // else if( node_active == 'spline'){
+
+                //     that.spline(thatNode.myGraph,that)
+
+                // }
+
+                // NODE MENU OPTIONS
+                // Detect which edge vis type is active and executes appropriate code
+                $('#nodeDrop').on('hide.bs.dropdown', function (e) {
+                    // console.log(e)
+                    console.log("graph obj",thatNode.myGraph.graphData())
+                    let drop_edge = null;
+                    let targetClass = null;
+                    if (e.clickEvent){
+                        targetClass = $(e.clickEvent.target).attr('class')
                     }
-                    else{
-                        highlightNodes = []
-                        // Need to reset da_node's color to what it was
-                        this.reference.myGraph
-                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
-                            // .nodeColor( ref_node => 'black');
+                    if (targetClass == 'dropdown-item'){
+                        let target = e.clickEvent.target.id;
+                        console.log('target',target)
+                        drop_edge = target;
+
+                        // changes active highlighting
+                        let kids = $('#nodeDrop').find('a')
+                        kids.removeClass( "active" );
+                        $(`#${target}`).addClass("active")
+
+                        
+                    }
+                    console.log('drop_edge',drop_edge)
+
+                    if (drop_edge == 'mstdev'){
+                        console.log('mean + stdev')
+                        that.mstdev(thatNode.myGraph,that,node_rel_size);
+                            
+                    }
+                    else if(drop_edge == 'mean'){
+                        console.log('mean')
+                        that.nodeMean(thatNode.myGraph,that,node_rel_size)
+            
+                    }
+                    else if(drop_edge == 'std'){
+                        console.log('std')
+                        that.nodeStd(thatNode.myGraph,that,node_rel_size)
+            
                     }
 
-                })
-                // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
-                .nodeCanvasObjectMode(()=> 'before')
-                .nodeCanvasObject((node, ctx) => {
-                    // Calculate radius for std
-                    //let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
-                    let stdSCALING = 1;
-                    let NODE_R = 0;
-                    let halo_color = null;
-                    if (highlightNodes.indexOf(node) !== -1){
-                        NODE_R = 12;
-                        halo_color = '#EA000080'
-                    }
-                    else{
-                        let std_perc = node.uncertainty_std/node.uncertainty_mean;
-                        let mean_radius = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size;
-                        let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
-                        // console.log(std_radius)
-                        NODE_R = std_radius;
-                        // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
-                        halo_color = d3.color(this.color(node.uncertainty_mean)).copy({opacity: 0.45});
 
-                    }
-                    // add a halo for stdev
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
-                    ctx.fillStyle = halo_color;
-                    ctx.fill();
-                })
+
+
+
+                });
+
 
                 // LINK STYLING - default
 
@@ -487,288 +312,17 @@ class Graph{
 
                 if (edge_active == 'splineOD'){
 
-                    thatNode.myGraph
-                        .linkHoverPrecision(4) //May need to adjust based on network size
-                        // Sets link hover behavoir based on type
-                        .onLinkHover(link => {
-                            highlightLink = link;
-                            // TODO: Add node highlighting
-                            highlightNodes = link ? [link.source, link.target] : [];
-                            //event()
-                        })
-                        .onLinkClick(link => {
-                            //console.log(link)
-                            // checks if link already been clicked
-                            if (clickedLink.includes(link)){
-                                let prevIdx = clickedLink.indexOf(link)
-                                clickedLink.splice(prevIdx,1)
-                            }
-                            else{
-                                clickedLink.push(link)
-                            }
-                        })
-                        .linkWidth(link => this.linkMeanScale(link.mean))
-                        .linkColor(link => this.linkColor(link.mean))
-                        .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
-                        .linkCanvasObject((link, ctx) => {
-                            // This draws the links' uncertainty viz
-                            //console.log("in link canvas object")
-        
-                            // Path node margin is how far out the edge uncertainty starts to taper
-                            const PATH_NODE_MARGIN = 5;
-                            // start and end coordinates
-                            const start = link.source;
-                            const end = link.target;
-        
-                            // ignore unbound links
-                            if (typeof start !== 'object' || typeof end !== 'object') return;
-        
-                            // calculate path midpoint
-                            const midPos = Object.assign(...['x', 'y'].map(c => ({
-                                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-                            })));
-                            //console.log(midPos.x)
-        
-                            // Relative positioning along line
-                            const relLink = { x: end.x - start.x, y: end.y - start.y };
-        
-                            // I need to calculate the positiong of the 2 outer-most path points
-                            let textAngle = Math.atan2(relLink.y, relLink.x);
-                            // Edge angle is separate to interpolate inner edge points
-                            let edgeAngle = textAngle;
-        
-                            // Maintains orientation
-                            if (textAngle > 0) textAngle = (Math.PI - textAngle);
-                            if (textAngle < 0) textAngle = (-Math.PI - textAngle);
-        
-                            // Set this to change the scaling of uncertainty vis
-                            // May need to have this automatically adjust based on network size
-                            // const scaling = 1
-                            // const mean_val = link.average * scaling;
-                            // const std_val = link.standard_deviation * scaling;
-        
-                            const mean_val = this.meanScaleSpline(link.mean);
-                            const std_val = this.meanScaleSpline(link.std);
-        
-                            let x_prime = Math.sin(textAngle)*mean_val;
-                            let y_prime = Math.cos(textAngle)*mean_val;
-                            let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
-                            let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
-        
-                            // Calculating points that are in from the edges
-                            let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
-                            let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
-        
-                            //line data for the mean shape
-                            let mean_data = [
-                                [start.x , start.y ], // point at the end
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // point at other end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            let std_data = [
-                                [start.x , start.y ], // point near the end 
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // other point near the end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            // draw edge uncertainties
-                            ctx.save();
-        
-                            //Retrieve color and adjust opacity
-                            let colorM = d3.color(that.linkColor(link.mean)).copy({opacity: 0.7})
-                            let colorStd = d3.color(that.linkColor(link.mean)).copy({opacity: 0.45});
-                            // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
-        
-                            //Line for first std dev
-                            const lineStd = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-                            //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineStd.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineStd(std_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorStd;
-                            //ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'red';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            //Line for mean
-                            const lineM = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
-                                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineM.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineM(mean_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorM
-                            // ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            ctx.restore();
-        
-                            })
-                        .zoom(2);
+                    that.splineOD(thatNode.myGraph,that)
+                  
                 }
-                else if( edge_active == 'spline'){
+                // else if( edge_active == 'spline'){
 
-                    thatNode.myGraph
-                        .linkHoverPrecision(4) //May need to adjust based on network size
-                        .linkWidth(link => that.linkMeanScale(link.mean))
-                        .linkColor(link => that.linkColor(link.mean))
-                        .linkCanvasObjectMode(() => 'replace')
-                        .linkCanvasObject((link, ctx) => {
-                            // This draws the links' uncertainty viz
-                            //console.log("in link canvas object")
-        
-                            // Path node margin is how far out the edge uncertainty starts to taper
-                            const PATH_NODE_MARGIN = 5;
-                            // start and end coordinates
-                            const start = link.source;
-                            const end = link.target;
-        
-                            // ignore unbound links
-                            if (typeof start !== 'object' || typeof end !== 'object') return;
-        
-                            // calculate path midpoint
-                            const midPos = Object.assign(...['x', 'y'].map(c => ({
-                                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-                            })));
-                            //console.log(midPos.x)
-        
-                            // Relative positioning along line
-                            const relLink = { x: end.x - start.x, y: end.y - start.y };
-        
-                            // I need to calculate the positiong of the 2 outer-most path points
-                            let textAngle = Math.atan2(relLink.y, relLink.x);
-                            // Edge angle is separate to interpolate inner edge points
-                            let edgeAngle = textAngle;
-        
-                            // Maintains orientation
-                            if (textAngle > 0) textAngle = (Math.PI - textAngle);
-                            if (textAngle < 0) textAngle = (-Math.PI - textAngle);
-        
-                            // Set this to change the scaling of uncertainty vis
-                            // May need to have this automatically adjust based on network size
-                            // const scaling = 1
-                            // const mean_val = link.average * scaling;
-                            // const std_val = link.standard_deviation * scaling;
-        
-                            const mean_val = that.meanScaleSpline(link.mean);
-                            const std_val = that.meanScaleSpline(link.std);
-        
-                            let x_prime = Math.sin(textAngle)*mean_val;
-                            let y_prime = Math.cos(textAngle)*mean_val;
-                            let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
-                            let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
-        
-                            // Calculating points that are in from the edges
-                            let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
-                            let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
-        
-                            //line data for the mean shape
-                            let mean_data = [
-                                [start.x , start.y ], // point at the end
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // point at other end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            let std_data = [
-                                [start.x , start.y ], // point near the end 
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // other point near the end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            // draw edge uncertainties
-                            ctx.save();
-        
-                            //Retrieve color and adjust opacity
-                            let colorM = d3.color(that.linkColor(link.mean)).copy({opacity: 0.7})
-                            let colorStd = d3.color(that.linkColor(link.mean)).copy({opacity: 0.45});
-                            // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
-        
-                            //Line for first std dev
-                            const lineStd = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-                            //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineStd.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineStd(std_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorStd;
-                            //ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'red';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            //Line for mean
-                            const lineM = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
-                                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineM.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineM(mean_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorM
-                            // ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            ctx.restore();
-        
-                            })
+                //     that.spline(thatNode.myGraph,that)
 
-
-
-
-                }
-
-
+                // }
 
                 
-
-                
-            // Menu selections
+            // Link Menu selections
 
             // EDGE VIS
             // Detect which edge vis type is active and executes appropriate code
@@ -792,284 +346,29 @@ class Graph{
 
                     
                 }
-
                 console.log('drop_edge',drop_edge)
+
+
                 if (drop_edge == 'splineOD'){
                     console.log('spline on demand')
-                    thatNode.myGraph
-                        .linkHoverPrecision(4) //May need to adjust based on network size
-                        // Sets link hover behavoir based on type
-                        .onLinkHover(link => {
-                            highlightLink = link;
-                            // TODO: Add node highlighting
-                            highlightNodes = link ? [link.source, link.target] : [];
-                            //event()
-                        })
-                        .onLinkClick(link => {
-                            //console.log(link)
-                            // checks if link already been clicked
-                            if (clickedLink.includes(link)){
-                                let prevIdx = clickedLink.indexOf(link)
-                                clickedLink.splice(prevIdx,1)
-                            }
-                            else{
-                                clickedLink.push(link)
-                            }
-                        })
-                        .linkWidth(link => that.linkMeanScale(link.mean))
-                        .linkColor(link => that.linkColor(link.mean))
-                        .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
-                        .linkCanvasObject((link, ctx) => {
-                            // This draws the links' uncertainty viz
-                            //console.log("in link canvas object")
-        
-                            // Path node margin is how far out the edge uncertainty starts to taper
-                            const PATH_NODE_MARGIN = 5;
-                            // start and end coordinates
-                            const start = link.source;
-                            const end = link.target;
-        
-                            // ignore unbound links
-                            if (typeof start !== 'object' || typeof end !== 'object') return;
-        
-                            // calculate path midpoint
-                            const midPos = Object.assign(...['x', 'y'].map(c => ({
-                                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-                            })));
-                            //console.log(midPos.x)
-        
-                            // Relative positioning along line
-                            const relLink = { x: end.x - start.x, y: end.y - start.y };
-        
-                            // I need to calculate the positiong of the 2 outer-most path points
-                            let textAngle = Math.atan2(relLink.y, relLink.x);
-                            // Edge angle is separate to interpolate inner edge points
-                            let edgeAngle = textAngle;
-        
-                            // Maintains orientation
-                            if (textAngle > 0) textAngle = (Math.PI - textAngle);
-                            if (textAngle < 0) textAngle = (-Math.PI - textAngle);
-        
-                            // Set this to change the scaling of uncertainty vis
-                            // May need to have this automatically adjust based on network size
-                            // const scaling = 1
-                            // const mean_val = link.average * scaling;
-                            // const std_val = link.standard_deviation * scaling;
-        
-                            const mean_val = that.meanScaleSpline(link.mean);
-                            const std_val = that.meanScaleSpline(link.std);
-        
-                            let x_prime = Math.sin(textAngle)*mean_val;
-                            let y_prime = Math.cos(textAngle)*mean_val;
-                            let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
-                            let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
-        
-                            // Calculating points that are in from the edges
-                            let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
-                            let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
-        
-                            //line data for the mean shape
-                            let mean_data = [
-                                [start.x , start.y ], // point at the end
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // point at other end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            let std_data = [
-                                [start.x , start.y ], // point near the end 
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // other point near the end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            // draw edge uncertainties
-                            ctx.save();
-        
-                            //Retrieve color and adjust opacity
-                            let colorM = d3.color(that.linkColor(link.mean)).copy({opacity: 0.7})
-                            let colorStd = d3.color(that.linkColor(link.mean)).copy({opacity: 0.45});
-                            // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
-        
-                            //Line for first std dev
-                            const lineStd = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-                            //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineStd.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineStd(std_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorStd;
-                            //ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'red';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            //Line for mean
-                            const lineM = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
-                                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineM.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineM(mean_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorM
-                            // ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            ctx.restore();
-        
-                            })
+                    that.splineOD(thatNode.myGraph,that);
                         
                 }
                 else if(drop_edge == 'spline'){
                     console.log('spline')
-                    thatNode.myGraph
-                        .linkHoverPrecision(4) //May need to adjust based on network size
-                        .linkWidth(link => that.linkMeanScale(link.mean))
-                        .linkColor(link => that.linkColor(link.mean))
-                        .linkCanvasObjectMode(() => 'replace')
-                        .linkCanvasObject((link, ctx) => {
-                            // This draws the links' uncertainty viz
-                            //console.log("in link canvas object")
+                    that.spline(thatNode.myGraph,that)
         
-                            // Path node margin is how far out the edge uncertainty starts to taper
-                            const PATH_NODE_MARGIN = 5;
-                            // start and end coordinates
-                            const start = link.source;
-                            const end = link.target;
-        
-                            // ignore unbound links
-                            if (typeof start !== 'object' || typeof end !== 'object') return;
-        
-                            // calculate path midpoint
-                            const midPos = Object.assign(...['x', 'y'].map(c => ({
-                                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-                            })));
-                            //console.log(midPos.x)
-        
-                            // Relative positioning along line
-                            const relLink = { x: end.x - start.x, y: end.y - start.y };
-        
-                            // I need to calculate the positiong of the 2 outer-most path points
-                            let textAngle = Math.atan2(relLink.y, relLink.x);
-                            // Edge angle is separate to interpolate inner edge points
-                            let edgeAngle = textAngle;
-        
-                            // Maintains orientation
-                            if (textAngle > 0) textAngle = (Math.PI - textAngle);
-                            if (textAngle < 0) textAngle = (-Math.PI - textAngle);
-        
-                            // Set this to change the scaling of uncertainty vis
-                            // May need to have this automatically adjust based on network size
-                            // const scaling = 1
-                            // const mean_val = link.average * scaling;
-                            // const std_val = link.standard_deviation * scaling;
-        
-                            const mean_val = that.meanScaleSpline(link.mean);
-                            const std_val = that.meanScaleSpline(link.std);
-        
-                            let x_prime = Math.sin(textAngle)*mean_val;
-                            let y_prime = Math.cos(textAngle)*mean_val;
-                            let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
-                            let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
-        
-                            // Calculating points that are in from the edges
-                            let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
-                            let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
-        
-                            //line data for the mean shape
-                            let mean_data = [
-                                [start.x , start.y ], // point at the end
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // point at other end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            let std_data = [
-                                [start.x , start.y ], // point near the end 
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ end.x , end.y ], // other point near the end
-                                [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
-                                [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
-                                [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
-                                [start.x , start.y ] // back to start
-                            ]
-        
-                            // draw edge uncertainties
-                            ctx.save();
-        
-                            //Retrieve color and adjust opacity
-                            let colorM = d3.color(that.linkColor(link.mean)).copy({opacity: 0.7})
-                            let colorStd = d3.color(that.linkColor(link.mean)).copy({opacity: 0.45});
-                            // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
-        
-                            //Line for first std dev
-                            const lineStd = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
-                            //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineStd.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineStd(std_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorStd;
-                            //ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'red';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            //Line for mean
-                            const lineM = d3.line()
-                                .curve(d3.curveBasisClosed); //good one
-                            // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
-                                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
-                            lineM.context(ctx); // for canvas
-                            ctx.beginPath();
-                            lineM(mean_data);
-                            ctx.lineWidth = 0.1
-                            ctx.fillStyle = colorM
-                            // ctx.strokeStyle = "white"
-                            //Shadow effect 
-                            // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
-                            // ctx.shadowBlur = 100;
-                            ctx.fill();
-                            // ctx.stroke();
-        
-                            ctx.restore();
-        
-                            })
-
                 }
-
-
+                else if(drop_edge =='square'){
+                    console.log('square')
+                    that.square(thatNode.myGraph,that)
+                    
+                }
+                else if (drop_edge == 'stdevO'){
+                    console.log('stdevO')
+                    that.stdevO(thatNode.myGraph,that)
+                    
+                }
 
 
 
@@ -1180,5 +479,603 @@ class Graph{
         }
         return canvas;
     }
+
+    // Spline on demand edge viz function
+    // Takes myGraph object and scope as input 
+    splineOD(myGraph,scope){
+        let highlightLink = null;
+        let clickedLink = [];
+        let highlightNodes = [];
+
+        myGraph
+            .linkHoverPrecision(4) //May need to adjust based on network size
+            // Sets link hover behavoir based on type
+            .onLinkHover(link => {
+                highlightLink = link;
+                // TODO: Add node highlighting
+                highlightNodes = link ? [link.source, link.target] : [];
+                //event()
+            })
+            .onLinkClick(link => {
+                //console.log(link)
+                // checks if link already been clicked
+                if (clickedLink.includes(link)){
+                    let prevIdx = clickedLink.indexOf(link)
+                    clickedLink.splice(prevIdx,1)
+                }
+                else{
+                    clickedLink.push(link)
+                }
+                console.log(link.mean,link.std)
+            })
+            .linkWidth(link => scope.linkMeanScale(link.mean))
+            .linkColor(link => scope.linkColor(link.mean))
+            .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
+            .linkCanvasObject((link, ctx) => {
+                // This draws the links' uncertainty viz
+                //console.log("in link canvas object")
+
+                // Path node margin is how far out the edge uncertainty starts to taper
+                const PATH_NODE_MARGIN = 5;
+                // start and end coordinates
+                const start = link.source;
+                const end = link.target;
+
+                // ignore unbound links
+                if (typeof start !== 'object' || typeof end !== 'object') return;
+
+                // calculate path midpoint
+                const midPos = Object.assign(...['x', 'y'].map(c => ({
+                    [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+                })));
+                //console.log(midPos.x)
+
+                // Relative positioning along line
+                const relLink = { x: end.x - start.x, y: end.y - start.y };
+
+                // I need to calculate the positiong of the 2 outer-most path points
+                let textAngle = Math.atan2(relLink.y, relLink.x);
+                // Edge angle is separate to interpolate inner edge points
+                let edgeAngle = textAngle;
+
+                // Maintains orientation
+                if (textAngle > 0) textAngle = (Math.PI - textAngle);
+                if (textAngle < 0) textAngle = (-Math.PI - textAngle);
+
+                // Set this to change the scaling of uncertainty vis
+                const perc = link.std/link.mean;
+                const mean_val = scope.meanScaleSpline(link.mean);
+                const std_val = mean_val*perc;
+
+                let x_prime = Math.sin(textAngle)*mean_val;
+                let y_prime = Math.cos(textAngle)*mean_val;
+                let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
+                let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
+
+                // Calculating points that are in from the edges
+                let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
+                let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
+
+                //line data for the mean shape
+                let mean_data = [
+                    [start.x , start.y ], // point at the end
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ end.x , end.y ], // point at other end
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [start.x , start.y ] // back to start
+                ]
+
+                let std_data = [
+                    [start.x , start.y ], // point near the end 
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ end.x , end.y ], // other point near the end
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [start.x , start.y ] // back to start
+                ]
+
+                // draw edge uncertainties
+                ctx.save();
+
+                //Retrieve color and adjust opacity
+                let colorM = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.7})
+                let colorStd = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.45});
+                // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
+
+                //Line for first std dev
+                const lineStd = d3.line()
+                    .curve(d3.curveBasisClosed); //good one
+                //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
+                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineStd.context(ctx); // for canvas
+                ctx.beginPath();
+                lineStd(std_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorStd;
+                //ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'red';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                // ctx.stroke();
+
+                //Line for mean
+                const lineM = d3.line()
+                    .curve(d3.curveBasisClosed); //good one
+                // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
+                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineM.context(ctx); // for canvas
+                ctx.beginPath();
+                lineM(mean_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorM
+                // ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                // ctx.stroke();
+
+                ctx.restore();
+
+                })
+    }
+
+    // Spline function that returns spline edge vis
+    // myGraph object and scope variable as input
+    spline(myGraph,scope){
+
+        myGraph
+            .linkHoverPrecision(4) //May need to adjust based on network size
+            .linkWidth(link => scope.linkMeanScale(link.mean))
+            .linkColor(link => scope.linkColor(link.mean))
+            .linkCanvasObjectMode(() => 'replace')
+            .linkCanvasObject((link, ctx) => {
+                // This draws the links' uncertainty viz
+                //console.log("in link canvas object")
+
+                // Path node margin is how far out the edge uncertainty starts to taper
+                const PATH_NODE_MARGIN = 5;
+                // start and end coordinates
+                const start = link.source;
+                const end = link.target;
+
+                // ignore unbound links
+                if (typeof start !== 'object' || typeof end !== 'object') return;
+
+                // calculate path midpoint
+                const midPos = Object.assign(...['x', 'y'].map(c => ({
+                    [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+                })));
+                //console.log(midPos.x)
+
+                // Relative positioning along line
+                const relLink = { x: end.x - start.x, y: end.y - start.y };
+
+                // I need to calculate the positiong of the 2 outer-most path points
+                let textAngle = Math.atan2(relLink.y, relLink.x);
+                // Edge angle is separate to interpolate inner edge points
+                let edgeAngle = textAngle;
+
+                // Maintains orientation
+                if (textAngle > 0) textAngle = (Math.PI - textAngle);
+                if (textAngle < 0) textAngle = (-Math.PI - textAngle);
+
+                // Set this to change the scaling of uncertainty vis
+                const perc = link.std/link.mean;
+                const mean_val = scope.meanScaleSpline(link.mean);
+                const std_val = mean_val*perc;
+
+                let x_prime = Math.sin(textAngle)*mean_val;
+                let y_prime = Math.cos(textAngle)*mean_val;
+                let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
+                let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
+
+                // Calculating points that are in from the edges
+                let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
+                let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
+
+                //line data for the mean shape
+                let mean_data = [
+                    [start.x , start.y ], // point at the end
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [midPos.x + x_prime , midPos.y + y_prime ], // point orthogonal from midpoint
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ end.x , end.y ], // point at other end
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ midPos.x - x_prime , midPos.y - y_prime ], // other point orthogonal from midpoint
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [start.x , start.y ] // back to start
+                ]
+
+                let std_data = [
+                    [start.x , start.y ], // point near the end 
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [midPos.x + xs_prime , midPos.y + ys_prime ], // point orthogonal from midpoint
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ end.x , end.y ], // other point near the end
+                    [end.x - xe_prime, end.y - ye_prime], // point a certaing distance in from other end 
+                    [ midPos.x - xs_prime , midPos.y - ys_prime ], // other point orthogonal from midpoint
+                    [start.x + xe_prime, start.y + ye_prime], // point a certain distance in from the end
+                    [start.x , start.y ] // back to start
+                ]
+
+                // draw edge uncertainties
+                ctx.save();
+
+                //Retrieve color and adjust opacity
+                let colorM = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.7})
+                let colorStd = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.45});
+                // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
+
+                //Line for first std dev
+                const lineStd = d3.line()
+                    .curve(d3.curveBasisClosed); //good one
+                //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
+                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineStd.context(ctx); // for canvas
+                ctx.beginPath();
+                lineStd(std_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorStd;
+                //ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'red';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                // ctx.stroke();
+
+                //Line for mean
+                const lineM = d3.line()
+                    .curve(d3.curveBasisClosed); //good one
+                // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
+                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineM.context(ctx); // for canvas
+                ctx.beginPath();
+                lineM(mean_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorM
+                // ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                // ctx.stroke();
+
+                ctx.restore();
+
+                })
+    }
+
+
+    // Square function that returns square edge vis
+    // Input is myGraph object and scope variable
+    square(myGraph,scope){
+
+        myGraph
+            .linkHoverPrecision(4) //May need to adjust based on network size
+            .linkWidth(link => scope.linkMeanScale(link.mean))
+            .linkColor(link => scope.linkColor(link.mean))
+            .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean)))
+            .linkCanvasObjectMode(() => 'replace')
+            .linkCanvasObject((link, ctx) => {
+                // This draws the links' uncertainty viz
+                //console.log("in link canvas object")
+
+                // Path node margin is how far out the edge uncertainty starts to taper
+                const PATH_NODE_MARGIN = 5;
+                // start and end coordinates
+                const start = link.source;
+                const end = link.target;
+
+                // ignore unbound links
+                if (typeof start !== 'object' || typeof end !== 'object') return;
+
+                // calculate path midpoint
+                const midPos = Object.assign(...['x', 'y'].map(c => ({
+                    [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+                })));
+                //console.log(midPos.x)
+
+                // Relative positioning along line
+                const relLink = { x: end.x - start.x, y: end.y - start.y };
+
+                // I need to calculate the positiong of the 2 outer-most path points
+                let textAngle = Math.atan2(relLink.y, relLink.x);
+                // Edge angle is separate to interpolate inner edge points
+                let edgeAngle = textAngle;
+
+                // Maintains orientation
+                if (textAngle > 0) textAngle = (Math.PI - textAngle);
+                if (textAngle < 0) textAngle = (-Math.PI - textAngle);
+
+                // Set this to change the scaling of uncertainty vis
+
+                const perc = link.std/link.mean;
+                const mean_val = scope.linkSquareScale(link.mean);
+                const std_val = mean_val*perc;
+
+                // Point orthogonal from midpoint
+                let x_prime = Math.sin(textAngle)*mean_val;
+                let y_prime = Math.cos(textAngle)*mean_val;
+                let xs_prime = Math.sin(textAngle)*(mean_val+std_val);
+                let ys_prime = Math.cos(textAngle)*(mean_val+std_val);
+
+
+                // Calculating points that are in from the edges
+                let xe_prime = Math.cos(edgeAngle)*PATH_NODE_MARGIN;
+                let ye_prime = Math.sin(edgeAngle)*PATH_NODE_MARGIN;
+
+                //line data for the mean shape
+                let mean_data = [
+                    [start.x , start.y ], // point at the end
+                    [start.x + x_prime, start.y + y_prime], // SQUARE
+                    [end.x + x_prime, end.y + y_prime], //SQAURE
+                    [ end.x , end.y ], // point at other end
+                    [end.x - x_prime, end.y - y_prime], //SQUARE
+                    [start.x - x_prime, start.y - y_prime], //SQAURE
+                    [start.x , start.y ] // back to start
+                ]
+
+
+                let std_data = [
+                    [start.x , start.y ], // point at the end
+                    [start.x + xs_prime, start.y + ys_prime], // SQUARE
+                    [end.x + xs_prime, end.y + ys_prime], //SQAURE
+                    [ end.x , end.y ], // point at other end
+                    [end.x - xs_prime, end.y - ys_prime], //SQUARE
+                    [start.x - xs_prime, start.y - ys_prime], //SQAURE
+                    [start.x , start.y ] // back to start
+                ]
+
+                // draw edge uncertainties
+                ctx.save();
+
+                //Retrieve color and adjust opacity
+                let colorM = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.7})
+                let colorStd = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.45});
+                // can also explore # color.brighter([k]) <> https://github.com/d3/d3-color for std instead of opacity
+
+                //Line for first std dev
+                const lineStd = d3.line()
+                    // .curve(d3.curveBasisClosed); //good one
+                //.curve(d3.curveCardinalClosed.tension(0)); //adjusting tension is cool
+                //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineStd.context(ctx); // for canvas
+                ctx.beginPath();
+                lineStd(std_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorStd;
+                //ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'red';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                // ctx.stroke();
+
+                //Line for mean
+                const lineM = d3.line()
+                    // .curve(d3.curveBasisClosed); //good one
+                // .curve(d3.curveCardinalClosed.tension(1)); //adjusting tension is cool
+                    //.curve(d3.curveCatmullRomClosed.alpha(0.5));
+                lineM.context(ctx); // for canvas
+                ctx.beginPath();
+                lineM(mean_data);
+                ctx.lineWidth = 0.1
+                ctx.fillStyle = colorM
+                // ctx.strokeStyle = "white"
+                //Shadow effect 
+                // ctx.shadowColor = 'rgba(46, 213, 197, 0.6)';
+                // ctx.shadowBlur = 100;
+                ctx.fill();
+                // ctx.stroke();
+
+                ctx.restore();
+
+            })
+
+    }
+
+    // Stdeviation only function that returns stdev only edge vis
+    // Input is myGraph object and scope variable
+    stdevO(myGraph,scope){
+        myGraph
+            .linkHoverPrecision(4) //May need to adjust based on network size
+            .linkWidth(link => scope.linkStdScale(link.std))
+            .linkColor(link => scope.linkColorStd(link.std))
+            .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean)))
+            .onLinkHover(() =>console.log() )
+            .linkCanvasObjectMode(() => undefined)
+            .linkCanvasObject((link, ctx) => {});
+           
+    }
+
+
+    // NODE FUNCTIONS
+
+    // Mean + stdeviation node styling
+    mstdev(myGraph,scope,node_rel_size){
+        let highlightNodes = [];
+
+        myGraph
+            .nodeRelSize(node_rel_size)
+            .nodeVal(node => scope.meanScale(node.uncertainty_mean))
+            .nodeLabel(node => node.id)
+            .nodeColor(node => scope.color(node.uncertainty_mean))
+            .onNodeClick(node => {
+                
+                console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+            })
+            .onNodeHover(node => {
+                highlightNodes = node ? [node] : []
+
+                // console.log(node)
+                if (node){
+                    // Need to select node with id that is node.cluster
+                    let my_data = scope.reference.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    this.reference.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                }
+                else{
+                    highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    scope.reference.myGraph
+                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        // .nodeColor( ref_node => 'black');
+                }
+
+            })
+            // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+            .nodeCanvasObjectMode(()=> 'before')
+            .nodeCanvasObject((node, ctx) => {
+                // Calculate radius for std
+                //let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
+                let stdSCALING = 1;
+                let NODE_R = 0;
+                let halo_color = null;
+                if (highlightNodes.indexOf(node) !== -1){
+                    NODE_R = 12;
+                    halo_color = '#EA000080'
+                }
+                else{
+                    let std_perc = node.uncertainty_std/node.uncertainty_mean;
+                    let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
+                    let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                    // console.log(std_radius)
+                    NODE_R = std_radius;
+                    // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
+                    halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+
+                }
+                // add a halo for stdev
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                ctx.fillStyle = halo_color;
+                ctx.fill();
+            })
+    }
+
+
+    // Mean node styling
+    nodeMean(myGraph,scope,node_rel_size){
+
+        let highlightNodes = [];
+
+        myGraph
+            .nodeRelSize(node_rel_size)
+            .nodeVal(node => scope.meanScale(node.uncertainty_mean))
+            .nodeLabel(node => node.id)
+            .nodeColor(node => scope.color(node.uncertainty_mean))
+            .onNodeClick(node => {
+                console.log(node===highlightNodes[0])
+                console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+            })
+            .onNodeHover(node => {
+                highlightNodes = node ? [node] : []
+
+                // console.log(node)
+                if (node){
+                    // Need to select node with id that is node.cluster
+                    let my_data = scope.reference.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    this.reference.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                }
+                else{
+                    highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    scope.reference.myGraph
+                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        // .nodeColor( ref_node => 'black');
+                }
+
+            })
+            // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+            .nodeCanvasObjectMode(() => 'before')
+            .nodeCanvasObject((node, ctx) => {
+                let NODE_R = 0;
+                let halo_color = null;
+                if (highlightNodes.indexOf(node) !== -1){
+                    NODE_R = 12;
+                    halo_color = '#EA000080'
+                }
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                ctx.fillStyle = halo_color;
+                ctx.fill();
+            })
+
+    }
+
+    // Mean node styling
+    nodeStd(myGraph,scope,node_rel_size){
+
+        let highlightNodes = [];
+
+        myGraph
+            .nodeRelSize(node_rel_size)
+            .nodeVal(node => scope.nodeStdScale(node.uncertainty_std))
+            .nodeLabel(node => node.id)
+            .nodeColor(node => scope.stdColor(node.uncertainty_std))
+            .onNodeClick(node => {
+                console.log(node===highlightNodes[0])
+                console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+            })
+            .onNodeHover(node => {
+                highlightNodes = node ? [node] : []
+
+                // console.log(node)
+                if (node){
+                    // Need to select node with id that is node.cluster
+                    let my_data = scope.reference.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    this.reference.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                }
+                else{
+                    highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    scope.reference.myGraph
+                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        // .nodeColor( ref_node => 'black');
+                }
+
+            })
+            // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+            .nodeCanvasObjectMode(() => 'before')
+            .nodeCanvasObject((node, ctx) => {
+                let NODE_R = 0;
+                let halo_color = null;
+                if (highlightNodes.indexOf(node) !== -1){
+                    NODE_R = 12;
+                    halo_color = '#EA000080'
+                }
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                ctx.fillStyle = halo_color;
+                ctx.fill();
+            })
+
+
+
+    }
+
+
+
+
 
 }
