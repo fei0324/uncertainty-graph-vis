@@ -108,7 +108,7 @@ Promise.all([
                 full_rect.drawGraph(proc_rect);
                 proc_rect.drawGraph(full_rect);
 
-                // detects change on bar and updates data show accordingly
+                // detects change on bar and updates data shown accordingly
                 d3.select('#activeK-bar').on('input', function(d){
                     that.k = k_Bar.activeK;
                     console.log('in script',that.k)

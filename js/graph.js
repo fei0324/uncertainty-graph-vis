@@ -91,6 +91,14 @@ class Graph{
         //         .attr("class","clust-legend")
         //         .attr("transform", "translate(45,60)");
         // }
+
+        // Creating legend selection
+        let legendSVG = d3.select("#legend-SVG");
+            
+        // Creating legend
+        this.clust_legend = legendSVG.append("g")
+            .attr("class","clust-legend")
+            .attr("transform", "translate(45,60)");
         
         this.prepGraph();
     }
@@ -154,13 +162,17 @@ class Graph{
             this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,5]);
             this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,15])
 
-            // Creating legend selection
-            let legendSVG = d3.select("#legend-SVG");
+            // // Creating legend selection
+            // let legendSVG = d3.select("#legend-SVG");
             
-            // Creating legend
-            this.clust_legend = legendSVG.append("g")
-                .attr("class","clust-legend")
-                .attr("transform", "translate(45,60)");
+            // // Creating legend
+            // this.clust_legend = legendSVG.append("g")
+            //     .attr("class","clust-legend")
+            //     .attr("transform", "translate(45,0)");
+
+            //calls legend
+            this.legend(this.clust_legend,this,this.color,'clust');
+
         }
     }
 
@@ -396,8 +408,8 @@ class Graph{
             // allows me to access this scope inside of drop down functions
             let thatNode = this;
             
-            //calls legend
-            this.legend(this.clust_legend,this,this.color,'clust');
+            // //calls legend
+            // this.legend(this.clust_legend,this,this.color,'clust');
             // this.legend(le_legend,this,this.color_le,"le");
 
             let node_rel_size = 4;
@@ -1123,24 +1135,28 @@ class Graph{
         let that = indic;
         const width = 300;
 
+        // Removes everything
+        g.selectAll("image").remove();
+        g.selectAll(".caption").remove();
+        g.selectAll(".tick").remove();
 
         //Sets multiplication factor
         let factor = null;
         let tick_count = 6;
-        
         
         g.append("image")
             .attr("width", width)
             .attr("height", 10)
             .attr("preserveAspectRatio", "none")
             .attr("xlink:href", that.ramp(color.interpolator()).toDataURL());
-      
+        
         g.append("text")
             .attr("class", "caption")
             .attr("y", -10)
             .attr("text-anchor", "start")
             .text((text=="clust") ? 'node mean' : 'edge mean');
-        console.log(color.domain())
+        // console.log(color.domain())
+
         g.call(d3.axisBottom(d3.scaleLinear().domain(color.domain()).range([0,width]))
             .ticks(tick_count)
             // .tickFormat(d => d.toFixed(3))
