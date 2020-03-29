@@ -43,6 +43,12 @@ Promise.all([
         // the relevant data - need to reorganize graph class to do this
         // Think this will solve some of my problems....
 
+    // Current workflow: I make a single graph object for original, then processed graphs
+    // When I choose a new value of k, I feed in the new graph data to the graph object
+    // I then run 'prep' graph to create the scales, and draw graph to draw the graph
+    // This is computationally overwhelming.. need to figure out a better way
+    // Think the most expensive thing is to rerun the graph everytime... Figure out how to work around this.
+
     //originals - rectangles
     // let full_rect_2 = new Graph(files[3],'graph-orig','orig');
     // let full_rect_4 = new Graph(files[4],'graph-orig','orig');
@@ -124,7 +130,6 @@ Promise.all([
                         
                         // full_rect.prepGraph(proc_rect);
                         // proc_rect.prepGraph(full_rect);
-
                         // full_rect.drawGraph(proc_rect);
                         // proc_rect.drawGraph(full_rect);
                         
@@ -166,10 +171,15 @@ Promise.all([
 
 
                     }
+                    // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                     full_rect.prepGraph(proc_rect);
                     proc_rect.prepGraph(full_rect);
-                    full_rect.drawGraph(proc_rect);
-                    proc_rect.drawGraph(full_rect);
+
+                    // Feeding in graph data like this speeds things up really well!
+                    full_rect.myGraph.graphData(full_rect.data)
+                    proc_rect.myGraph.graphData(proc_rect.data)
+                    // full_rect.drawGraph(proc_rect);
+                    // proc_rect.drawGraph(full_rect);
 
 
                 })
@@ -187,7 +197,7 @@ Promise.all([
 
                 // Draws graph and passes in references to other objects
                 // full_graph.drawGraph(small_graph);
-                small_graph.drawGraph(full_rect_2);
+                // small_graph.drawGraph(full_rect_2);
             }
         }
 
