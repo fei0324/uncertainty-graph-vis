@@ -129,7 +129,7 @@ class Graph{
             this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7]);
             this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,5]);
             this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,2.5]);
-            this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range([1,5]);
+            this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range([2,10]);
             this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,15])
 
             // // Creating legend selection
