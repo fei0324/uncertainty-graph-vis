@@ -33,12 +33,14 @@
 /* Setting variables */
 :root{
     /* graph borders */
-    --border-color: rgb(186, 186, 186);
+    --border-color: rgb(243, 243, 243);
     --border-width: thin;
     /* dropdown alignment */
     --button-top: 20%;
     --slider-top: 25%;
     --slider-left: 18%;
+    /* canvas background */
+    --canvas-color: #e3e3e3
 
 }
 
@@ -93,6 +95,7 @@
     border: var(--border-width) solid var(--border-color);
     border-bottom-left-radius: 20px 20px;
     border-top-left-radius: 20px 20px;
+    background-color: var(--canvas-color);
 }
 
 #graph-processed{
@@ -101,6 +104,7 @@
     border: var(--border-width)  solid var(--border-color);
     border-bottom-right-radius: 20px 20px;
     border-top-right-radius: 20px 20px;
+    background-color: var(--canvas-color);
 }
 
 
@@ -146,7 +150,7 @@
 }
 
 .caption{
-    font-size: 20px;
+    font-size: 15px;
     font-weight: lighter;
     fill: grey;
 }

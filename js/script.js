@@ -105,6 +105,10 @@ Promise.all([
                 // Initial k is 2, so draws this
                 // let full_rect = new Graph(files[3],'graph-orig','orig');
                 // let proc_rect = new Graph(files[7],'graph-processed','clust');
+
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                
                 full_rect.drawGraph(proc_rect);
                 proc_rect.drawGraph(full_rect);
 

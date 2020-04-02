@@ -28,16 +28,22 @@ class Graph{
         // Creating legend selection
         let legendSVG = d3.select("#legend-SVG");
             
-        // Creating legend
-        this.clust_legend = legendSVG.append("g")
-            .attr("class","clust-legend")
-            .attr("transform", "translate(45,60)");
+        if (this.type == 'clust'){
+            // Creating legend
+            this.node_legend = legendSVG.append("g")
+                .attr("class","node-legend")
+                .attr("transform", "translate(45,60)");
+
+            this.link_legend = legendSVG.append("g")
+                .attr("class","link-legend")
+                .attr("transform", "translate(45,15)");
+        }
         
-        this.prepGraph();
+        // this.prepGraph();
     }
 
     prepGraph(){
-        // Creating scales
+        // Creating scales and legend
 
         //Scales for sparsification
         if (this.type == 'spars'){
@@ -72,13 +78,30 @@ class Graph{
             // let medMeanN = d3.median(avg_array);
             // console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
 
+            // Different color schemes
+            let viridis = d3.interpolateViridis
+            let inferno = d3.interpolateInferno
+            let plasma =  d3.interpolatePlasma
+            let cool = d3.interpolateCool
+            let warm = d3.interpolateWarm
+
+            let green =  d3.interpolateGreens
+            let purple = d3.interpolatePurples
+            let orange = d3.interpolateOranges
+            let grey = d3.interpolateGreys
+            let blue = d3.interpolateBlues
+
+            let link_color = blue;
+            let node_color = orange;
+        
+
             // NODE
 
             //Color scale for means of node
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-            this.color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_array));
-            this.stdColor = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(std_array));
+            this.color = d3.scaleSequential(node_color).domain(d3.extent(avg_array));
+            this.stdColor = d3.scaleSequential(node_color).domain(d3.extent(std_array));
             // d3.interpolateRgb("orange", "blue")
 
             // linear scale for mean of node
@@ -93,13 +116,14 @@ class Graph{
             let avg_arrayLW = this.data.links.map( d => d.weight );
             let avg_arrayLM = this.data.links.map( d => d.mean );
             let std_arrayL = this.data.links.map( d => d.std );
+            console.log("stdev extent",d3.extent(std_arrayL))
             // let maxMeanLW = d3.max(avg_arrayLW);
             // let minMeanLW = d3.min(avg_arrayLW);
             // let medMeanLW = d3.median(avg_arrayLW)
 
             // Color scale for links
-            this.linkColor = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(avg_arrayLM));
-            this.linkColorStd = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(std_arrayL));
+            this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
+            this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
 
             // Link scales
             this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7]);
@@ -116,8 +140,28 @@ class Graph{
             //     .attr("class","clust-legend")
             //     .attr("transform", "translate(45,0)");
 
-            //calls legend
-            this.legend(this.clust_legend,this,this.color,'clust');
+            //calls legend - need to detect here what options are active in dropdowns and style accordingly
+            let node_active = $('#nodeDrop').find('a.active').attr('id');
+            console.log("node active in prep",node_active)
+            let edge_active = $('#edgeDrop').find('a.active').attr('id');
+            console.log("edge active in prep",edge_active)
+
+            // Node legends
+            if (node_active == 'std'){
+                this.legend(this.node_legend,this,this.stdColor,'node-std');
+            }
+            else{
+                this.legend(this.node_legend,this,this.color,'node');
+            }
+
+            // Link legends
+            if (edge_active == 'stdevO'){
+                this.legend(this.link_legend,this,this.linkColorStd,'link-std');
+            }
+            else{
+                this.legend(this.link_legend,this,this.linkColor,'link');
+            }
+            
 
         }
     }
@@ -284,16 +328,19 @@ class Graph{
                     if (drop_edge == 'mstdev'){
                         console.log('mean + stdev')
                         that.mstdev(thatNode.myGraph,that,node_rel_size);
+                        that.legend(that.node_legend,that,that.color,'node');
                             
                     }
                     else if(drop_edge == 'mean'){
                         console.log('mean')
                         that.nodeMean(thatNode.myGraph,that,node_rel_size)
+                        that.legend(that.node_legend,that,that.color,'node');
             
                     }
                     else if(drop_edge == 'std'){
                         console.log('std')
                         that.nodeStd(thatNode.myGraph,that,node_rel_size)
+                        that.legend(that.node_legend,that,that.stdColor,'node-std');
             
                     }
 
@@ -352,21 +399,25 @@ class Graph{
                 if (drop_edge == 'splineOD'){
                     console.log('spline on demand')
                     that.splineOD(thatNode.myGraph,that);
+                    that.legend(that.link_legend,that,that.linkColor,'link');
                         
                 }
                 else if(drop_edge == 'spline'){
                     console.log('spline')
                     that.spline(thatNode.myGraph,that)
+                    that.legend(that.link_legend,that,that.linkColor,'link');
         
                 }
                 else if(drop_edge =='square'){
                     console.log('square')
                     that.square(thatNode.myGraph,that)
+                    that.legend(that.link_legend,that,that.linkColor,'link');
                     
                 }
                 else if (drop_edge == 'stdevO'){
                     console.log('stdevO')
                     that.stdevO(thatNode.myGraph,that)
+                    that.legend(that.link_legend,that,that.linkColorStd,'link-std');
                     
                 }
 
@@ -451,14 +502,16 @@ class Graph{
         
         g.append("text")
             .attr("class", "caption")
-            .attr("y", -10)
+            .attr("y", -5)
+            .attr("x", 10)
             .attr("text-anchor", "start")
-            .text((text=="clust") ? 'node mean' : 'edge mean');
+            // .text((text=="node") ? 'node mean' : 'edge mean')
+            .text((text=="link-std") ? 'edge std' : (text=="node-std") ? 'node std' : (text=="node") ? 'node mean' : 'edge mean');
         // console.log(color.domain())
 
         g.call(d3.axisBottom(d3.scaleLinear().domain(color.domain()).range([0,width]))
             .ticks(tick_count)
-            // .tickFormat(d => d.toFixed(3))
+            .tickFormat(d => d.toFixed(2))
             // .tickFormat(d => (text=="eg") ? (`${d > 0 ? "" : ""}${Math.abs((d * factor).toFixed(0))}`) : (d.toFixed(0) == 3) ? `${d.toFixed(0)}+`:`${d.toFixed(0)}`)
             .tickSize(13))
           .select(".domain")
@@ -890,7 +943,7 @@ class Graph{
             .linkHoverPrecision(4) //May need to adjust based on network size
             .linkWidth(link => scope.linkStdScale(link.std))
             .linkColor(link => scope.linkColorStd(link.std))
-            .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean)))
+            .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean),link))
             .onLinkHover(() =>console.log() )
             .linkCanvasObjectMode(() => undefined)
             .linkCanvasObject((link, ctx) => {});
