@@ -108,7 +108,7 @@ Promise.all([
 
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
-                
+
                 full_rect.drawGraph(proc_rect);
                 proc_rect.drawGraph(full_rect);
 
@@ -188,8 +188,6 @@ Promise.all([
 
                 })
 
-
-
                 // Think I can do better...
                 
             }
@@ -207,7 +205,39 @@ Promise.all([
 
       })
 
-    
+
+      // Button inversion dropdown - simply changes active class the calls prep graph?
+      $('#invertDrop').on('hide.bs.dropdown', function (e) {
+        // console.log(e)
+        let drop_invert = null;
+        let targetClass = null;
+        if (e.clickEvent){
+            targetClass = $(e.clickEvent.target).attr('class')
+        }
+        if (targetClass == 'dropdown-item'){
+            let target = e.clickEvent.target.id;
+            console.log('target',target)
+            drop_invert = target;
+
+            // changes active highlighting
+            let kids = $('#invertDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            
+        }
+        console.log('drop_edge',drop_invert)
+
+        //Redraws
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+
+        // Feeding in graph data like this speeds things up really well!
+        full_rect.myGraph.graphData(full_rect.data)
+        proc_rect.myGraph.graphData(proc_rect.data)
+
+
+    })
     
 
 

@@ -93,6 +93,29 @@ class Graph{
 
             let link_color = blue;
             let node_color = orange;
+
+            //Node range 
+            let node_range = [1,4];
+
+            // Link ranges
+            let squareRange = [1,2.5]
+            let stdRange = [2,10]
+            let splineRange = [1,15]
+            let meanRange = [1,5]
+            
+            // Check to see if inverted is activated 
+            let invert_active = $('#invertDrop').find('a.active').attr('id');
+            console.log("invert active",invert_active)
+            if (invert_active == 'invert'){
+                //Node range 
+                node_range = [4,1];
+
+                // Link ranges
+                squareRange = [2.5,1]
+                stdRange = [10,2]
+                splineRange = [15,1]
+                meanRange = [5,1]
+            }
         
 
             // NODE
@@ -102,12 +125,10 @@ class Graph{
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
             this.color = d3.scaleSequential(node_color).domain(d3.extent(avg_array));
             this.stdColor = d3.scaleSequential(node_color).domain(d3.extent(std_array));
-            // d3.interpolateRgb("orange", "blue")
 
             // linear scale for mean of node
-            // may need to find way to adjust range automatically based on network size
-            this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range([1,4])
-            this.nodeStdScale = d3.scaleLinear().domain(d3.extent(std_array)).range([1,4])
+            this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range(node_range)
+            this.nodeStdScale = d3.scaleLinear().domain(d3.extent(std_array)).range(node_range)
 
 
             // LINK
@@ -125,12 +146,13 @@ class Graph{
             this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
             this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
 
+
             // Link scales
-            this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,7]);
-            this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,5]);
-            this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,2.5]);
-            this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range([2,10]);
-            this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range([1,15])
+            this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range(stdRange);
+            this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(meanRange);
+            this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(squareRange);
+            this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range(stdRange);
+            this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(splineRange);
 
             // // Creating legend selection
             // let legendSVG = d3.select("#legend-SVG");
@@ -490,8 +512,7 @@ class Graph{
         g.selectAll(".caption").remove();
         g.selectAll(".tick").remove();
 
-        //Sets multiplication factor
-        let factor = null;
+        //Sets tick count
         let tick_count = 6;
         
         g.append("image")

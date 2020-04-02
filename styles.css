@@ -138,13 +138,18 @@
     position: relative;
     top: var(--button-top);
 }
+.invert-btn-group{
+    display: inline-block;
+    position: relative;
+    top: var(--button-top);
+}
 
 /* legend styling */
 
 #legend-SVG{
     display: inline-block;
     position: absolute;
-    left: 74%;
+    left: 73%;
     top: 87%;
     height:120px;
     width:400px;
