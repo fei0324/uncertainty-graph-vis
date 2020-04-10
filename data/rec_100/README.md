@@ -1,3 +1,5 @@
+The dataset is generated from the synthetic rectangular dataset with 1000 uncertainty runs.
+
 **clu_[num_clusters]** is the clustered graph with uncertainty information on both the nodes and the edges.
 
 Node:
