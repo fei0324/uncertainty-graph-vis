@@ -3,9 +3,10 @@ class for the k cluster slider
 */
 class kBar {
 
-	constructor(activeK) {
+	constructor(activeK,range) {
 		
         this.activeK = activeK;
+        this.range = range;
         /** Reference to graph object */
         // this.graph = mapObj; 
 
@@ -44,8 +45,8 @@ class kBar {
             .append('div').classed('slider-wrap', true)
             .append('input').classed('slider', true)
             .attr('type', 'range')
-            .attr('min', 2)
-            .attr('max', 8)
+            .attr('min', this.range[0])
+            .attr('max', this.range[1])
             .attr('step','2')
             .attr('value', this.activeK);
 

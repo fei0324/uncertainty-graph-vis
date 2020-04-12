@@ -22,17 +22,35 @@
 // Loading a bunch of data at once
 Promise.all([
 
-    d3.json('data/ori_rec_100_cluster.json'), //the original dataset with cluster assignment information (100 nodes, 1300 edges)
-    d3.json('data/rec_100_clustered_uncertainty.json'), //the clustered graph dataset with uncertainty mean and uncertainty standard deviation information (20 nodes)
-    d3.json('data/small_net.json'),
-    d3.json('data/rec_100/original_2.json'),
-    d3.json('data/rec_100/original_4.json'),
-    d3.json('data/rec_100/original_6.json'),
-    d3.json('data/rec_100/original_8.json'),
-    d3.json('data/rec_100/clu_2.json'),
-    d3.json('data/rec_100/clu_4.json'),
-    d3.json('data/rec_100/clu_6.json'),
-    d3.json('data/rec_100/clu_8.json')
+    // d3.json('data/ori_rec_100_cluster.json'), //the original dataset with cluster assignment information (100 nodes, 1300 edges)
+    // d3.json('data/rec_100_clustered_uncertainty.json'), //the clustered graph dataset with uncertainty mean and uncertainty standard deviation information (20 nodes)
+    // d3.json('data/small_net.json'),
+    // rectangle orignals
+    d3.json('data/rec_100/original_2.json'), // 0
+    d3.json('data/rec_100/original_4.json'), // 1 
+    d3.json('data/rec_100/original_6.json'), // 2 
+    d3.json('data/rec_100/original_8.json'),  // 3
+    d3.json('data/rec_100/original_10.json'), // 4 
+    d3.json('data/rec_100/original_12.json'), // 5
+    // rectangle clusters
+    d3.json('data/rec_100/clu_2.json'), // 6 
+    d3.json('data/rec_100/clu_4.json'), // 7
+    d3.json('data/rec_100/clu_6.json'), // 8
+    d3.json('data/rec_100/clu_8.json'), // 9 
+    d3.json('data/rec_100/clu_10.json'), // 10 
+    d3.json('data/rec_100/clu_12.json'), // 11 
+    // c elegans originals
+    d3.json('data/celegans_453/original_10.json'), // 12 
+    d3.json('data/celegans_453/original_11.json'), // 13 
+    d3.json('data/celegans_453/original_12.json'), // 14 
+    d3.json('data/celegans_453/original_13.json'), // 15
+    d3.json('data/celegans_453/original_14.json'), // 16
+    // c elegans clusters
+    d3.json('data/celegans_453/clu_10.json'), // 17
+    d3.json('data/celegans_453/clu_11.json'), // 18
+    d3.json('data/celegans_453/clu_12.json'), // 19
+    d3.json('data/celegans_453/clu_13.json'), // 20
+    d3.json('data/celegans_453/clu_14.json') // 21
 
     
 ]).then(function(files){
@@ -54,26 +72,28 @@ Promise.all([
     // let full_rect_4 = new Graph(files[4],'graph-orig','orig');
     // let full_rect_6 = new Graph(files[5],'graph-orig','orig');
     // let full_rect_8 = new Graph(files[6],'graph-orig','orig');
-    let full_rect_2 = files[3];
-    let full_rect_4 = files[4];
-    let full_rect_6 = files[5];
-    let full_rect_8 = files[6];
+    let full_rect_2 = files[0];
+    let full_rect_4 = files[1];
+    let full_rect_6 = files[2];
+    let full_rect_8 = files[3];
+    let full_rect_10 = files[4];
+    let full_rect_12 = files[5];
     
     //rectangles
     // let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
     // let proc_rect_4 = new Graph(files[8],'graph-processed','clust');
     // let proc_rect_6 = new Graph(files[9],'graph-processed','clust');
     // let proc_rect_8 = new Graph(files[10],'graph-processed','clust');
-    let proc_rect_2 = files[7];
-    let proc_rect_4 = files[8];
-    let proc_rect_6 = files[9];
-    let proc_rect_8 = files[10];
+    let proc_rect_2 = files[6];
+    let proc_rect_4 = files[7];
+    let proc_rect_6 = files[8];
+    let proc_rect_8 = files[9];
+    let proc_rect_10 = files[10];
+    let proc_rect_12 = files[11];
 
-    //small net
-    // let small_graph = new Graph(files[2],'graph-processed','spars');
 
-    let full_rect = new Graph(files[3],'graph-orig','orig');
-    let proc_rect = new Graph(files[7],'graph-processed','clust');
+    let full_rect = new Graph(full_rect_2,'graph-orig','orig');
+    let proc_rect = new Graph(proc_rect_2,'graph-processed','clust');
 
 
     // Data dropdown
@@ -97,10 +117,11 @@ Promise.all([
 
                 //Sets default k
                 this.k = 2
+                let range = [2,12]
                 let that = this;
 
                 //Creates k bar
-                let k_Bar = new kBar(this.k);
+                let k_Bar = new kBar(this.k,range);
 
                 // Initial k is 2, so draws this
                 // let full_rect = new Graph(files[3],'graph-orig','orig');
@@ -175,6 +196,24 @@ Promise.all([
 
 
                     }
+                    else if(k_Bar.activeK == 10){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_8.drawGraph(proc_rect_8);
+                        // proc_rect_8.drawGraph(full_rect_8);
+                        full_rect.data = full_rect_10;
+                        proc_rect.data = proc_rect_10;
+
+
+                    }
+                    else if(k_Bar.activeK == 12){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_8.drawGraph(proc_rect_8);
+                        // proc_rect_8.drawGraph(full_rect_8);
+                        full_rect.data = full_rect_12;
+                        proc_rect.data = proc_rect_12;
+
+
+                    }
                     // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                     full_rect.prepGraph(proc_rect);
                     proc_rect.prepGraph(full_rect);
@@ -195,11 +234,18 @@ Promise.all([
                 console.log('coming soon')
 
             }
-            else if(target =='small'){
+            else if(target =='c. elegans'){
+                // Loads c-elegans data set
+                    
 
-                // Draws graph and passes in references to other objects
-                // full_graph.drawGraph(small_graph);
-                // small_graph.drawGraph(full_rect_2);
+
+
+
+
+
+
+
+
             }
         }
 
