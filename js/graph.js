@@ -483,12 +483,25 @@ class Graph{
                         // console.log("selected node",da_node)
                         this.reference.myGraph
                             .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.reference.color(ref_node.uncertainty_mean));
+
+                        // activating panel
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(this.infoboxRenderOrig(node));
+
                     }
                     else{
                         highlightNodes = []
                         // Need to reset da_node's color to what it was and ena
                         this.reference.myGraph
                             .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
+
+                        // deactivating panel
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+
                     }
                     
                 })
@@ -573,10 +586,23 @@ class Graph{
             .linkHoverPrecision(4) //May need to adjust based on network size
             // Sets link hover behavoir based on type
             .onLinkHover(link => {
+                let that = this;
                 highlightLink = link;
                 // TODO: Add node highlighting
                 highlightNodes = link ? [link.source, link.target] : [];
                 //event()
+                if (link){
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRenderLink(link));
+                }
+                else{
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
+               
             })
             .onLinkClick(link => {
                 //console.log(link)
@@ -718,6 +744,21 @@ class Graph{
             .linkHoverPrecision(4) //May need to adjust based on network size
             .linkWidth(link => scope.linkMeanScale(link.mean))
             .linkColor(link => scope.linkColor(link.mean))
+            .onLinkHover(link => {
+                let that = this;
+                if (link){
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRenderLink(link));
+                }
+                else{
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
+
+            })
             .linkCanvasObjectMode(() => 'replace')
             .linkCanvasObject((link, ctx) => {
                 // This draws the links' uncertainty viz
@@ -845,6 +886,21 @@ class Graph{
             .linkHoverPrecision(4) //May need to adjust based on network size
             .linkWidth(link => scope.linkMeanScale(link.mean))
             .linkColor(link => scope.linkColor(link.mean))
+            .onLinkHover(link => {
+                let that = this;
+                if (link){
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRenderLink(link));
+                }
+                else{
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
+
+            })
             .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean)))
             .linkCanvasObjectMode(() => 'replace')
             .linkCanvasObject((link, ctx) => {
@@ -967,17 +1023,17 @@ class Graph{
 
     // Stdeviation only function that returns stdev only edge vis
     // Input is myGraph object and scope variable
-    stdevO(myGraph,scope){
-        myGraph
-            .linkHoverPrecision(4) //May need to adjust based on network size
-            .linkWidth(link => scope.linkStdScale(link.std))
-            .linkColor(link => scope.linkColorStd(link.std))
-            .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean),link))
-            .onLinkHover(() =>console.log() )
-            .linkCanvasObjectMode(() => undefined)
-            .linkCanvasObject((link, ctx) => {});
+    // stdevO(myGraph,scope){
+    //     myGraph
+    //         .linkHoverPrecision(4) //May need to adjust based on network size
+    //         .linkWidth(link => scope.linkStdScale(link.std))
+    //         .linkColor(link => scope.linkColorStd(link.std))
+    //         .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean),link))
+    //         .onLinkHover(() =>console.log() )
+    //         .linkCanvasObjectMode(() => undefined)
+    //         .linkCanvasObject((link, ctx) => {});
            
-    }
+    // }
 
 
     // NODE FUNCTIONS
@@ -1061,6 +1117,7 @@ class Graph{
     nodeMean(myGraph,scope,node_rel_size){
 
         let highlightNodes = [];
+        let that = this;
 
         myGraph
             .nodeRelSize(node_rel_size)
@@ -1083,6 +1140,11 @@ class Graph{
                     // console.log("selected node",da_node)
                     this.reference.myGraph
                         .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
                 }
                 else{
                     highlightNodes = []
@@ -1090,6 +1152,9 @@ class Graph{
                     scope.reference.myGraph
                         .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
                         // .nodeColor( ref_node => 'black');
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
                 }
 
             })
@@ -1110,60 +1175,60 @@ class Graph{
 
     }
 
-    // Mean node styling
-    nodeStd(myGraph,scope,node_rel_size){
+    // // Std node styling
+    // nodeStd(myGraph,scope,node_rel_size){
 
-        let highlightNodes = [];
+    //     let highlightNodes = [];
 
-        myGraph
-            .nodeRelSize(node_rel_size)
-            .nodeVal(node => scope.nodeStdScale(node.uncertainty_std))
-            .nodeLabel(node => node.id)
-            .nodeColor(node => scope.stdColor(node.uncertainty_std))
-            .onNodeClick(node => {
-                console.log(node===highlightNodes[0])
-                console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
-            })
-            .onNodeHover(node => {
-                highlightNodes = node ? [node] : []
+    //     myGraph
+    //         .nodeRelSize(node_rel_size)
+    //         .nodeVal(node => scope.nodeStdScale(node.uncertainty_std))
+    //         .nodeLabel(node => node.id)
+    //         .nodeColor(node => scope.stdColor(node.uncertainty_std))
+    //         .onNodeClick(node => {
+    //             console.log(node===highlightNodes[0])
+    //             console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+    //         })
+    //         .onNodeHover(node => {
+    //             highlightNodes = node ? [node] : []
 
-                // console.log(node)
-                if (node){
-                    // Need to select node with id that is node.cluster
-                    let my_data = scope.reference.myGraph.graphData();
-                    // console.log(my_data.nodes)
-                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
-                    // console.log("selected node",da_node)
-                    this.reference.myGraph
-                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
-                }
-                else{
-                    highlightNodes = []
-                    // Need to reset da_node's color to what it was
-                    scope.reference.myGraph
-                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
-                        // .nodeColor( ref_node => 'black');
-                }
+    //             // console.log(node)
+    //             if (node){
+    //                 // Need to select node with id that is node.cluster
+    //                 let my_data = scope.reference.myGraph.graphData();
+    //                 // console.log(my_data.nodes)
+    //                 let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+    //                 // console.log("selected node",da_node)
+    //                 this.reference.myGraph
+    //                     .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+    //             }
+    //             else{
+    //                 highlightNodes = []
+    //                 // Need to reset da_node's color to what it was
+    //                 scope.reference.myGraph
+    //                     .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+    //                     // .nodeColor( ref_node => 'black');
+    //             }
 
-            })
-            // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
-            .nodeCanvasObjectMode(() => 'before')
-            .nodeCanvasObject((node, ctx) => {
-                let NODE_R = 0;
-                let halo_color = null;
-                if (highlightNodes.indexOf(node) !== -1){
-                    NODE_R = 12;
-                    halo_color = '#EA000080'
-                }
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
-                ctx.fillStyle = halo_color;
-                ctx.fill();
-            })
+    //         })
+    //         // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+    //         .nodeCanvasObjectMode(() => 'before')
+    //         .nodeCanvasObject((node, ctx) => {
+    //             let NODE_R = 0;
+    //             let halo_color = null;
+    //             if (highlightNodes.indexOf(node) !== -1){
+    //                 NODE_R = 12;
+    //                 halo_color = '#EA000080'
+    //             }
+    //             ctx.beginPath();
+    //             ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+    //             ctx.fillStyle = halo_color;
+    //             ctx.fill();
+    //         })
 
 
 
-    }
+    // }
 
     /**
      * Returns info for infobox
@@ -1178,6 +1243,48 @@ class Graph{
         text = text + "<p> weight: " + node_data.weight + "</p>";
         text = text + "<p> mean: " + node_data.uncertainty_mean.toFixed(4) + "</p>";
         text = text + "<p> stdev: " + node_data.uncertainty_std.toFixed(4) + "</p>";
+        // //Adds in relevant data
+        // text = text + `<p style="color:${((data.r_eg > data.d_eg) ? '#DB090C' : '#2F88ED')}"> EG: ` + ((data.r_eg > data.d_eg) ? (data.r_eg*100).toFixed(2)+'%' : (data.d_eg*100).toFixed(2)+'%');
+        // text = text + "<p> LE: "+ data.le.toFixed(2)+"</p>";
+        // //console.log(text)
+        return text;
+
+    }
+
+    /**
+     * Returns info for infobox
+     * @param data
+     * @returns {string}
+     */
+    infoboxRenderLink(link) {
+        console.log(link)
+        let that = this;
+        let text = null;
+        text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
+        text = text + "<p> weight: " + link.weight + "</p>";
+        text = text + "<p> mean: " + link.mean.toFixed(4) + "</p>";
+        text = text + "<p> stdev: " + link.std.toFixed(4) + "</p>";
+        // //Adds in relevant data
+        // text = text + `<p style="color:${((data.r_eg > data.d_eg) ? '#DB090C' : '#2F88ED')}"> EG: ` + ((data.r_eg > data.d_eg) ? (data.r_eg*100).toFixed(2)+'%' : (data.d_eg*100).toFixed(2)+'%');
+        // text = text + "<p> LE: "+ data.le.toFixed(2)+"</p>";
+        // //console.log(text)
+        return text;
+
+    }
+
+    /**
+     * Returns info for infobox
+     * @param data
+     * @returns {string}
+     */
+    infoboxRenderOrig(node) {
+        console.log(node)
+        let that = this;
+        let text = null;
+        text = "<h3>" + node.id + "</h3>";
+        text = text + "<p> clusters to: " + node.cluster + "</p>";
+        // text = text + "<p> mean: " + link.mean.toFixed(4) + "</p>";
+        // text = text + "<p> stdev: " + link.std.toFixed(4) + "</p>";
         // //Adds in relevant data
         // text = text + `<p style="color:${((data.r_eg > data.d_eg) ? '#DB090C' : '#2F88ED')}"> EG: ` + ((data.r_eg > data.d_eg) ? (data.r_eg*100).toFixed(2)+'%' : (data.d_eg*100).toFixed(2)+'%');
         // text = text + "<p> LE: "+ data.le.toFixed(2)+"</p>";
