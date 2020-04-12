@@ -14,12 +14,12 @@
     padding-left:  10px; */
     
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /*800px*/
+    grid-template-columns:  250px 0.45fr 0.55fr;  /*800px*/
     grid-template-rows: 120px 60px 600px;
     grid-template-areas: 
-            "title selections"
-            "info info  "
-            "orig processed ";
+            "title title selections"
+            "info info info  "
+            "panel orig processed ";
     /* width: 100vw;
     height: 100vh; */
 
@@ -74,7 +74,7 @@
     /* text-align: left; */
     position: relative;
     top: 25%;
-    left: 10%;
+    left: 32%;
     color: gray;
 }
 
@@ -84,9 +84,17 @@
     /* text-align: center; */
     position: relative;
     top: 25%;
-    left: 73%;
+    left: 66%;
     color: gray;
 }
+
+/* #panel-label{
+    display: inline-block;
+    position: relative;
+    top: 25%;
+    left: 5%;
+    color: gray;
+} */
 
 /* Graph styling */
 #graph-orig{
@@ -105,6 +113,60 @@
     border-bottom-right-radius: 20px 20px;
     border-top-right-radius: 20px 20px;
     background-color: var(--canvas-color);
+}
+
+/* meta data panel styling */
+
+#data-panel{
+    position: relative;
+    grid-area: panel;
+    /* border: var(--border-width)  solid var(--border-color);
+    border-bottom-right-radius: 20px 20px;
+    border-top-right-radius: 20px 20px;
+    background-color: var(--canvas-color); */
+}
+
+
+#infobox-graph-orig {
+    position: relative;
+    text-align: center;
+    /* left: 995px;
+    top: -1360px;
+    width: 550px;
+    height: 500px;
+    padding: 10px; */
+    background: rgba(255, 255, 255, 0);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+#infobox-graph-processed {
+    position: relative;
+    text-align: center;
+    left: 0px;
+    top: 10px;
+    width: 250px;
+    height: 600px;
+    padding: 10px;
+    background: rgba(221, 109, 109, 0);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+#infobox-graph-processed h3{
+    margin: auto;
+    font-size: 60px;
+    font-weight:bolder;
+    color: #484b5a;
+}
+
+#infobox-graph-processed p{
+    margin: auto;
+    font-size: 25px;
+    font-weight: lighter;
+    color: #81849a;
 }
 
 

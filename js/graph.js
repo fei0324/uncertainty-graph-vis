@@ -38,6 +38,14 @@ class Graph{
                 .attr("class","link-legend")
                 .attr("transform", "translate(45,15)");
         }
+
+        //make tooltip div - more detailed info to the side -state in selected view
+        let infobox = d3.select("#data-panel")
+            .append("div")
+            .attr("id", `infobox-${this.location}`)
+            .style("opacity", 0);
+            // .style("left","995px") 
+            // .style("top", "580px");
         
         // this.prepGraph();
     }
@@ -102,7 +110,7 @@ class Graph{
             let stdRange = [2,10]
             let splineRange = [1,15]
             let meanRange = [1,5]
-            
+
             // Check to see if inverted is activated 
             let invert_active = $('#invertDrop').find('a.active').attr('id');
             console.log("invert active",invert_active)
@@ -989,7 +997,8 @@ class Graph{
             })
             .onNodeHover(node => {
                 highlightNodes = node ? [node] : []
-
+                
+                let that = this
                 // console.log(node)
                 if (node){
                     // Need to select node with id that is node.cluster
@@ -999,6 +1008,11 @@ class Graph{
                     // console.log("selected node",da_node)
                     this.reference.myGraph
                         .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                    
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
                 }
                 else{
                     highlightNodes = []
@@ -1006,6 +1020,9 @@ class Graph{
                     scope.reference.myGraph
                         .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
                         // .nodeColor( ref_node => 'black');
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
                 }
 
             })
@@ -1145,6 +1162,27 @@ class Graph{
             })
 
 
+
+    }
+
+    /**
+     * Returns info for infobox
+     * @param data
+     * @returns {string}
+     */
+    infoboxRender(node_data,ref_data) {
+        console.log(node_data,ref_data)
+        let that = this;
+        let text = null;
+        text = "<h3>" + node_data.id + "</h3>";
+        text = text + "<p> weight: " + node_data.weight + "</p>";
+        text = text + "<p> mean: " + node_data.uncertainty_mean.toFixed(4) + "</p>";
+        text = text + "<p> stdev: " + node_data.uncertainty_std.toFixed(4) + "</p>";
+        // //Adds in relevant data
+        // text = text + `<p style="color:${((data.r_eg > data.d_eg) ? '#DB090C' : '#2F88ED')}"> EG: ` + ((data.r_eg > data.d_eg) ? (data.r_eg*100).toFixed(2)+'%' : (data.d_eg*100).toFixed(2)+'%');
+        // text = text + "<p> LE: "+ data.le.toFixed(2)+"</p>";
+        // //console.log(text)
+        return text;
 
     }
 
