@@ -35,7 +35,20 @@ class kBar {
 	*/
 	drawkBar() {
 
-		let that = this;
+        let that = this;
+        let step = null;
+        // determines correct step
+        if (this.range[0] == 2){
+            // this is rectange, so step is 2 
+            step = 2
+        }
+        else{
+            // c elegans, step = 1
+            step = 1
+        }
+
+
+
 
         //Slider to change to the datasets with correct k 
 
@@ -47,7 +60,7 @@ class kBar {
             .attr('type', 'range')
             .attr('min', this.range[0])
             .attr('max', this.range[1])
-            .attr('step','2')
+            .attr('step',step)
             .attr('value', this.activeK);
 
         // d3.select("#activeTime-bar").append("div");

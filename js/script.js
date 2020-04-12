@@ -79,7 +79,7 @@ Promise.all([
     let full_rect_10 = files[4];
     let full_rect_12 = files[5];
     
-    //rectangles
+    //cluster - rectangles
     // let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
     // let proc_rect_4 = new Graph(files[8],'graph-processed','clust');
     // let proc_rect_6 = new Graph(files[9],'graph-processed','clust');
@@ -92,8 +92,23 @@ Promise.all([
     let proc_rect_12 = files[11];
 
 
-    let full_rect = new Graph(full_rect_2,'graph-orig','orig');
-    let proc_rect = new Graph(proc_rect_2,'graph-processed','clust');
+    //originals - celeegans
+    let full_cele_10 = files[12];
+    let full_cele_11 = files[13];
+    let full_cele_12 = files[14];
+    let full_cele_13 = files[15];
+    let full_cele_14 = files[16];
+    // cluster - celegans
+    let proc_cele_10 = files[17];
+    let proc_cele_11= files[18];
+    let proc_cele_12 = files[19];
+    let proc_cele_13 = files[20];
+    let proc_cele_14 = files[21];
+
+
+    // Makes graph objects once, passing in no data to begin with
+    let full_rect = new Graph(null,'graph-orig','orig');
+    let proc_rect = new Graph(null,'graph-processed','clust');
 
 
     // Data dropdown
@@ -120,12 +135,17 @@ Promise.all([
                 let range = [2,12]
                 let that = this;
 
+                // deletes k bar if one exists  
+                d3.select(".slider-wrap").remove();
+
                 //Creates k bar
                 let k_Bar = new kBar(this.k,range);
 
                 // Initial k is 2, so draws this
                 // let full_rect = new Graph(files[3],'graph-orig','orig');
                 // let proc_rect = new Graph(files[7],'graph-processed','clust');
+                full_rect.data = full_rect_2;
+                proc_rect.data = proc_rect_2;
 
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
@@ -227,23 +247,103 @@ Promise.all([
 
                 })
 
-                // Think I can do better...
                 
             }
             else if(target =='lesmis'){
                 console.log('coming soon')
 
             }
-            else if(target =='c. elegans'){
+            else if(target =='cele'){
                 // Loads c-elegans data set
+                //Sets default k
+                this.k = 10
+                let range = [10,14]
+                let that = this;
+
+                // deletes k bar if one exists  
+                d3.select(".slider-wrap").remove();
+
+                //Creates k bar
+                let k_Bar = new kBar(this.k,range);
+
+                full_rect.data = full_cele_10;
+                proc_rect.data = proc_cele_10;
+
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(full_rect);
+
+                
+                // detects change on bar and updates data shown accordingly
+                d3.select('#activeK-bar').on('input', function(d){
+                    that.k = k_Bar.activeK;
+                    console.log('in script',that.k)
                     
+                    
+                    if(k_Bar.activeK == 10){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_2.data = files[3]
+                        // proc_rect_2.data = files[7]
+                        // let full_rect = new Graph(files[3],'graph-orig','orig');
+                        // let proc_rect = new Graph(files[7],'graph-processed','clust');
 
 
+                        // full_rect.drawGraph(proc_rect);
+                        // proc_rect.drawGraph(full_rect);
+
+                        full_rect.data = full_cele_10;
+                        proc_rect.data = proc_cele_10;
+                        
+                
+                    }
+                    else if(k_Bar.activeK == 11){
+                        // Draws graph and passes in references to other objects
+                        // let full_rect = new Graph(files[4],'graph-orig','orig');
+                        // let proc_rect = new Graph(files[8],'graph-processed','clust');
+
+                        full_rect.data = full_cele_11;
+                        proc_rect.data = proc_cele_11;
+                    }
+                    else if(k_Bar.activeK == 12){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_6.drawGraph(proc_rect_6);
+                        // proc_rect_6.drawGraph(full_rect_6);
+                        full_rect.data = full_cele_12;
+                        proc_rect.data = proc_cele_12;
+
+                    }
+                    else if(k_Bar.activeK == 13){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_8.drawGraph(proc_rect_8);
+                        // proc_rect_8.drawGraph(full_rect_8);
+                        full_rect.data = full_cele_13;
+                        proc_rect.data = proc_cele_13;
 
 
+                    }
+                    else if(k_Bar.activeK == 14){
+                        // Draws graph and passes in references to other objects
+                        // full_rect_8.drawGraph(proc_rect_8);
+                        // proc_rect_8.drawGraph(full_rect_8);
+                        full_rect.data = full_cele_14;
+                        proc_rect.data = proc_cele_14;
 
 
+                    }
+                    // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                    full_rect.prepGraph(proc_rect);
+                    proc_rect.prepGraph(full_rect);
 
+                    // Feeding in graph data like this speeds things up really well!
+                    full_rect.myGraph.graphData(full_rect.data)
+                    proc_rect.myGraph.graphData(proc_rect.data)
+                    // full_rect.drawGraph(proc_rect);
+                    // proc_rect.drawGraph(full_rect);
+
+
+                })
 
 
             }
