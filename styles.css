@@ -14,12 +14,12 @@
     padding-left:  10px; */
     
     display: grid;
-    grid-template-columns:  250px 0.45fr 0.55fr;  /*800px*/
+    grid-template-columns:  125px 125px repeat(3,1fr) repeat(3,1fr);  /*800px*/
     grid-template-rows: 120px 60px 600px;
     grid-template-areas: 
-            "title title selections"
-            "info info info  "
-            "panel orig processed ";
+            "title title title title selections selections selections selections"
+            "info info info info info info info info "
+            "panel panel orig orig orig processed processed processed ";
     /* width: 100vw;
     height: 100vh; */
 
@@ -58,6 +58,7 @@
 /* selections div styling */
 .selections{
     grid-area: selections;
+    padding-left: 100px;
 }
 
 /* INFO div styling */
