@@ -15,12 +15,12 @@
     
     display: grid;
     grid-template-columns: repeat(3,1fr) repeat(3,1fr) 1fr 0.5fr;  /*800px*/
-    grid-template-rows: 120px 60px 1fr 0.5fr;
+    grid-template-rows: 120px 60px 1fr minmax(230px,auto);
     grid-template-areas: 
             "title title title title selections selections selections selections"
             "info info info info info info info info "
             "orig orig orig processed processed processed panel panel"
-            "table table table table table table table table";
+            "heatmap heatmap heatmap heatmap heatmap heatmap heatmap heatmap";
     width: 100vw;
     height: 99vh;
 
@@ -116,6 +116,28 @@
     border-top-right-radius: 20px 20px;
     background-color: var(--canvas-color);
 }
+
+/* heatmap styling */
+#heatmap{
+    position: relative;
+    grid-area: heatmap;
+    /* background-color: rgba(116, 255, 236, 0.363); */
+    /* border: var(--border-width)  solid var(--border-color);
+    border-bottom-right-radius: 20px 20px;
+    border-top-right-radius: 20px 20px;
+    background-color: var(--canvas-color); */
+}
+
+
+.background{
+    fill: rgb(255, 255, 255);
+}
+
+/* .row{
+    fill: rebeccapurple;
+} */
+
+
 
 /* meta data panel styling */
 

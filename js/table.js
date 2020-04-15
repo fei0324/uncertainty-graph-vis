@@ -42,8 +42,115 @@ class Table {
 
     }
 
-    createTable(){
-        /** Creates table **/
+    createHeatMap(){
+        /** Creates heat map **/
+        let data = this.data
+        console.log("heatmap data",data)
+
+        //Setting width and height of canvas object
+        let LOCATION = document.getElementById('heatmap')
+
+        // SVG width and height
+        let boundingRect = LOCATION.getBoundingClientRect()
+        let WIDTH = boundingRect.width;
+        let HEIGHT = boundingRect.height;
+        let margin = {top: 10, right: 10, bottom: 10, left: 10};
+        // For matrix 
+        let width = WIDTH - margin.left - margin.right
+        let height = HEIGHT - margin.top - margin.bottom
+
+        let svg = d3.select("#heatmap").append("svg")
+                .attr("width", WIDTH)
+                .attr("height", HEIGHT)
+            .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("rect")
+            .attr("class", "background")
+            .attr("width", width)
+            .attr("height", height);
+
+        
+        // Data scales and such
+        let y = d3.scaleBand().range([0, height]).domain(d3.range(data.length));
+        let x = d3.scaleBand().range([0, width]).domain(d3.range(data.columns.length));
+        // let x = d3.scale.ordinal().rangeBands([0,  WIDTH - margin.left - margin.right]),
+            // z = d3.scale.linear().domain([0, 4]).clamp(true),
+            // c = d3.scale.category10().domain(d3.range(10));
+
+        let data_values = this.data.map( d => Object.values(d) );
+        let mat_values = new Array()
+        for (let elem of data_values){
+            mat_values = mat_values.concat(elem)
+        }
+        
+        let color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(mat_values));
+        
+        // Make rows
+        let row = svg.selectAll(".row")
+            .data(data)
+        .enter().append("g")
+            .attr("class", "row")
+            .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; });
+
+
+        // Make columns
+        let column = svg.selectAll(".column")
+            .data(data.columns)
+        .enter().append("g")
+            .attr("class", "column")
+            .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
+
+        // let squares = row.selectAll(".cell");
+        // // Need to have better data structure here....
+        // let count = 0;
+        // for (const elem of data){
+
+        //     console.log("for loop",elem)
+        //     squares
+        //         .data(elem)
+        //     .enter().append("rect")
+        //         .attr("class", "cell")
+        //         .attr("y", function(d,i) {return y(i)})
+        //         .attr("x", x(count))
+        //         .attr("width", x.bandwidth())
+        //         .attr("height", y.bandwidth());
+        //         // .style("fill-opacity", d => opacityScale(d.z)).style("fill", d => {
+        //         //     return nodes[d.x].group == nodes[d.y].group ? colorScale(nodes[d.x].group) : "grey";
+        //         // });
+        //         // .on("mouseover", mouseover)
+        //         // .on("mouseout", mouseout);
+        //     count++;
+        //     console.log(count)
+        // }
+
+        let squares = row.selectAll(".cell")
+            .data(function(d,i){return Object.values(d);})
+        .enter().append("rect")
+            .attr("class", "cell")
+            // .attr("y", function(d,i) {return y(i)})
+            .attr("x", (d,i) => x(i))
+            .attr("width", x.bandwidth())
+            .attr("height", y.bandwidth()-2)
+            .style("fill", d => color(d));
+            // .on("mouseover", mouseover)
+            // .on("mouseout", mouseout);
+
+
+        function mouseover(p) {
+            d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
+            d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
+            }
+        
+        function mouseout() {
+            d3.selectAll("text").classed("active", false);
+            }
+
+
+       
+
+
+        
 
         // //Updating scale domains
 
@@ -192,8 +299,21 @@ class Table {
 
     }
 
-    updateTable(){
-        /** Updates the table with data **/
+    removeHeatMap(){
+        /** Clears existing heat map**/
+        
+        d3.select("#heatmap").select("svg").remove()
+
+        
+        
+
+
+
+
+
+
+
+
 
     //     //this.data = this.data.slice(0,25);
     //     //Create table rows

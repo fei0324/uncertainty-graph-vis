@@ -50,10 +50,19 @@ Promise.all([
     d3.json('data/celegans_453/clu_11.json'), // 18
     d3.json('data/celegans_453/clu_12.json'), // 19
     d3.json('data/celegans_453/clu_13.json'), // 20
-    d3.json('data/celegans_453/clu_14.json') // 21
+    d3.json('data/celegans_453/clu_14.json'), // 21
+
+    // uncertainty matrix data
+    d3.csv('data/rec_100/uncertainty_mat_2.csv'), //22
+    d3.csv('data/rec_100/uncertainty_mat_4.csv'), //23
+    d3.csv('data/rec_100/uncertainty_mat_6.csv'), //24
+    d3.csv('data/rec_100/uncertainty_mat_8.csv'), //25
+    d3.csv('data/rec_100/uncertainty_mat_10.csv'), //26
+    d3.csv('data/rec_100/uncertainty_mat_12.csv') //27
 
     
 ]).then(function(files){
+
 
     //Instantiates graph objects with data
 
@@ -68,10 +77,6 @@ Promise.all([
     // Think the most expensive thing is to rerun the graph everytime... Figure out how to work around this.
 
     //originals - rectangles
-    // let full_rect_2 = new Graph(files[3],'graph-orig','orig');
-    // let full_rect_4 = new Graph(files[4],'graph-orig','orig');
-    // let full_rect_6 = new Graph(files[5],'graph-orig','orig');
-    // let full_rect_8 = new Graph(files[6],'graph-orig','orig');
     let full_rect_2 = files[0];
     let full_rect_4 = files[1];
     let full_rect_6 = files[2];
@@ -80,16 +85,21 @@ Promise.all([
     let full_rect_12 = files[5];
     
     //cluster - rectangles
-    // let proc_rect_2 = new Graph(files[7],'graph-processed','clust');
-    // let proc_rect_4 = new Graph(files[8],'graph-processed','clust');
-    // let proc_rect_6 = new Graph(files[9],'graph-processed','clust');
-    // let proc_rect_8 = new Graph(files[10],'graph-processed','clust');
     let proc_rect_2 = files[6];
     let proc_rect_4 = files[7];
     let proc_rect_6 = files[8];
     let proc_rect_8 = files[9];
     let proc_rect_10 = files[10];
     let proc_rect_12 = files[11];
+
+    // heatmaps  - rectangles
+    let hm_rect_2 = files[22];
+    let hm_rect_4 = files[23];
+    let hm_rect_6 = files[24];
+    let hm_rect_8 = files[25];
+    let hm_rect_10 = files[26];
+    let hm_rect_12 = files[27];
+
 
 
     //originals - celeegans
@@ -109,6 +119,12 @@ Promise.all([
     // Makes graph objects once, passing in no data to begin with
     let full_rect = new Graph(null,'graph-orig','orig');
     let proc_rect = new Graph(null,'graph-processed','clust');
+
+    // Makes heatmap
+    let heatMap = new Table(null)
+    // heatMap.createHeatMap()
+    // heatMap.data = files[22]
+    // heatMap.updateHeatMap()
 
 
     // Data dropdown
@@ -153,6 +169,9 @@ Promise.all([
                 full_rect.drawGraph(proc_rect);
                 proc_rect.drawGraph(full_rect);
 
+                heatMap.data = hm_rect_2
+                heatMap.createHeatMap()
+
                 // detects change on bar and updates data shown accordingly
                 d3.select('#activeK-bar').on('input', function(d){
                     that.k = k_Bar.activeK;
@@ -161,43 +180,26 @@ Promise.all([
                     
                     if(k_Bar.activeK == 2){
                         // Draws graph and passes in references to other objects
-                        // full_rect_2.data = files[3]
-                        // proc_rect_2.data = files[7]
-                        // let full_rect = new Graph(files[3],'graph-orig','orig');
-                        // let proc_rect = new Graph(files[7],'graph-processed','clust');
-
-
-                        // full_rect.drawGraph(proc_rect);
-                        // proc_rect.drawGraph(full_rect);
 
                         full_rect.data = full_rect_2;
                         proc_rect.data = proc_rect_2;
-                        
-                        // full_rect.prepGraph(proc_rect);
-                        // proc_rect.prepGraph(full_rect);
-                        // full_rect.drawGraph(proc_rect);
-                        // proc_rect.drawGraph(full_rect);
+
+                        heatMap.data = hm_rect_2
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+                       
                         
                 
                     }
                     else if(k_Bar.activeK == 4){
                         // Draws graph and passes in references to other objects
-                        // let full_rect = new Graph(files[4],'graph-orig','orig');
-                        // let proc_rect = new Graph(files[8],'graph-processed','clust');
-
                         full_rect.data = full_rect_4;
                         proc_rect.data = proc_rect_4;
-                        // full_rect.prepGraph(proc_rect);
-                        // proc_rect.prepGraph(full_rect);
-                        // full_rect.drawGraph(proc_rect);
-                        // proc_rect.drawGraph(full_rect);
+                        
+                        heatMap.data = hm_rect_4
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
-                        // // Passes in new data
-                        // full_rect_2.data = files[4]
-                        // proc_rect_2.data = files[8]
-                        // // Then redraws the graph
-                        // full_rect_2.drawGraph(proc_rect_2);
-                        // proc_rect_2.drawGraph(full_rect_2);
                     }
                     else if(k_Bar.activeK == 6){
                         // Draws graph and passes in references to other objects
@@ -206,32 +208,40 @@ Promise.all([
                         full_rect.data = full_rect_6;
                         proc_rect.data = proc_rect_6;
 
+                        heatMap.data = hm_rect_6
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+
                     }
                     else if(k_Bar.activeK == 8){
                         // Draws graph and passes in references to other objects
-                        // full_rect_8.drawGraph(proc_rect_8);
-                        // proc_rect_8.drawGraph(full_rect_8);
                         full_rect.data = full_rect_8;
                         proc_rect.data = proc_rect_8;
 
+                        heatMap.data = hm_rect_8
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
                     }
                     else if(k_Bar.activeK == 10){
                         // Draws graph and passes in references to other objects
-                        // full_rect_8.drawGraph(proc_rect_8);
-                        // proc_rect_8.drawGraph(full_rect_8);
                         full_rect.data = full_rect_10;
                         proc_rect.data = proc_rect_10;
+
+                        heatMap.data = hm_rect_10
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
 
                     }
                     else if(k_Bar.activeK == 12){
                         // Draws graph and passes in references to other objects
-                        // full_rect_8.drawGraph(proc_rect_8);
-                        // proc_rect_8.drawGraph(full_rect_8);
                         full_rect.data = full_rect_12;
                         proc_rect.data = proc_rect_12;
 
+                        heatMap.data = hm_rect_12
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
                     }
                     // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
@@ -241,8 +251,6 @@ Promise.all([
                     // Feeding in graph data like this speeds things up really well!
                     full_rect.myGraph.graphData(full_rect.data)
                     proc_rect.myGraph.graphData(proc_rect.data)
-                    // full_rect.drawGraph(proc_rect);
-                    // proc_rect.drawGraph(full_rect);
 
 
                 })
