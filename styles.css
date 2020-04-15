@@ -8,20 +8,21 @@
 
     margin-right: auto; 
     margin-left:  auto; 
-    max-width: 2800px; /*2400*/
+    max-width: 3200px;
 
     /* padding-right: 10px; 
     padding-left:  10px; */
     
     display: grid;
-    grid-template-columns:  125px 125px repeat(3,1fr) repeat(3,1fr);  /*800px*/
-    grid-template-rows: 120px 60px 600px;
+    grid-template-columns: repeat(3,1fr) repeat(3,1fr) 1fr 0.5fr;  /*800px*/
+    grid-template-rows: 120px 60px 1fr 0.5fr;
     grid-template-areas: 
             "title title title title selections selections selections selections"
             "info info info info info info info info "
-            "panel panel orig orig orig processed processed processed ";
-    /* width: 100vw;
-    height: 100vh; */
+            "orig orig orig processed processed processed panel panel"
+            "table table table table table table table table";
+    width: 100vw;
+    height: 99vh;
 
 }
 
@@ -58,13 +59,13 @@
 /* selections div styling */
 .selections{
     grid-area: selections;
-    padding-left: 100px;
+    padding-left: 0px;
 }
 
 /* INFO div styling */
 .info{
     grid-area: info;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 100;
     
 }
@@ -75,7 +76,7 @@
     /* text-align: left; */
     position: relative;
     top: 25%;
-    left: 32%;
+    left: 15%;
     color: gray;
 }
 
@@ -85,7 +86,7 @@
     /* text-align: center; */
     position: relative;
     top: 25%;
-    left: 66%;
+    left: 40%;
     color: gray;
 }
 
@@ -146,9 +147,9 @@
     position: relative;
     text-align: center;
     left: 0px;
-    top: 10px;
-    width: 250px;
-    height: 600px;
+    top: 15%;
+    width: 100%;
+    height: auto;
     padding: 10px;
     background: rgba(221, 109, 109, 0);
     stroke: rgb(180, 180, 180);
@@ -212,10 +213,11 @@
 #legend-SVG{
     display: inline-block;
     position: absolute;
-    left: 73%;
-    top: 87%;
+    left: 0%;
+    top: 60%;
     height:120px;
-    width:400px;
+    width:100%;
+    padding-left:10px;
 }
 
 .caption{

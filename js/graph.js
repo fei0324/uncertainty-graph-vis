@@ -32,11 +32,11 @@ class Graph{
             // Creating legend
             this.node_legend = legendSVG.append("g")
                 .attr("class","node-legend")
-                .attr("transform", "translate(45,60)");
+                .attr("transform", "translate(0,60)");
 
             this.link_legend = legendSVG.append("g")
                 .attr("class","link-legend")
-                .attr("transform", "translate(45,15)");
+                .attr("transform", "translate(0,15)");
         }
 
         //make tooltip div - more detailed info to the side -state in selected view
@@ -526,7 +526,14 @@ class Graph{
     // Legend Function from: https://observablehq.com/@mbostock/population-change-2017-2018
     legend (g,indic,color,text){
         let that = indic;
-        const width = 300;
+
+        //Setting width and height of canvas object
+        let LOCATION = document.getElementById('legend-SVG')
+
+        // Canvas width and height
+        let padding = 20;
+        let boundingRect = LOCATION.getBoundingClientRect()
+        const width = boundingRect.width - padding;
 
         // Removes everything
         g.selectAll("image").remove();
@@ -534,7 +541,9 @@ class Graph{
         g.selectAll(".tick").remove();
 
         //Sets tick count
-        let tick_count = 6;
+        let tick_count = 4;
+
+        g.attr('width',width)
         
         g.append("image")
             .attr("width", width)
