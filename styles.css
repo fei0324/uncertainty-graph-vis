@@ -15,7 +15,7 @@
     
     display: grid;
     grid-template-columns: repeat(3,1fr) repeat(3,1fr) 1fr 0.5fr;  /*800px*/
-    grid-template-rows: 120px 60px 1fr minmax(230px,auto);
+    grid-template-rows: 120px 20px 1fr minmax(230px,auto);
     grid-template-areas: 
             "title title title title selections selections selections selections"
             "info info info info info info info info "
@@ -75,8 +75,8 @@
     /* width: 100px; */
     /* text-align: left; */
     position: relative;
-    top: 25%;
-    left: 15%;
+    top: -100%;
+    left: 5%;
     color: gray;
 }
 
@@ -85,8 +85,8 @@
     /* width: 100px; */
     /* text-align: center; */
     position: relative;
-    top: 25%;
-    left: 40%;
+    top: -100%;
+    left: 37%;
     color: gray;
 }
 
@@ -103,8 +103,8 @@
     position: relative;
     grid-area: orig;
     border: var(--border-width) solid var(--border-color);
-    border-bottom-left-radius: 20px 20px;
-    border-top-left-radius: 20px 20px;
+    border-bottom-left-radius: 10px 10px;
+    border-top-left-radius: 10px 10px;
     background-color: var(--canvas-color);
 }
 
@@ -112,8 +112,8 @@
     position: relative;
     grid-area: processed;
     border: var(--border-width)  solid var(--border-color);
-    border-bottom-right-radius: 20px 20px;
-    border-top-right-radius: 20px 20px;
+    border-bottom-right-radius: 10px 10px;
+    border-top-right-radius: 10px 10px;
     background-color: var(--canvas-color);
 }
 
@@ -131,6 +131,11 @@
 
 .background{
     fill: rgb(255, 255, 255);
+}
+
+.row-back{
+    fill: rgba(223, 69, 69, 0.76);
+    opacity: 0;
 }
 
 /* .row{
@@ -152,13 +157,13 @@
 
 
 #infobox-graph-orig {
-    position: relative;
+    position: absolute;
     text-align: center;
-    /* left: 995px;
-    top: -1360px;
-    width: 550px;
-    height: 500px;
-    padding: 10px; */
+    left: 0px;
+    top: 50%;
+    width: 100%;
+    height: auto;
+    padding: 10px;
     background: rgba(255, 255, 255, 0);
     stroke: rgb(180, 180, 180);
     border-radius: 10px;
@@ -166,10 +171,10 @@
 }
 
 #infobox-graph-processed {
-    position: relative;
+    position: absolute;
     text-align: center;
     left: 0px;
-    top: 15%;
+    top: 10%;
     width: 100%;
     height: auto;
     padding: 10px;
@@ -187,6 +192,20 @@
 }
 
 #infobox-graph-processed p{
+    margin: auto;
+    font-size: 25px;
+    font-weight: lighter;
+    color: #81849a;
+}
+
+#infobox-graph-orig h3{
+    margin: auto;
+    font-size: 30px;
+    font-weight:bolder;
+    color: #484b5a;
+}
+
+#infobox-graph-orig p{
     margin: auto;
     font-size: 25px;
     font-weight: lighter;

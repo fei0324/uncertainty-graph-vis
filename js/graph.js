@@ -490,6 +490,11 @@ class Graph{
                             .style("opacity", 1);
                         d3.select(`#infobox-graph-processed`).html(this.infoboxRenderOrig(node));
 
+                        //Row highlighting
+                        d3.selectAll(`#row-${node.cluster}`).transition()
+                            .duration(100)
+                            .style('opacity',1);
+
                     }
                     else{
                         highlightNodes = []
@@ -501,6 +506,11 @@ class Graph{
                         d3.select(`#infobox-graph-processed`).transition()
                             .duration(200)
                             .style("opacity", 0);
+
+                        //Row de-highlighting
+                        d3.selectAll(`.row-back`).transition()
+                            .duration(100)
+                            .style('opacity',0);
 
                     }
                     
@@ -520,6 +530,7 @@ class Graph{
                 .linkColor(() => '#878787')
                 .zoom(1);
         }
+
 
     }
 
@@ -1078,6 +1089,11 @@ class Graph{
                         .duration(200)
                         .style("opacity", 1);
                     d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
+
+                    //Row highlighting
+                    d3.select(`#row-${node.id}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
                 }
                 else{
                     highlightNodes = []
@@ -1088,6 +1104,11 @@ class Graph{
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 0);
+
+                    //Row de-highlighting
+                    d3.selectAll(`.row-back`).transition()
+                        .duration(100)
+                        .style('opacity',0);
                 }
 
             })
@@ -1150,10 +1171,17 @@ class Graph{
                     this.reference.myGraph
                         .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
 
+                    // INFOBOX 
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 1);
                     d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
+
+                    //Row highlighting
+                    d3.select(`#row-${node.id}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
+
                 }
                 else{
                     highlightNodes = []
@@ -1164,6 +1192,11 @@ class Graph{
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 0);
+
+                    //Row de-highlighting
+                    d3.selectAll(`.row-back`).transition()
+                        .duration(100)
+                        .style('opacity',0);
                 }
 
             })
@@ -1245,7 +1278,7 @@ class Graph{
      * @returns {string}
      */
     infoboxRender(node_data,ref_data) {
-        console.log(node_data,ref_data)
+        // console.log(node_data,ref_data)
         let that = this;
         let text = null;
         text = "<h3>" + node_data.id + "</h3>";
@@ -1266,17 +1299,13 @@ class Graph{
      * @returns {string}
      */
     infoboxRenderLink(link) {
-        console.log(link)
+        // console.log(link)
         let that = this;
         let text = null;
         text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
         text = text + "<p> weight: " + link.weight + "</p>";
         text = text + "<p> mean: " + link.mean.toFixed(4) + "</p>";
         text = text + "<p> stdev: " + link.std.toFixed(4) + "</p>";
-        // //Adds in relevant data
-        // text = text + `<p style="color:${((data.r_eg > data.d_eg) ? '#DB090C' : '#2F88ED')}"> EG: ` + ((data.r_eg > data.d_eg) ? (data.r_eg*100).toFixed(2)+'%' : (data.d_eg*100).toFixed(2)+'%');
-        // text = text + "<p> LE: "+ data.le.toFixed(2)+"</p>";
-        // //console.log(text)
         return text;
 
     }
@@ -1287,17 +1316,11 @@ class Graph{
      * @returns {string}
      */
     infoboxRenderOrig(node) {
-        console.log(node)
+        // console.log(node)
         let that = this;
         let text = null;
         text = "<h3>" + node.id + "</h3>";
         text = text + "<p> clusters to: " + node.cluster + "</p>";
-        // text = text + "<p> mean: " + link.mean.toFixed(4) + "</p>";
-        // text = text + "<p> stdev: " + link.std.toFixed(4) + "</p>";
-        // //Adds in relevant data
-        // text = text + `<p style="color:${((data.r_eg > data.d_eg) ? '#DB090C' : '#2F88ED')}"> EG: ` + ((data.r_eg > data.d_eg) ? (data.r_eg*100).toFixed(2)+'%' : (data.d_eg*100).toFixed(2)+'%');
-        // text = text + "<p> LE: "+ data.le.toFixed(2)+"</p>";
-        // //console.log(text)
         return text;
 
     }
