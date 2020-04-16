@@ -185,6 +185,7 @@ Promise.all([
                 heatMap.data = hm_rect_2;
                 heatMap.full_ref = full_rect;
                 heatMap.proc_ref = proc_rect;
+                heatMap.removeHeatMap()
                 heatMap.createHeatMap();
 
                 // detects change on bar and updates data shown accordingly
@@ -305,6 +306,7 @@ Promise.all([
                 heatMap.data = hm_cele_10;
                 heatMap.full_ref = full_rect;
                 heatMap.proc_ref = proc_rect;
+                heatMap.removeHeatMap()
                 heatMap.createHeatMap();
 
                 
