@@ -3,9 +3,13 @@ class Table {
     /**
      * Creates a Table Object
      */
-    constructor(data){
+    constructor(data,full_ref,proc_ref){
         // Set data variable
         this.data = data;
+
+        //Setting references
+        this.full_ref = full_ref;
+        this.proc_ref = proc_ref;
 
         //Margins for table cells- the bostock way
         this.margin = {top: 0, right: 10, bottom: 0, left: 10};
@@ -83,15 +87,19 @@ class Table {
         for (let elem of data_values){
             mat_values = mat_values.concat(elem)
         }
-        
-        let color = d3.scaleSequential(d3.interpolateViridis).domain(d3.extent(mat_values));
+        let orange = d3.interpolateOranges
+        let viridis = d3.interpolateViridis
+        let color = d3.scaleSequential(orange).domain(d3.extent(mat_values));
         
         // Make rows
         let row = svg.selectAll(".row")
             .data(data)
         .enter().append("g")
             .attr("class", "row")
-            .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; });
+            .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; })
+            .on("mouseover", (d,i) => mouseoverRow(d,i))
+            .on("mouseout", (d,i) => mouseoutRow(d,i));
+
 
 
         // Make columns
@@ -132,19 +140,59 @@ class Table {
             .attr("x", (d,i) => x(i))
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth()-2)
-            .style("fill", d => color(d));
-            // .on("mouseover", mouseover)
+            .style("fill", d => color(d))
+            .on("mouseover", mouseoverCell);
             // .on("mouseout", mouseout);
 
+        let that = this;
 
-        function mouseover(p) {
-            d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
-            d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
+        function mouseoverRow(r,i){
+            console.log("in row",i)
+            console.log(that.proc_ref)
+
+
+            // PROCESSED HIGHLIGHTING
+            // Need to select node with id that is node.cluster
+            let my_data = that.proc_ref.myGraph.graphData();
+            // console.log(my_data.nodes)
+            let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
+            // console.log("selected node",da_node)
+            that.proc_ref.myGraph
+                .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+
+            // FULL HIGHLIGHTING
+            // Need to select node with id that is node.cluster
+            let my_full_data = that.full_ref.myGraph.graphData();
+            let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
+            that.full_ref.myGraph
+                .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+
+        }
+
+        function mouseoutRow(r,i) {
+
+            // PROCESSED DE-HIGHLIGHTING
+            that.proc_ref.myGraph
+                .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+
+            // FULL DE- HIGHLIGHTING
+            let highlightNodes = []
+                // Need to reset da_node's color to what it was
+                that.full_ref.myGraph
+                    .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+            
+        }
+
+        function mouseoverCell(p) {
+            // console.log(p)
+            // console.log(that.proc_ref)
+            // d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
+            // d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
             }
         
-        function mouseout() {
-            d3.selectAll("text").classed("active", false);
-            }
+        
 
 
        

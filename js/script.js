@@ -121,7 +121,7 @@ Promise.all([
     let proc_rect = new Graph(null,'graph-processed','clust');
 
     // Makes heatmap
-    let heatMap = new Table(null)
+    let heatMap = new Table(null,full_rect,proc_rect)
     // heatMap.createHeatMap()
     // heatMap.data = files[22]
     // heatMap.updateHeatMap()
@@ -169,8 +169,10 @@ Promise.all([
                 full_rect.drawGraph(proc_rect);
                 proc_rect.drawGraph(full_rect);
 
-                heatMap.data = hm_rect_2
-                heatMap.createHeatMap()
+                heatMap.data = hm_rect_2;
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                heatMap.createHeatMap();
 
                 // detects change on bar and updates data shown accordingly
                 d3.select('#activeK-bar').on('input', function(d){
@@ -247,6 +249,10 @@ Promise.all([
                     // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                     full_rect.prepGraph(proc_rect);
                     proc_rect.prepGraph(full_rect);
+
+                    // Pass references to heatmap as well
+                    heatMap.full_ref = full_rect;
+                    heatMap.proc_ref = proc_rect;
 
                     // Feeding in graph data like this speeds things up really well!
                     full_rect.myGraph.graphData(full_rect.data)
