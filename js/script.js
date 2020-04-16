@@ -52,13 +52,20 @@ Promise.all([
     d3.json('data/celegans_453/clu_13.json'), // 20
     d3.json('data/celegans_453/clu_14.json'), // 21
 
-    // uncertainty matrix data
+    // uncertainty matrix data - rectangle
     d3.csv('data/rec_100/uncertainty_mat_2.csv'), //22
     d3.csv('data/rec_100/uncertainty_mat_4.csv'), //23
     d3.csv('data/rec_100/uncertainty_mat_6.csv'), //24
     d3.csv('data/rec_100/uncertainty_mat_8.csv'), //25
     d3.csv('data/rec_100/uncertainty_mat_10.csv'), //26
-    d3.csv('data/rec_100/uncertainty_mat_12.csv') //27
+    d3.csv('data/rec_100/uncertainty_mat_12.csv'), //27
+
+    //uncertainty matrix data - c. elegans
+    d3.csv('data/celegans_453/uncertainty_mat_10.csv'), //28
+    d3.csv('data/celegans_453/uncertainty_mat_11.csv'), //29
+    d3.csv('data/celegans_453/uncertainty_mat_12.csv'), //30
+    d3.csv('data/celegans_453/uncertainty_mat_13.csv'), //31
+    d3.csv('data/celegans_453/uncertainty_mat_14.csv') //32
 
     
 ]).then(function(files){
@@ -114,6 +121,12 @@ Promise.all([
     let proc_cele_12 = files[19];
     let proc_cele_13 = files[20];
     let proc_cele_14 = files[21];
+    // heatmap - celegans
+    let hm_cele_10 = files[28];
+    let hm_cele_11= files[29];
+    let hm_cele_12 = files[30];
+    let hm_cele_13 = files[31];
+    let hm_cele_14 = files[32];
 
 
     // Makes graph objects once, passing in no data to begin with
@@ -289,6 +302,11 @@ Promise.all([
                 full_rect.drawGraph(proc_rect);
                 proc_rect.drawGraph(full_rect);
 
+                heatMap.data = hm_cele_10;
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                heatMap.createHeatMap();
+
                 
                 // detects change on bar and updates data shown accordingly
                 d3.select('#activeK-bar').on('input', function(d){
@@ -298,51 +316,56 @@ Promise.all([
                     
                     if(k_Bar.activeK == 10){
                         // Draws graph and passes in references to other objects
-                        // full_rect_2.data = files[3]
-                        // proc_rect_2.data = files[7]
-                        // let full_rect = new Graph(files[3],'graph-orig','orig');
-                        // let proc_rect = new Graph(files[7],'graph-processed','clust');
-
-
-                        // full_rect.drawGraph(proc_rect);
-                        // proc_rect.drawGraph(full_rect);
 
                         full_rect.data = full_cele_10;
                         proc_rect.data = proc_cele_10;
+
+                        heatMap.data = hm_cele_10
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
                         
                 
                     }
                     else if(k_Bar.activeK == 11){
                         // Draws graph and passes in references to other objects
-                        // let full_rect = new Graph(files[4],'graph-orig','orig');
-                        // let proc_rect = new Graph(files[8],'graph-processed','clust');
 
                         full_rect.data = full_cele_11;
                         proc_rect.data = proc_cele_11;
+
+                        heatMap.data = hm_cele_11
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
                     }
                     else if(k_Bar.activeK == 12){
                         // Draws graph and passes in references to other objects
-                        // full_rect_6.drawGraph(proc_rect_6);
-                        // proc_rect_6.drawGraph(full_rect_6);
                         full_rect.data = full_cele_12;
                         proc_rect.data = proc_cele_12;
+
+                        heatMap.data = hm_cele_12
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
                     }
                     else if(k_Bar.activeK == 13){
                         // Draws graph and passes in references to other objects
-                        // full_rect_8.drawGraph(proc_rect_8);
-                        // proc_rect_8.drawGraph(full_rect_8);
+
                         full_rect.data = full_cele_13;
                         proc_rect.data = proc_cele_13;
+
+                        heatMap.data = hm_cele_13
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
 
                     }
                     else if(k_Bar.activeK == 14){
                         // Draws graph and passes in references to other objects
-                        // full_rect_8.drawGraph(proc_rect_8);
-                        // proc_rect_8.drawGraph(full_rect_8);
                         full_rect.data = full_cele_14;
                         proc_rect.data = proc_cele_14;
+
+                        heatMap.data = hm_cele_14
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
 
 
                     }
@@ -350,11 +373,15 @@ Promise.all([
                     full_rect.prepGraph(proc_rect);
                     proc_rect.prepGraph(full_rect);
 
+                    // Pass references to heatmap as well
+                    heatMap.full_ref = full_rect;
+                    heatMap.proc_ref = proc_rect;
+
                     // Feeding in graph data like this speeds things up really well!
                     full_rect.myGraph.graphData(full_rect.data)
                     proc_rect.myGraph.graphData(proc_rect.data)
-                    // full_rect.drawGraph(proc_rect);
-                    // proc_rect.drawGraph(full_rect);
+
+
 
 
                 })
