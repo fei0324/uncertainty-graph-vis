@@ -65,7 +65,33 @@ Promise.all([
     d3.csv('data/celegans_453/uncertainty_mat_11.csv'), //29
     d3.csv('data/celegans_453/uncertainty_mat_12.csv'), //30
     d3.csv('data/celegans_453/uncertainty_mat_13.csv'), //31
-    d3.csv('data/celegans_453/uncertainty_mat_14.csv') //32
+    d3.csv('data/celegans_453/uncertainty_mat_14.csv'), //32
+
+
+    //les mis originals
+    d3.json('data/lesmis_77/original_9.json'), //33
+    d3.json('data/lesmis_77/original_10.json'), //34
+    d3.json('data/lesmis_77/original_11.json'), //35
+    d3.json('data/lesmis_77/original_12.json'), //36
+    d3.json('data/lesmis_77/original_13.json'), //37
+    d3.json('data/lesmis_77/original_14.json'), //38
+
+    //les mis processed
+    d3.json('data/lesmis_77/clu_9.json'), //39
+    d3.json('data/lesmis_77/clu_10.json'), //40
+    d3.json('data/lesmis_77/clu_11.json'), //41
+    d3.json('data/lesmis_77/clu_12.json'), //42
+    d3.json('data/lesmis_77/clu_13.json'), //43
+    d3.json('data/lesmis_77/clu_14.json'), //44
+
+    //uncertainty matrix data - les mis
+    d3.csv('data/lesmis_77/uncertainty_mat_9.csv'), //45
+    d3.csv('data/lesmis_77/uncertainty_mat_10.csv'), //46
+    d3.csv('data/lesmis_77/uncertainty_mat_11.csv'), //47
+    d3.csv('data/lesmis_77/uncertainty_mat_12.csv'), //48
+    d3.csv('data/lesmis_77/uncertainty_mat_13.csv'), //49
+    d3.csv('data/lesmis_77/uncertainty_mat_14.csv') //50
+
 
     
 ]).then(function(files){
@@ -127,6 +153,29 @@ Promise.all([
     let hm_cele_12 = files[30];
     let hm_cele_13 = files[31];
     let hm_cele_14 = files[32];
+
+
+    //originals - lesmis
+    let full_mis_9 = files[33];
+    let full_mis_10 = files[34];
+    let full_mis_11 = files[35];
+    let full_mis_12 = files[36];
+    let full_mis_13 = files[37];
+    let full_mis_14 = files[38];
+    // cluster - lesmis
+    let proc_mis_9 = files[39];
+    let proc_mis_10 = files[40];
+    let proc_mis_11 = files[41];
+    let proc_mis_12 = files[42];
+    let proc_mis_13 = files[43];
+    let proc_mis_14 = files[44];
+    // heatmap - lesmis
+    let hm_mis_9 = files[45];
+    let hm_mis_10 = files[46];
+    let hm_mis_11 = files[47];
+    let hm_mis_12 = files[48];
+    let hm_mis_13 = files[49];
+    let hm_mis_14 = files[50];
 
 
     // Makes graph objects once, passing in no data to begin with
@@ -278,7 +327,123 @@ Promise.all([
                 
             }
             else if(target =='lesmis'){
-                console.log('coming soon')
+
+                // Loads lesmis data set
+                //Sets default k
+                this.k = 9
+                let range = [9,14]
+                let that = this;
+
+                // deletes k bar if one exists  
+                d3.select(".slider-wrap").remove();
+
+                //Creates k bar
+                let k_Bar = new kBar(this.k,range);
+
+                full_rect.data = full_mis_9;
+                proc_rect.data = proc_mis_9;
+
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(full_rect);
+
+                heatMap.data = hm_mis_9;
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                heatMap.removeHeatMap()
+                heatMap.createHeatMap();
+
+                
+                // detects change on bar and updates data shown accordingly
+                d3.select('#activeK-bar').on('input', function(d){
+                    that.k = k_Bar.activeK;
+                    console.log('in script',that.k)
+                    
+                    if(k_Bar.activeK == 9){
+                        // Draws graph and passes in references to other objects
+
+                        full_rect.data = full_mis_9;
+                        proc_rect.data = proc_mis_9;
+
+                        heatMap.data = hm_mis_9
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+                        
+                
+                    }
+                    else if(k_Bar.activeK == 10){
+                        // Draws graph and passes in references to other objects
+
+                        full_rect.data = full_mis_10;
+                        proc_rect.data = proc_mis_10;
+
+                        heatMap.data = hm_mis_10
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+                        
+                
+                    }
+                    else if(k_Bar.activeK == 11){
+                        // Draws graph and passes in references to other objects
+
+                        full_rect.data = full_mis_11;
+                        proc_rect.data = proc_mis_11;
+
+                        heatMap.data = hm_mis_11
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+                    }
+                    else if(k_Bar.activeK == 12){
+                        // Draws graph and passes in references to other objects
+                        full_rect.data = full_mis_12;
+                        proc_rect.data = proc_mis_12;
+
+                        heatMap.data = hm_mis_12
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+
+                    }
+                    else if(k_Bar.activeK == 13){
+                        // Draws graph and passes in references to other objects
+
+                        full_rect.data = full_mis_13;
+                        proc_rect.data = proc_mis_13;
+
+                        heatMap.data = hm_mis_13
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+
+
+                    }
+                    else if(k_Bar.activeK == 14){
+                        // Draws graph and passes in references to other objects
+                        full_rect.data = full_mis_14;
+                        proc_rect.data = proc_mis_14;
+
+                        heatMap.data = hm_mis_14
+                        heatMap.removeHeatMap()
+                        heatMap.createHeatMap()
+
+
+                    }
+                    // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                    full_rect.prepGraph(proc_rect);
+                    proc_rect.prepGraph(full_rect);
+
+                    // Pass references to heatmap as well
+                    heatMap.full_ref = full_rect;
+                    heatMap.proc_ref = proc_rect;
+
+                    // Feeding in graph data like this speeds things up really well!
+                    full_rect.myGraph.graphData(full_rect.data)
+                    proc_rect.myGraph.graphData(proc_rect.data)
+
+
+
+
+                })
 
             }
             else if(target =='cele'){
