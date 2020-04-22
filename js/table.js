@@ -100,37 +100,16 @@ class Table {
             .on("mouseover", (d,i) => mouseoverRow(d,i))
             .on("mouseout", (d,i) => mouseoutRow(d,i));
 
+        row.append('rect')
+            .attr('class','row-back')
+            .attr('id',(d,i) => `row-${i}`)
+            .attr('width',WIDTH)
+            .attr('height',y.bandwidth()+5)
+            .attr('rx','10px')
+            .attr('ry','10px')
+            .attr("transform", function(d, i) { return "translate(-10,"+ -3.5 + ")"; });
+            
 
-
-        // Make columns
-        let column = svg.selectAll(".column")
-            .data(data.columns)
-        .enter().append("g")
-            .attr("class", "column")
-            .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
-
-        // let squares = row.selectAll(".cell");
-        // // Need to have better data structure here....
-        // let count = 0;
-        // for (const elem of data){
-
-        //     console.log("for loop",elem)
-        //     squares
-        //         .data(elem)
-        //     .enter().append("rect")
-        //         .attr("class", "cell")
-        //         .attr("y", function(d,i) {return y(i)})
-        //         .attr("x", x(count))
-        //         .attr("width", x.bandwidth())
-        //         .attr("height", y.bandwidth());
-        //         // .style("fill-opacity", d => opacityScale(d.z)).style("fill", d => {
-        //         //     return nodes[d.x].group == nodes[d.y].group ? colorScale(nodes[d.x].group) : "grey";
-        //         // });
-        //         // .on("mouseover", mouseover)
-        //         // .on("mouseout", mouseout);
-        //     count++;
-        //     console.log(count)
-        // }
 
         let squares = row.selectAll(".cell")
             .data(function(d,i){return Object.values(d);})
@@ -141,14 +120,14 @@ class Table {
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth()-2)
             .style("fill", d => color(d))
-            .on("mouseover", mouseoverCell);
-            // .on("mouseout", mouseout);
+            .on("mouseover", (d,i) => mouseoverCell(d,i))
+            .on("mouseout", mouseoutCell);
 
         let that = this;
 
         function mouseoverRow(r,i){
-            console.log("in row",i)
-            console.log(that.proc_ref)
+            // console.log("in row",i)
+            // console.log(that.proc_ref)
 
 
             // PROCESSED HIGHLIGHTING
@@ -167,6 +146,18 @@ class Table {
             that.full_ref.myGraph
                 .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
 
+            // INFOBOX
+            d3.select(`#infobox-graph-processed`).transition()
+                .duration(200)
+                .style("opacity", 1);
+            d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
+
+
+            //Row highlighting
+            d3.select(`#row-${i}`).transition()
+                .duration(100)
+                .style('opacity',1);
+
 
         }
 
@@ -178,172 +169,44 @@ class Table {
 
             // FULL DE- HIGHLIGHTING
             let highlightNodes = []
-                // Need to reset da_node's color to what it was
-                that.full_ref.myGraph
-                    .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+            // Need to reset da_node's color to what it was
+            that.full_ref.myGraph
+                .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+            //INFOBOX 
+            d3.select(`#infobox-graph-processed`).transition()
+                .duration(200)
+                .style("opacity", 0);
+
+            //Row de-highlighting
+            d3.select(`#row-${i}`).transition()
+                .duration(100)
+                .style('opacity',0);
 
             
         }
 
-        function mouseoverCell(p) {
-            // console.log(p)
-            // console.log(that.proc_ref)
-            // d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
-            // d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
+        function mouseoverCell(c,i) {
+            // console.log(c,i)
+
+            // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
+            // INFOBOX
+            d3.select(`#infobox-graph-orig`).transition()
+                .duration(200)
+                .style("opacity", 1);
+            d3.select(`#infobox-graph-orig`).html(that.infoboxRender(c,i));
+
+            }
+
+        function mouseoutCell() {
+            
+            //INFOBOX 
+            d3.select(`#infobox-graph-orig`).transition()
+                .duration(200)
+                .style("opacity", 0);
+
             }
         
-        
-
-
-       
-
-
-        
-
-        // //Updating scale domains
-
-        // //Finding domain of rect color - might need to tweak this
-        // let nCat = this.data.map((d) => {
-        //     return d.category
-        // });
-        // //console.log("nCat: ",nCat);
-
-        // //Function that gives only the distinct elements in an array
-        // const unique = (value, index, self) => {
-        //     return self.indexOf(value) === index
-        // };
-        // this.uniqueCats = nCat.filter(unique);
-        // //console.log("unique categories: ",uniqueCats);
-
-        // //Setting domains
-        // //want frequency from 0 to 100
-        // this.freqScale = this.freqScale.domain([0,1]);
-        // //setting from -100 to 100
-        // this.percAxScale = this.percAxScale.domain([-100,100]);
-        // this.percScale = this.percScale.domain([0,100]);
-        // //Color scale for frequency rect based on different categories
-        // this.rectScale = d3.scaleOrdinal(d3.schemeSet3);
-
-        // // Create the axes
-
-        // //Frequency
-        // const freqAxisGroup = d3.select("#freqHeader").append('svg')
-        //     .attr("width", this.width+this.margin.right+this.margin.left)
-        //     .attr("height",this.height)
-        //     .attr("transform","translate(0,18)")
-        //     .append('g')
-        //     .classed("axis",true)
-        //     .attr("id","f-axis")
-        //     .attr('transform', `translate(${this.margin.left}, 20)`);
-
-        // let fAxis = d3.axisTop(this.freqScale).ticks(3);
-
-        // d3.select("#f-axis")
-        //     .call(fAxis);
-
-        // //Percentages
-        // const percAxisGroup = d3.select("#percHeader").append('svg')
-        //     .attr("width", this.width+this.margin.right+this.margin.left)
-        //     .attr("height",this.height)
-        //     .attr("transform","translate(0,18)")
-        //     .append('g')
-        //     .classed("axis",true)
-        //     .attr("id","p-axis")
-        //     .attr('transform', `translate(${this.margin.left}, 20)`);
-
-        // let formatter = d3.format("0"); //Function to remove negative signs
-        // let pAxis = d3.axisTop(this.percAxScale)
-        //     .ticks(5)
-        //     .tickFormat(function (d){
-        //         if (d<0) d = -d;
-        //         return formatter(d);
-        //     }); //Formats tick values
-
-        // d3.select("#p-axis")
-        //     .call(pAxis);
-
-        // //Sorts along table headers
-
-        // // Binding headers column data to pre-existing html headers
-        // let headers = d3.select("thead").select("tr").selectAll("div")
-        //     .data(this.tableHeaders);
-        // //console.log("headers selection: ",headers);
-
-        // //set onclick event with sorted functions
-        // //Why does this work??
-        // headers
-        //     .on("click", (d, i) => {
-
-        //         //phrases
-        //         if (i == 0) {
-        //             if (d.sorted === false) {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return a.phrase > b.phrase ? -1 : 1;
-        //                 });
-        //                 //console.log(newData);
-        //                 d.sorted = true;
-        //                 this.updateTable(newData);
-        //             } else {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return a.phrase < b.phrase ? -1 : 1;
-        //                 });
-        //                 d.sorted = false;
-        //                 this.updateTable(newData);
-        //             }
-        //         }
-
-        //         //frequency
-        //         if (i == 1) {
-        //             if (d.sorted === false) {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return parseInt(a.total) > parseInt(b.total) ? -1 : 1;
-        //                 });
-        //                 d.sorted = true;
-        //                 this.updateTable(newData);
-        //             } else {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return parseInt(a.total) < parseInt(b.total) ? -1 : 1;
-        //                 });
-        //                 d.sorted = false;
-        //                 this.updateTable(newData);
-        //             }
-        //         }
-
-        //         //Percentages
-        //         if (i == 2) {
-        //             if (d.sorted === false) {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return (parseInt(a.percent_of_d_speeches) + parseInt(a.percent_of_r_speeches)) > (parseInt(b.percent_of_d_speeches) + parseInt(b.percent_of_r_speeches)) ? -1 : 1;
-        //                 });
-        //                 d.sorted = true;
-        //                 this.updateTable(newData);
-        //             } else {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return (parseInt(a.percent_of_d_speeches) + parseInt(a.percent_of_r_speeches)) < (parseInt(b.percent_of_d_speeches) + parseInt(b.percent_of_r_speeches)) ? -1 : 1;
-        //                 });
-        //                 d.sorted = false;
-        //                 this.updateTable(newData);
-        //             }
-        //         }
-
-        //         //Total
-        //         if (i == 3) {
-        //             if (d.sorted === false) {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return parseInt(a.total) > parseInt(b.total) ? -1 : 1;
-        //                 });
-        //                 d.sorted = true;
-        //                 this.updateTable(newData);
-        //             } else {
-        //                 let newData = this.data.sort((a, b) => {
-        //                     return parseInt(a.total) < parseInt(b.total) ? -1 : 1;
-        //                 });
-        //                 d.sorted = false;
-        //                 this.updateTable(newData);
-        //             }
-        //         }
-
-        //     });
 
     }
 
@@ -352,85 +215,15 @@ class Table {
         
         d3.select("#heatmap").select("svg").remove()
 
-        
-        
 
+    }
 
-
-
-
-
-
-
-
-    //     //this.data = this.data.slice(0,25);
-    //     //Create table rows
-    //     let rows = d3.select("tbody").selectAll('tr').data(this.data);
-
-    //     //Enter selection
-    //     let rowsE = rows.enter().append('tr');
-
-    //     //Appending and initializing table headers + table cells
-    //     rowsE.append("th").append("text");
-    //     rowsE.append("td").classed("freqR",true).append("svg").append("rect").classed("freqRect",true);
-    //     let a = rowsE.append("td").classed("percR",true).append("svg");
-    //     a.append("rect").classed("demRect",true);
-    //     a.append("rect").classed("repRect",true);
-    //     rowsE.append("td").classed("totalR",true).append("text");
-
-
-    //     //Handle exits
-    //     rows.exit().remove();
-
-    //     //Merge
-    //     rows = rows.merge(rowsE);
-
-    //     //Update
-
-    //     //Header
-    //     rows.select("text")
-    //         .html(d => d.phrase);
-
-    //     //frequency
-    //     let freqsR = rows.select(".freqR").select("svg")
-    //         .attr("width",this.width+this.margin.left+this.margin.right)
-    //         .attr("height",this.height+this.margin.top+this.margin.bottom)
-    //         .attr("transform",`translate(0,${this.margin.top*2})`);
-
-    //     freqsR.select(".freqRect")
-    //         .attr("y",this.margin.top)
-    //         .attr("x",this.margin.left)
-    //         .attr("width",d => this.freqScale((d.total/50)))
-    //         .attr("height",this.height)
-    //         .attr("fill",d => this.rectScale(d.category));
-
-    //     //Percentages
-    //     let percR = rows.select(".percR").select("svg")
-    //         .attr("width",this.width+this.margin.left+this.margin.right)
-    //         .attr("height",this.height+this.margin.top+this.margin.bottom)
-    //         .attr("transform",`translate(0,${this.margin.top*2})`);
-
-    //     //Dem side
-    //     percR.select(".demRect")
-    //         .attr("y",this.margin.top)
-    //         .attr("x",d => (this.width+this.margin.left+this.margin.right)/2 - this.percScale(parseInt(d.percent_of_d_speeches)))
-    //         .attr("fill","#61a3e3")
-    //         .attr("width",d => this.percScale(parseInt(d.percent_of_d_speeches)))
-    //         .attr("height",this.height);
-
-    //     //Rep side
-    //     percR.select(".repRect")
-    //         .attr("y",this.margin.top)
-    //         .attr("x",d => (this.width+this.margin.left+this.margin.right)/2)
-    //         .attr("fill","#a82e2e")
-    //         .attr("width",d => this.percScale(parseInt(d.percent_of_r_speeches)))
-    //         .attr("height",this.height);
-
-    //     //Total
-    //     rows.select(".totalR")
-    //         .html((d) => d.total);
-
-
+    infoboxRender(value,i){
+        let that = this;
+        let text = null;
+        text = "<h3> run number: " + i+ "</h3>";
+        text = text + "<p> uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
+        return text;
 
     }
 
