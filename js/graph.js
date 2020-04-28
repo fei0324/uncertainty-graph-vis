@@ -26,19 +26,19 @@ class Graph{
         this.WIDTH = boundingRect.width;
         this.HEIGHT = boundingRect.height;
 
-        // Creating legend selection
-        let legendSVG = d3.select("#legend-SVG");
+        // // Creating legend selection
+        // let legendSVG = d3.select("#legend-SVG");
             
-        if (this.type == 'clust'){
-            // Creating legend
-            this.node_legend = legendSVG.append("g")
-                .attr("class","node-legend")
-                .attr("transform", "translate(0,60)");
+        // if (this.type == 'clust'){
+        //     // Creating legend
+        //     this.node_legend = legendSVG.append("g")
+        //         .attr("class","node-legend")
+        //         .attr("transform", "translate(0,60)");
 
-            this.link_legend = legendSVG.append("g")
-                .attr("class","link-legend")
-                .attr("transform", "translate(0,15)");
-        }
+        //     this.link_legend = legendSVG.append("g")
+        //         .attr("class","link-legend")
+        //         .attr("transform", "translate(0,15)");
+        // }
 
         //make tooltip div - more detailed info to the side -state in selected view
         let infobox = d3.select("#data-panel")
@@ -57,30 +57,103 @@ class Graph{
         //Scales for sparsification
         if (this.type == 'spars'){
 
-            //Sets active variable for edge vis type - this appears first on load
-            // this.active = 'squareOD';
+             // Different color schemes
+             let viridis = d3.interpolateViridis
+             let inferno = d3.interpolateInferno
+             let plasma =  d3.interpolatePlasma
+             let cool = d3.interpolateCool
+             let warm = d3.interpolateWarm
+ 
+             let green =  d3.interpolateGreens
+             let purple = d3.interpolatePurples
+             let orange = d3.interpolateOranges
+             let grey = d3.interpolateGreys
+             let blue = d3.interpolateBlues
+ 
+             let link_color = blue;
+             let node_color = orange;
+ 
+             // Link ranges
+             let squareRange = [1,2.5]
+             let stdRange = [2,10]
+             let splineRange = [1,15]
+             let meanRange = [1,5]
+ 
+             // Check to see if inverted is activated 
+             let invert_active = $('#invertDrop').find('a.active').attr('id');
+             // console.log("invert active",invert_active)
+             if (invert_active == 'invert'){
+                 
+                 // Link ranges
+                 squareRange = [2.5,1]
+                 stdRange = [10,2]
+                 splineRange = [15,1]
+                 meanRange = [5,1]
+             }
 
-            // //finding max and min of mean for links 
-            // let avg_array = this.data.links.map( d => d.average);
-            // let maxMeanL = d3.max(avg_array);
-            // let minMeanL = d3.min(avg_array);
-            // let medMeanL = d3.median(avg_array)
-            // // console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
+            // LINK
 
-            // //Color scale for means of links
-            // //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
-            // //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-            // this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMeanL,maxMeanL]);
-        
-            // // linear scale for mean of links
-            // // may need to find way to adjust range automatically based on network size
-            // this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
-            // this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
+            //finding max and min of mean for link weights and means 
+            let avg_arrayLW = this.data.links.map( d => d.weight );
+            let avg_arrayLM = this.data.links.map( d => d.mean );
+            let std_arrayL = this.data.links.map( d => d.std );
+
+            // Color scale for links
+            this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
+            this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
+
+
+            // Link scales
+            this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range(stdRange);
+            this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(meanRange);
+            this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(squareRange);
+            this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range(stdRange);
+            this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(splineRange);
+
+            let edge_active = $('#edgeDrop').find('a.active').attr('id');
+            
+            // Creating legend selection
+            let legendSVG = d3.select("#legend-SVG");
+           
+            // Removing legends if they exist
+            d3.select('.node-legend').remove()
+            d3.select('.link-legend').remove()
+
+            // Creating link legend
+            this.link_legend = legendSVG.append("g")
+                .attr("class","link-legend")
+                .attr("transform", "translate(0,15)");
+
+            // Link legends
+            if (edge_active == 'stdevO'){
+                this.legend(this.link_legend,this,this.linkColorStd,'link-std');
+            }
+            else{
+                this.legend(this.link_legend,this,this.linkColor,'link');
+            }
         }
 
         //Scales for clustering
         else if (this.type == 'clust'){
-            console.log("in prep graph for coarse")
+
+            // Creating legend selection
+            let legendSVG = d3.select("#legend-SVG");
+
+            // removing if it exists
+            d3.select('.node-legend').remove()
+            d3.select('.link-legend').remove()
+
+            // Creating legend
+            this.node_legend = legendSVG.append("g")
+                .attr("class","node-legend")
+                .attr("transform", "translate(0,60)");
+
+            this.link_legend = legendSVG.append("g")
+                .attr("class","link-legend")
+                .attr("transform", "translate(0,15)");
+    
+
+
             //finding max and min of mean for nodes
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
             let std_array = this.data.nodes.map( d => d.uncertainty_std );
@@ -590,16 +663,18 @@ class Graph{
                             this.reference.myGraph
                                 .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
 
-                            // deactivating panel
-                            d3.select(`#infobox-graph-processed`).transition()
-                                .duration(200)
-                                .style("opacity", 0);
+                            
 
                             //Row de-highlighting
                             d3.selectAll(`.row-back`).transition()
                                 .duration(100)
                                 .style('opacity',0);
                         }
+
+                        // deactivating panel
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
 
                     }
                     

@@ -109,6 +109,8 @@ Promise.all([
     //Instantiates graph objects with data
 
     // TODO: Figure out loading data in better way than just doing it all at once at the beginning. 
+    // TODO: Think what is slowing everyhting down is the continual call to drawing the graph, I can just pass
+    // in the data when I'm in the same algorithm... implement this at some point
 
     // GRAPH COARSENING: ////////////////////////////////////////////////////////////////////
 
@@ -754,7 +756,7 @@ Promise.all([
         // heatMap.data = hm_mis_9;
         // heatMap.full_ref = full_rect;
         // heatMap.proc_ref = proc_rect;
-        // heatMap.removeHeatMap()
+        heatMap.removeHeatMap()
         // heatMap.createHeatMap();
 
         
