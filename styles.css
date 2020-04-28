@@ -15,12 +15,13 @@
     
     display: grid;
     grid-template-columns: repeat(3,1fr) repeat(3,1fr) 1fr 0.5fr;  /*800px*/
-    grid-template-rows: 120px 20px 1fr minmax(230px,auto);
+    grid-template-rows: 120px 20px 1fr 1fr minmax(230px,auto);
     grid-template-areas: 
             "title title title title selections selections selections selections"
             "info info info info info info info info "
             "orig orig orig processed processed processed panel panel"
-            "heatmap heatmap heatmap heatmap heatmap heatmap heatmap heatmap";
+            "orig orig orig processed processed processed panel panel"
+            "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
     width: 100vw;
     height: 99vh;
 
@@ -112,6 +113,17 @@
     position: relative;
     grid-area: processed;
     border: var(--border-width)  solid var(--border-color);
+    border-bottom-right-radius: 10px 10px;
+    border-top-right-radius: 10px 10px;
+    background-color: var(--canvas-color);
+}
+
+#graph-mini{
+    position: relative;
+    grid-area: mini;
+    border: var(--border-width)  solid var(--border-color);
+    border-bottom-left-radius: 10px 10px;
+    border-top-left-radius: 10px 10px;
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px;
     background-color: var(--canvas-color);

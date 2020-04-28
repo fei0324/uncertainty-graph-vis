@@ -11,6 +11,23 @@ class Table {
         this.full_ref = full_ref;
         this.proc_ref = proc_ref;
 
+        // Creating force graph
+        this.myGraph = ForceGraph();
+
+        //Setting width and height of canvas object
+        this.LOCATION = document.getElementById('graph-mini')
+
+        // Canvas width and height
+        let boundingRect = this.LOCATION.getBoundingClientRect()
+        this.WIDTH = boundingRect.width;
+        this.HEIGHT = boundingRect.height;
+
+        this.myGraph(this.LOCATION)
+                    .width(this.WIDTH)
+                    .height(this.HEIGHT)
+                    .nodeRelSize(4)
+                    .nodeColor(() => "black");
+
         //Margins for table cells- the bostock way
         this.margin = {top: 0, right: 10, bottom: 0, left: 10};
         this.width = 150 - this.margin.left - this.margin.right;
@@ -188,6 +205,12 @@ class Table {
 
         function mouseoverCell(c,i) {
             // console.log(c,i)
+
+            // Loading data and plotting graph
+            
+            d3.json('data/small_net.json').then(data => {
+                that.myGraph.graphData(data)
+            })
 
             // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
             // INFOBOX
