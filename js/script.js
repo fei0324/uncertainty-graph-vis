@@ -93,14 +93,15 @@ Promise.all([
 
     /// SPARSIFICATION //////////////////////////////////////////////////////////////////////////////////////
 
-    d3.json('data/spectral_sparsification/lesmis_77_0.3.json'), //51
-    d3.json('data/spectral_sparsification/lesmis_77_0.4.json'), //52
-    d3.json('data/spectral_sparsification/lesmis_77_0.5.json'), //53
-    d3.json('data/spectral_sparsification/lesmis_77_0.6.json'), //54
-    d3.json('data/spectral_sparsification/lesmis_77_0.7.json'), //55
-    d3.json('data/spectral_sparsification/lesmis_77_0.8.json'), //56
-    d3.json('data/spectral_sparsification/lesmis_77_0.9.json') //57
-
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.1.json'), //51
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.2.json'), //52
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.3.json'), //53
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.4.json'), //54
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.5.json'), //55
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.6.json'), //56
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.7.json'), //57
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.8.json'), //58
+    d3.json('data/spectral_sparsification_lesmis/lesmis_77_0.9.json') //59
     
 ]).then(function(files){
 
@@ -180,14 +181,15 @@ Promise.all([
     /// SPARSIFICATION //////////////////////////////////////////////////////////////////////////////////////
 
     // Les mis spectral sparsification data
-    let mis_spars_3 = files[51];
-    let mis_spars_4 = files[52];
-    let mis_spars_5 = files[53];
-    let mis_spars_6 = files[54];
-    let mis_spars_7 = files[55];
-    let mis_spars_8 = files[56];
-    let mis_spars_9 = files[57];
-
+    let mis_spars_1 = files[51];
+    let mis_spars_2 = files[52];
+    let mis_spars_3 = files[53];
+    let mis_spars_4 = files[54];
+    let mis_spars_5 = files[55];
+    let mis_spars_6 = files[56];
+    let mis_spars_7 = files[57];
+    let mis_spars_8 = files[58];
+    let mis_spars_9 = files[59];
 
 
     // Makes graph objects once, passing in no data to begin with
@@ -220,6 +222,7 @@ Promise.all([
             // $(`#${target}`).addClass("active")
 
             if (target == 'coarse'){
+                //TODO: Hide buttons that don't apply/ make buttons that do reappear
                 // changes active highlighting if it's a valid move
                 let start_active = $('#algDrop').find('active');
                 console.log("active start",start_active)
@@ -244,6 +247,7 @@ Promise.all([
 
             }
             else if (target == 'spars'){
+                //TODO: Hide buttons that don't apply/ make buttons that do reappear
                 if (active_data == 'rectangle'){
                     // TODO: Display message on screen 
                     console.log('sparsification data not available')
@@ -379,10 +383,10 @@ Promise.all([
          let that = this;
 
          // deletes k bar if one exists  
-         d3.select(".slider-wrap").remove();
+        d3.select(".active-kBar").remove();
 
-         //Creates k bar
-         let k_Bar = new kBar(this.k,range);
+        //Creates k bar
+        let k_Bar = new kBar(this.k,range,'coarse-rect');
 
          // Initial k is 2, so draws this
          // let full_rect = new Graph(files[3],'graph-orig','orig');
@@ -390,6 +394,7 @@ Promise.all([
          full_rect.data = full_rect_2;
          proc_rect.data = proc_rect_2;
 
+         proc_rect.type = 'clust'
          full_rect.prepGraph(proc_rect);
          proc_rect.prepGraph(full_rect);
 
@@ -403,7 +408,7 @@ Promise.all([
          heatMap.createHeatMap();
 
          // detects change on bar and updates data shown accordingly
-         d3.select('#activeK-bar').on('input', function(d){
+         d3.select('#coarse-rect').on('input', function(d){
              that.k = k_Bar.activeK;
             //  console.log('in script',that.k)
              
@@ -498,19 +503,21 @@ Promise.all([
         let that = this;
 
         // deletes k bar if one exists  
-        d3.select(".slider-wrap").remove();
+        d3.select(".active-kBar").remove();
 
         //Creates k bar
-        let k_Bar = new kBar(this.k,range);
+        let k_Bar = new kBar(this.k,range,'coarse-mis');
 
         full_rect.data = full_mis_9;
         proc_rect.data = proc_mis_9;
 
+        proc_rect.type = 'clust';
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
+
 
         heatMap.data = hm_mis_9;
         heatMap.full_ref = full_rect;
@@ -520,7 +527,7 @@ Promise.all([
 
         
         // detects change on bar and updates data shown accordingly
-        d3.select('#activeK-bar').on('input', function(d){
+        d3.select('#coarse-mis').on('input', function(d){
             that.k = k_Bar.activeK;
             // console.log('in script',that.k)
             
@@ -617,14 +624,15 @@ Promise.all([
         let that = this;
 
         // deletes k bar if one exists  
-        d3.select(".slider-wrap").remove();
+        d3.select(".active-kBar").remove();
 
         //Creates k bar
-        let k_Bar = new kBar(this.k,range);
+        let k_Bar = new kBar(this.k,range,'coarse-cele');
 
         full_rect.data = full_cele_10;
         proc_rect.data = proc_cele_10;
 
+        proc_rect.type = 'clust'
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -639,7 +647,7 @@ Promise.all([
 
         
         // detects change on bar and updates data shown accordingly
-        d3.select('#activeK-bar').on('input', function(d){
+        d3.select('#coarse-cele').on('input', function(d){
             that.k = k_Bar.activeK;
             // console.log('in script',that.k)
             
@@ -718,117 +726,106 @@ Promise.all([
 
 ////////////////////////////// SPARSIFICATION RENDERING FUNCTIONS ////////////////////////////////////////
     function renderSparsLesmis(){
-        console.log('SPARS')
+
         // Loads lesmis data set
         //Sets default k
-        this.k = 9
-        let range = [9,14]
+        this.k = 0.1
+        let range = [0.1,0.9]
         let that = this;
 
         // deletes k bar if one exists  
-        d3.select(".slider-wrap").remove();
+        d3.select(".active-kBar").remove();
 
         //Creates k bar
-        let k_Bar = new kBar(this.k,range);
+        let k_Bar = new kBar(this.k,range,'spars-mis');
 
+        // Can choose any data for full graph, there's no linked views with this.
         full_rect.data = full_mis_9;
-        proc_rect.data = proc_mis_9;
+        proc_rect.data = mis_spars_1;
 
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
+        proc_rect.type = 'spars'
+        full_rect.prepGraph(null);
+        proc_rect.prepGraph();
 
-        full_rect.drawGraph(proc_rect);
-        proc_rect.drawGraph(full_rect);
+        full_rect.drawGraph(null);
+        proc_rect.drawGraph();
 
-        heatMap.data = hm_mis_9;
-        heatMap.full_ref = full_rect;
-        heatMap.proc_ref = proc_rect;
-        heatMap.removeHeatMap()
-        heatMap.createHeatMap();
+        // Pretty sure not heat map here, what else could I put there? 
+        // heatMap.data = hm_mis_9;
+        // heatMap.full_ref = full_rect;
+        // heatMap.proc_ref = proc_rect;
+        // heatMap.removeHeatMap()
+        // heatMap.createHeatMap();
 
         
         // detects change on bar and updates data shown accordingly
-        d3.select('#activeK-bar').on('input', function(d){
+        d3.select('#spars-mis').on('input', function(d){
             that.k = k_Bar.activeK;
             // console.log('in script',that.k)
             
-            if(k_Bar.activeK == 9){
+            if(k_Bar.activeK == 0.1){
                 // Draws graph and passes in references to other objects
 
-                full_rect.data = full_mis_9;
-                proc_rect.data = proc_mis_9;
-
-                heatMap.data = hm_mis_9
-                heatMap.removeHeatMap()
-                heatMap.createHeatMap()
+                proc_rect.data = mis_spars_1;
                 
         
             }
-            else if(k_Bar.activeK == 10){
+            else if(k_Bar.activeK == 0.2){
                 // Draws graph and passes in references to other objects
 
-                full_rect.data = full_mis_10;
-                proc_rect.data = proc_mis_10;
-
-                heatMap.data = hm_mis_10
-                heatMap.removeHeatMap()
-                heatMap.createHeatMap()
+                proc_rect.data = mis_spars_2;
                 
         
             }
-            else if(k_Bar.activeK == 11){
+            else if(k_Bar.activeK == 0.3){
                 // Draws graph and passes in references to other objects
 
-                full_rect.data = full_mis_11;
-                proc_rect.data = proc_mis_11;
-
-                heatMap.data = hm_mis_11
-                heatMap.removeHeatMap()
-                heatMap.createHeatMap()
-            }
-            else if(k_Bar.activeK == 12){
-                // Draws graph and passes in references to other objects
-                full_rect.data = full_mis_12;
-                proc_rect.data = proc_mis_12;
-
-                heatMap.data = hm_mis_12
-                heatMap.removeHeatMap()
-                heatMap.createHeatMap()
+                proc_rect.data = mis_spars_3;
 
             }
-            else if(k_Bar.activeK == 13){
+            else if(k_Bar.activeK == 0.4){
+                // Draws graph and passes in references to other objects
+                proc_rect.data = mis_spars_4;
+
+            }
+            else if(k_Bar.activeK == 0.5){
                 // Draws graph and passes in references to other objects
 
-                full_rect.data = full_mis_13;
-                proc_rect.data = proc_mis_13;
+                proc_rect.data = mis_spars_5;
 
-                heatMap.data = hm_mis_13
-                heatMap.removeHeatMap()
-                heatMap.createHeatMap()
+            }
+            else if(k_Bar.activeK == 0.6){
+                // Draws graph and passes in references to other objects
+                proc_rect.data = mis_spars_6;
 
 
             }
-            else if(k_Bar.activeK == 14){
+            else if(k_Bar.activeK == 0.7){
                 // Draws graph and passes in references to other objects
-                full_rect.data = full_mis_14;
-                proc_rect.data = proc_mis_14;
+                proc_rect.data = mis_spars_7;
 
-                heatMap.data = hm_mis_14
-                heatMap.removeHeatMap()
-                heatMap.createHeatMap()
+
+            }
+            else if(k_Bar.activeK == 0.8){
+                // Draws graph and passes in references to other objects
+                proc_rect.data = mis_spars_8;
+
+
+            }
+            else if(k_Bar.activeK == 0.9){
+                // Draws graph and passes in references to other objects
+                proc_rect.data = mis_spars_9;
 
 
             }
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            full_rect.prepGraph(proc_rect);
+            // full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
-            // Pass references to heatmap as well
-            heatMap.full_ref = full_rect;
-            heatMap.proc_ref = proc_rect;
 
             // Feeding in graph data like this speeds things up really well!
-            full_rect.myGraph.graphData(full_rect.data)
+            // full_rect.myGraph.graphData(full_rect.data)
+            // Think I have to redraw the graph here
             proc_rect.myGraph.graphData(proc_rect.data)
 
 

@@ -58,28 +58,29 @@ class Graph{
         if (this.type == 'spars'){
 
             //Sets active variable for edge vis type - this appears first on load
-            this.active = 'squareOD';
+            // this.active = 'squareOD';
 
-            //finding max and min of mean for links 
-            let avg_array = this.data.links.map( d => d.average);
-            let maxMeanL = d3.max(avg_array);
-            let minMeanL = d3.min(avg_array);
-            let medMeanL = d3.median(avg_array)
-            // console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
+            // //finding max and min of mean for links 
+            // let avg_array = this.data.links.map( d => d.average);
+            // let maxMeanL = d3.max(avg_array);
+            // let minMeanL = d3.min(avg_array);
+            // let medMeanL = d3.median(avg_array)
+            // // console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
 
-            //Color scale for means of links
-            //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
-            //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-            this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMeanL,maxMeanL]);
+            // //Color scale for means of links
+            // //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
+            // //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
+            // this.color = d3.scaleSequential(d3.interpolateViridis).domain([minMeanL,maxMeanL]);
         
-            // linear scale for mean of links
-            // may need to find way to adjust range automatically based on network size
-            this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
-            this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
+            // // linear scale for mean of links
+            // // may need to find way to adjust range automatically based on network size
+            // this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
+            // this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
         }
 
         //Scales for clustering
         else if (this.type == 'clust'){
+            console.log("in prep graph for coarse")
             //finding max and min of mean for nodes
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
             let std_array = this.data.nodes.map( d => d.uncertainty_std );
@@ -247,62 +248,139 @@ class Graph{
 
         // Graph for SPARSIFICATION
         if (this.type == 'spars'){
+            console.log("IN SPARS IN DRAW GRAPH")
 
             let thatNode = this;
-
-            // // Detect which edge vis type is active and store in active variable
-            // // changes current active highlight in dropdown
-            // $('#edgeDrop').on('hide.bs.dropdown', function (e) {
-            //     // console.log(e)
-            //     let targetClass = null;
-            //     if (e.clickEvent){
-            //         targetClass = $(e.clickEvent.target).attr('class')
-            //     }
-            //     if (targetClass == 'dropdown-item'){
-            //         let target = e.clickEvent.target.id;
-            //         // console.log(target)
-            //         that.active = target;
-
-            //         // changes active highlighting
-            //         let kids = $('#edgeDrop').find('a')
-            //         kids.removeClass( "active" );
-            //         $(`#${target}`).addClass("active")
-
-            //         // console.log(that.active)
-            //     }
-            // });
-
-            // console.log("active edge-vis",this.active);
-
+            // TODO: get rid of node legends 
+            let node_rel_size = 6;
             this.myGraph(location)
                 .width(WIDTH)
                 .height(HEIGHT)
                 .graphData(data)
-                .nodeRelSize(2)
+                .nodeRelSize(node_rel_size)
                 .nodeColor(() => "black")
                 .nodeLabel(node => node.id)
+                .onNodeClick(node => console.log(node.id))
+                .onNodeHover(node => {
+                    highlightNodes = node ? [node] : []
+                    
+                    let that = this
+                    // console.log(node)
+                    if (node){
+                        
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,null));
 
-            // Link styling 
+                        // //Row highlighting
+                        // d3.select(`#row-${node.id}`).transition()
+                        //     .duration(100)
+                        //     .style('opacity',1);
+                    }
+                    else{
+                       
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+
+                        // //Row de-highlighting
+                        // d3.selectAll(`.row-back`).transition()
+                        //     .duration(100)
+                        //     .style('opacity',0);
+                    }
+
+                })
+                // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+                .nodeCanvasObjectMode(()=> 'before')
+                .nodeCanvasObject((node, ctx) => {
+                    // Calculate radius for std
+                    //let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
+                    let NODE_R = 0;
+                    let halo_color = null;
+                    if (highlightNodes.indexOf(node) !== -1){
+                        NODE_R = 12;
+                        halo_color = '#EA000080'
+                    }
+                });
+
+
+            // LINK STYLING
+
             // Determine which is active, style by that.....
             let edge_active = $('#edgeDrop').find('a.active').attr('id');
-            // console.log("edge active",edge_active)
 
             if (edge_active == 'splineOD'){
 
                 that.splineOD(thatNode.myGraph,that)
                 
             }
-            else if( edge_active == 'spline'){
+            // else if( edge_active == 'spline'){
 
-                that.spline(thatNode.myGraph,that)
+            //     that.spline(thatNode.myGraph,that)
 
-            }
+            // }
+                
+            // Link Menu selections
+
+            // EDGE VIS
+            // Detect which edge vis type is active and executes appropriate code
+            $('#edgeDrop').on('hide.bs.dropdown', function (e) {
+                let drop_edge = null;
+                let targetClass = null;
+                if (e.clickEvent){
+                    targetClass = $(e.clickEvent.target).attr('class')
+                }
+                if (targetClass == 'dropdown-item'){
+                    let target = e.clickEvent.target.id;
+                    // console.log('target',target)
+                    drop_edge = target;
+
+                    // changes active highlighting
+                    let kids = $('#edgeDrop').find('a')
+                    kids.removeClass( "active" );
+                    $(`#${target}`).addClass("active")
+
+                    
+                }
+
+
+                if (drop_edge == 'splineOD'){
+                    // console.log('spline on demand')
+                    that.splineOD(thatNode.myGraph,that);
+                    that.legend(that.link_legend,that,that.linkColor,'link');
+                        
+                }
+                else if(drop_edge == 'spline'){
+                    // console.log('spline')
+                    that.spline(thatNode.myGraph,that)
+                    that.legend(that.link_legend,that,that.linkColor,'link');
+        
+                }
+                else if(drop_edge =='square'){
+                    // console.log('square')
+                    that.square(thatNode.myGraph,that)
+                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    
+                }
+                else if (drop_edge == 'stdevO'){
+                    // console.log('stdevO')
+                    that.stdevO(thatNode.myGraph,that)
+                    that.legend(that.link_legend,that,that.linkColorStd,'link-std');
+                    
+                }
+
+
+
+            });
+
+
 
         }
 
-        //graph for NODE CLUSTERING
+        //graph for NODE COARSENING
         else if (this.type == 'clust'){
-            // console.log("node clustering")
+            console.log("node clustering")
             // allows me to access this scope inside of drop down functions
             let thatNode = this;
             
@@ -479,40 +557,49 @@ class Graph{
 
                     if (node){
                         // Need to select node with id that is node.cluster
-                        let my_data = this.reference.myGraph.graphData();
-                        // console.log(my_data.nodes)
-                        let da_node = my_data.nodes.filter(l => l.id == node.cluster); // extract node with correct id
-                        // console.log("selected node",da_node)
-                        this.reference.myGraph
-                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.reference.color(ref_node.uncertainty_mean));
+                        if (this.reference != null){
+                            let my_data = this.reference.myGraph.graphData();
+                            // console.log(my_data.nodes)
+                            let da_node = my_data.nodes.filter(l => l.id == node.cluster); // extract node with correct id
+                            // console.log("selected node",da_node)
+                            this.reference.myGraph
+                                .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.reference.color(ref_node.uncertainty_mean));
 
+                            // // activating panel
+                            // d3.select(`#infobox-graph-processed`).transition()
+                            //     .duration(200)
+                            //     .style("opacity", 1);
+                            // d3.select(`#infobox-graph-processed`).html(this.infoboxRenderOrig(node));
+
+                            //Row highlighting
+                            d3.selectAll(`#row-${node.cluster}`).transition()
+                                .duration(100)
+                                .style('opacity',1);
+                        }
                         // activating panel
                         d3.select(`#infobox-graph-processed`).transition()
                             .duration(200)
                             .style("opacity", 1);
                         d3.select(`#infobox-graph-processed`).html(this.infoboxRenderOrig(node));
 
-                        //Row highlighting
-                        d3.selectAll(`#row-${node.cluster}`).transition()
-                            .duration(100)
-                            .style('opacity',1);
-
                     }
                     else{
                         highlightNodes = []
                         // Need to reset da_node's color to what it was and ena
-                        this.reference.myGraph
-                            .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
+                        if (this.reference != null){
+                            this.reference.myGraph
+                                .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
 
-                        // deactivating panel
-                        d3.select(`#infobox-graph-processed`).transition()
-                            .duration(200)
-                            .style("opacity", 0);
+                            // deactivating panel
+                            d3.select(`#infobox-graph-processed`).transition()
+                                .duration(200)
+                                .style("opacity", 0);
 
-                        //Row de-highlighting
-                        d3.selectAll(`.row-back`).transition()
-                            .duration(100)
-                            .style('opacity',0);
+                            //Row de-highlighting
+                            d3.selectAll(`.row-back`).transition()
+                                .duration(100)
+                                .style('opacity',0);
+                        }
 
                     }
                     
