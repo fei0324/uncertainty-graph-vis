@@ -354,7 +354,10 @@
 
 /*End slider styling*/
 
-/*year bar stylein*/
+/* Mini graph styling */
 
 
-/*End year bar styling*/
+/* Heatmap styling */
+.cell:hover{
+    fill: #2ee67a;
+}

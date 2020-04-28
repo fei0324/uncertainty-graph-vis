@@ -112,6 +112,7 @@ class Table {
         let row = svg.selectAll(".row")
             .data(data)
         .enter().append("g")
+            .attr("id", (d,i) => `row-g-${i}`)
             .attr("class", "row")
             .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; })
             .on("mouseover", (d,i) => mouseoverRow(d,i))
@@ -132,13 +133,15 @@ class Table {
             .data(function(d,i){return Object.values(d);})
         .enter().append("rect")
             .attr("class", "cell")
+            .attr("id",(d,i) => `${i}`)
             // .attr("y", function(d,i) {return y(i)})
             .attr("x", (d,i) => x(i))
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth()-2)
-            .style("fill", d => color(d))
-            .on("mouseover", (d,i) => mouseoverCell(d,i))
-            .on("mouseout", mouseoutCell);
+            .attr("fill", d => color(d))
+            .on("mouseover", mouseoverCell)
+            .on("mouseout", mouseoutCell)
+            .on('click', mouseClick);
 
         let that = this;
 
@@ -204,13 +207,9 @@ class Table {
         }
 
         function mouseoverCell(c,i) {
-            // console.log(c,i)
 
-            // Loading data and plotting graph
-            
-            d3.json('data/small_net.json').then(data => {
-                that.myGraph.graphData(data)
-            })
+            // Highlight cell
+            // d3.select(this).attr('fill','#2ee67a')
 
             // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
             // INFOBOX
@@ -222,13 +221,54 @@ class Table {
             }
 
         function mouseoutCell() {
-            
-            //INFOBOX 
-            d3.select(`#infobox-graph-orig`).transition()
-                .duration(200)
-                .style("opacity", 0);
+
+            // d3.select(this).attr('fill', (d) => color(d))
+            let highlighted = d3.selectAll('.highlighted')._groups[0][0];
+            // Keeps info up if something's been clicked 
+            // console.log(highlighted)
+            if(highlighted){
+                d3.select(`#infobox-graph-orig`).transition()
+                    .duration(200)
+                    .style("opacity", 1);
+                d3.select(`#infobox-graph-orig`).html(that.infoboxRender(highlighted.__data__,highlighted.id));
+            }
+            else{
+                //INFOBOX 
+                d3.select(`#infobox-graph-orig`).transition()
+                    .duration(200)
+                    .style("opacity", 0);
+            }
 
             }
+
+        function mouseClick(c,i){
+
+            // Loading data and plotting graph
+            that.myGraph.nodeVisibility(true)
+            that.myGraph.linkVisibility(true)
+            d3.json('data/small_net.json').then(data => {
+                that.myGraph.graphData(data)
+            })
+
+            // If already selected it, then clears selection and removes graph
+            if (d3.select('.highlighted')._groups[0][0] == this){
+                // Selects previously highlighted and changes color back and reclasses it
+                d3.selectAll('.highlighted').style('fill',d => color(d))
+                d3.selectAll('.highlighted').classed("highlighted",false)
+                // clearing graph
+                that.myGraph.nodeVisibility(false)
+                that.myGraph.linkVisibility(false)
+            }
+            else {
+                // Selects previously highlighted and changes color back and reclasses it
+                d3.selectAll('.highlighted').style('fill',d => color(d))
+                d3.selectAll('.highlighted').classed("highlighted",false)
+                // Highlights newly selected
+                d3.select(this).classed("highlighted",true).style('fill','#2ee67a')
+            }
+            
+
+        }
         
 
     }

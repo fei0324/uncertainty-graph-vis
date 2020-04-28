@@ -16,8 +16,7 @@ class Graph{
         this.type = type;
 
         // console.log("Graph data:",this.data);
-        //Creating forcegraph object
-        this.myGraph = ForceGraph();
+
 
         //Setting width and height of canvas object
         this.LOCATION = document.getElementById(this.location)
@@ -27,9 +26,19 @@ class Graph{
         this.WIDTH = boundingRect.width;
         this.HEIGHT = boundingRect.height;
 
-        this.myGraph(this.LOCATION)
-            .width(this.WIDTH)
-            .height(this.HEIGHT);
+        // // Creating legend selection
+        // let legendSVG = d3.select("#legend-SVG");
+            
+        // if (this.type == 'clust'){
+        //     // Creating legend
+        //     this.node_legend = legendSVG.append("g")
+        //         .attr("class","node-legend")
+        //         .attr("transform", "translate(0,60)");
+
+        //     this.link_legend = legendSVG.append("g")
+        //         .attr("class","link-legend")
+        //         .attr("transform", "translate(0,15)");
+        // }
 
         //make tooltip div - more detailed info to the side -state in selected view
         let infobox = d3.select("#data-panel")
@@ -148,6 +157,10 @@ class Graph{
             //finding max and min of mean for nodes
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
             let std_array = this.data.nodes.map( d => d.uncertainty_std );
+            // let maxMeanN = d3.max(avg_array);
+            // let minMeanN = d3.min(avg_array);
+            // let medMeanN = d3.median(avg_array);
+            // console.log("maxN:",maxMeanN,"min:",minMeanN,"median:",medMeanN)
 
             // Different color schemes
             let viridis = d3.interpolateViridis
@@ -208,6 +221,10 @@ class Graph{
             let avg_arrayLW = this.data.links.map( d => d.weight );
             let avg_arrayLM = this.data.links.map( d => d.mean );
             let std_arrayL = this.data.links.map( d => d.std );
+            // console.log("stdev extent",d3.extent(std_arrayL))
+            // let maxMeanLW = d3.max(avg_arrayLW);
+            // let minMeanLW = d3.min(avg_arrayLW);
+            // let medMeanLW = d3.median(avg_arrayLW)
 
             // Color scale for links
             this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
@@ -268,6 +285,8 @@ class Graph{
         this.reference = reference
         // console.log(this.reference)
 
+        //Creating forcegraph object
+        this.myGraph = ForceGraph();
 
         // let myGraph = ForceGraph();
         let data = this.data;
@@ -307,7 +326,9 @@ class Graph{
             let thatNode = this;
             // TODO: get rid of node legends 
             let node_rel_size = 6;
-            this.myGraph
+            this.myGraph(location)
+                .width(WIDTH)
+                .height(HEIGHT)
                 .graphData(data)
                 .nodeRelSize(node_rel_size)
                 .nodeColor(() => "black")
@@ -441,8 +462,10 @@ class Graph{
             // this.legend(le_legend,this,this.color_le,"le");
 
             let node_rel_size = 4;
-            this.myGraph
+            this.myGraph(location)
                 .graphData(data)
+                .width(WIDTH)
+                .height(HEIGHT)
 
                 // NODE STYLING - default
 
@@ -595,8 +618,10 @@ class Graph{
             //TODO: when I highlight node here, it highlights corresoinding supercluster
             const NODE_R = 8;
 
-            this.myGraph
+            this.myGraph(location)
                 .graphData(data)
+                .width(WIDTH)
+                .height(HEIGHT)
                 .nodeRelSize(NODE_R)
                 .nodeLabel(node => node.id)
                 .nodeColor(()=> "black")
