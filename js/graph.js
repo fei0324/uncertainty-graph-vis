@@ -14,7 +14,8 @@ class Graph{
         this.location = location;
         // Indicates what type of graph: orig (original) or clust (clustered) or spars (sparsified)
         this.type = type;
-        console.log("Graph data:",this.data);
+
+        // console.log("Graph data:",this.data);
 
 
         //Setting width and height of canvas object
@@ -64,7 +65,7 @@ class Graph{
             let maxMeanL = d3.max(avg_array);
             let minMeanL = d3.min(avg_array);
             let medMeanL = d3.median(avg_array)
-            console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
+            // console.log("max:",maxMeanL,"min:",minMeanL,"median:",medMeanL)
 
             //Color scale for means of links
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
@@ -76,6 +77,7 @@ class Graph{
             this.meanScale = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,5])
             this.meanScaleSpline = d3.scaleLinear().domain([minMeanL,maxMeanL]).range([1,15])
         }
+
         //Scales for clustering
         else if (this.type == 'clust'){
             //finding max and min of mean for nodes
@@ -113,7 +115,7 @@ class Graph{
 
             // Check to see if inverted is activated 
             let invert_active = $('#invertDrop').find('a.active').attr('id');
-            console.log("invert active",invert_active)
+            // console.log("invert active",invert_active)
             if (invert_active == 'invert'){
                 //Node range 
                 node_range = [4,1];
@@ -145,7 +147,7 @@ class Graph{
             let avg_arrayLW = this.data.links.map( d => d.weight );
             let avg_arrayLM = this.data.links.map( d => d.mean );
             let std_arrayL = this.data.links.map( d => d.std );
-            console.log("stdev extent",d3.extent(std_arrayL))
+            // console.log("stdev extent",d3.extent(std_arrayL))
             // let maxMeanLW = d3.max(avg_arrayLW);
             // let minMeanLW = d3.min(avg_arrayLW);
             // let medMeanLW = d3.median(avg_arrayLW)
@@ -172,9 +174,9 @@ class Graph{
 
             //calls legend - need to detect here what options are active in dropdowns and style accordingly
             let node_active = $('#nodeDrop').find('a.active').attr('id');
-            console.log("node active in prep",node_active)
+            // console.log("node active in prep",node_active)
             let edge_active = $('#edgeDrop').find('a.active').attr('id');
-            console.log("edge active in prep",edge_active)
+            // console.log("edge active in prep",edge_active)
 
             // Node legends
             if (node_active == 'std'){
@@ -283,7 +285,7 @@ class Graph{
             // Link styling 
             // Determine which is active, style by that.....
             let edge_active = $('#edgeDrop').find('a.active').attr('id');
-            console.log("edge active",edge_active)
+            // console.log("edge active",edge_active)
 
             if (edge_active == 'splineOD'){
 
@@ -300,7 +302,7 @@ class Graph{
 
         //graph for NODE CLUSTERING
         else if (this.type == 'clust'){
-            console.log("node clustering")
+            // console.log("node clustering")
             // allows me to access this scope inside of drop down functions
             let thatNode = this;
             
@@ -318,7 +320,7 @@ class Graph{
 
                 // Determine which is active, style by that.....
                 let node_active = $('#nodeDrop').find('a.active').attr('id');
-                console.log("node active",node_active)
+                // console.log("node active",node_active)
 
                 if (node_active == 'mstdev'){
 
@@ -335,7 +337,7 @@ class Graph{
                 // Detect which edge vis type is active and executes appropriate code
                 $('#nodeDrop').on('hide.bs.dropdown', function (e) {
                     // console.log(e)
-                    console.log("graph obj",thatNode.myGraph.graphData())
+                    // console.log("graph obj",thatNode.myGraph.graphData())
                     let drop_edge = null;
                     let targetClass = null;
                     if (e.clickEvent){
@@ -343,7 +345,7 @@ class Graph{
                     }
                     if (targetClass == 'dropdown-item'){
                         let target = e.clickEvent.target.id;
-                        console.log('target',target)
+                        // console.log('target',target)
                         drop_edge = target;
 
                         // changes active highlighting
@@ -353,22 +355,22 @@ class Graph{
 
                         
                     }
-                    console.log('drop_edge',drop_edge)
+                    // console.log('drop_edge',drop_edge)
 
                     if (drop_edge == 'mstdev'){
-                        console.log('mean + stdev')
+                        // console.log('mean + stdev')
                         that.mstdev(thatNode.myGraph,that,node_rel_size);
                         that.legend(that.node_legend,that,that.color,'node');
                             
                     }
                     else if(drop_edge == 'mean'){
-                        console.log('mean')
+                        // console.log('mean')
                         that.nodeMean(thatNode.myGraph,that,node_rel_size)
                         that.legend(that.node_legend,that,that.color,'node');
             
                     }
                     else if(drop_edge == 'std'){
-                        console.log('std')
+                        // console.log('std')
                         that.nodeStd(thatNode.myGraph,that,node_rel_size)
                         that.legend(that.node_legend,that,that.stdColor,'node-std');
             
@@ -385,7 +387,7 @@ class Graph{
 
                 // Determine which is active, style by that.....
                 let edge_active = $('#edgeDrop').find('a.active').attr('id');
-                console.log("edge active",edge_active)
+                // console.log("edge active",edge_active)
 
                 if (edge_active == 'splineOD'){
 
@@ -405,7 +407,7 @@ class Graph{
             // Detect which edge vis type is active and executes appropriate code
             $('#edgeDrop').on('hide.bs.dropdown', function (e) {
                 // console.log(e)
-                console.log("graph obj",thatNode.myGraph.graphData())
+                // console.log("graph obj",thatNode.myGraph.graphData())
                 let drop_edge = null;
                 let targetClass = null;
                 if (e.clickEvent){
@@ -413,7 +415,7 @@ class Graph{
                 }
                 if (targetClass == 'dropdown-item'){
                     let target = e.clickEvent.target.id;
-                    console.log('target',target)
+                    // console.log('target',target)
                     drop_edge = target;
 
                     // changes active highlighting
@@ -423,29 +425,29 @@ class Graph{
 
                     
                 }
-                console.log('drop_edge',drop_edge)
+                // console.log('drop_edge',drop_edge)
 
 
                 if (drop_edge == 'splineOD'){
-                    console.log('spline on demand')
+                    // console.log('spline on demand')
                     that.splineOD(thatNode.myGraph,that);
                     that.legend(that.link_legend,that,that.linkColor,'link');
                         
                 }
                 else if(drop_edge == 'spline'){
-                    console.log('spline')
+                    // console.log('spline')
                     that.spline(thatNode.myGraph,that)
                     that.legend(that.link_legend,that,that.linkColor,'link');
         
                 }
                 else if(drop_edge =='square'){
-                    console.log('square')
+                    // console.log('square')
                     that.square(thatNode.myGraph,that)
                     that.legend(that.link_legend,that,that.linkColor,'link');
                     
                 }
                 else if (drop_edge == 'stdevO'){
-                    console.log('stdevO')
+                    // console.log('stdevO')
                     that.stdevO(thatNode.myGraph,that)
                     that.legend(that.link_legend,that,that.linkColorStd,'link-std');
                     
@@ -634,7 +636,7 @@ class Graph{
                 else{
                     clickedLink.push(link)
                 }
-                console.log(link.mean,link.std)
+                // console.log(link.mean,link.std)
             })
             .linkWidth(link => scope.linkMeanScale(link.mean))
             .linkColor(link => scope.linkColor(link.mean))

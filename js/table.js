@@ -49,7 +49,7 @@ class Table {
     createHeatMap(){
         /** Creates heat map **/
         let data = this.data
-        console.log("heatmap data",data)
+        // console.log("heatmap data",data)
 
         //Setting width and height of canvas object
         let LOCATION = document.getElementById('heatmap')

@@ -13,23 +13,6 @@ class kBar {
 		this.drawkBar();
 	}
 
-	// updateYear(year) {
-    //     this.activeYear = year;
-
-    //     /** Pass active year to map object */
-    //     this.map.activeYear = year;
-    //     this.map.updateMap();
-    //     //Updates state info box with year update
-    //     if(this.map.activeState){
-    //         d3.select("#mtooltipS").html(this.map.tooltipRender2(this.map.activeState));
-    //     }
-
-    //     console.log(this.map.activeState);
-    //     console.log(this.map.activeStates);
-    //     this.bubbleChart.updateChart(this.activeYear, this.map.activeState, this.map.activeStates);
-        
-	// }
-
 	/**
 	Draw the k bar
 	*/
@@ -46,9 +29,6 @@ class kBar {
             // c elegans, step = 1
             step = 1
         }
-
-
-
 
         //Slider to change to the datasets with correct k 
 
