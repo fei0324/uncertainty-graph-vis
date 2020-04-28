@@ -264,7 +264,7 @@ class Table {
                 d3.selectAll('.highlighted').style('fill',d => color(d))
                 d3.selectAll('.highlighted').classed("highlighted",false)
                 // Highlights newly selected
-                d3.select(this).classed("highlighted",true).style('fill','#2ee67a')
+                d3.select(this).classed("highlighted",true).style('fill','#37c3ed')
             }
             
 

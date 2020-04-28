@@ -89,6 +89,9 @@ class Graph{
             let avg_arrayLM = this.data.links.map( d => d.mean );
             let std_arrayL = this.data.links.map( d => d.std );
 
+            this.linkRange = d3.extent(avg_arrayLM)
+
+            
             // Color scale for links
             this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
             this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));

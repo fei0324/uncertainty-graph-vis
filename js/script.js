@@ -730,16 +730,27 @@ Promise.all([
     function renderSparsLesmis(){
 
         // Loads lesmis data set
+
         //Sets default k
         this.k = 0.1
         let range = [0.1,0.9]
         let that = this;
+
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
 
         // deletes k bar if one exists  
         d3.select(".active-kBar").remove();
 
         //Creates k bar
         let k_Bar = new kBar(this.k,range,'spars-mis');
+
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
+
+        //Creates k bar
+        let f_Bar = new fBar(this.f,f_range,'spars-mis-f');
 
         // Can choose any data for full graph, there's no linked views with this.
         full_rect.data = full_mis_9;
@@ -758,6 +769,20 @@ Promise.all([
         // heatMap.proc_ref = proc_rect;
         heatMap.removeHeatMap()
         // heatMap.createHeatMap();
+
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#spars-mis-f').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = proc_rect.linkRange[1]*that.f;
+            console.log(threshold)
+            proc_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.mean) >= threshold) ? true : false )
+
+
+        })
 
         
         // detects change on bar and updates data shown accordingly
