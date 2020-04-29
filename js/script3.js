@@ -24,9 +24,8 @@ Promise.all([
 
 
 
-    // NJW GRAPH COARSENING: ////////////////////////////////////////////////////////////////////
-
-    // rectangle orignals 
+    // GRAPH COARSENING: ////////////////////////////////////////////////////////////////////
+    // rectangle orignals
     d3.json('data/rec_100/original_2.json'), // 0
     d3.json('data/rec_100/original_4.json'), // 1 
     d3.json('data/rec_100/original_6.json'), // 2 

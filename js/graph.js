@@ -272,7 +272,7 @@ class Graph{
 
         // Reference to other graph object
         this.reference = reference
-        // console.log(this.reference)
+        console.log("my ref",this.reference)
 
 
         // let myGraph = ForceGraph();

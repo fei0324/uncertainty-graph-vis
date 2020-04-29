@@ -37,14 +37,14 @@
 				  	<a class="dropdown-item" href="#" id='spars'>sparsification</a>
 				</div>
 			  </div>
-			<div class="uncertainty-btn-group">
+			<div class="uncertainty-btn-group" id='uncertaintyDrop'>
 				<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					uncertainty
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<a class="dropdown-item" href="#">ARI</a>
-					<a class="dropdown-item" href="#">JI</a>
-					<a class="dropdown-item" href="#">MI</a>
+					<a class="dropdown-item active" href="#" id='local_adjusted_rand_index'>adjusted rand index</a>
+					<a class="dropdown-item" href="#" id='local_jaccard_index'>jaccard index</a>
+					<a class="dropdown-item" href="#" id='local_mutual_information'>mutual information</a>
 				</div>
 			</div>
 			<div class="edge-btn-group" id='edgeDrop'>
@@ -141,10 +141,12 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 	<!-- Our scripts -->
-	<script type="application/javascript" src="js/script.js"></script>
+	<!-- <script type="application/javascript" src="js/script.js"></script> -->
+	
 	<script type="application/javascript" src="js/graph.js"></script>
 	<script type="application/javascript" src="js/kBar.js"></script>
 	<script type="application/javascript" src="js/fBar.js"></script>
 	<script type="application/javascript" src="js/table.js"></script>
+	<script type="application/javascript" src="js/script2.js"></script>
 </body>
 </html>
