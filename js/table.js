@@ -106,7 +106,8 @@ class Table {
         }
         let orange = d3.interpolateOranges
         let viridis = d3.interpolateViridis
-        let color = d3.scaleSequential(orange).domain(d3.extent(mat_values));
+        let blue = d3.interpolateBlues
+        let color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
         
         // Make rows
         let row = svg.selectAll(".row")
@@ -132,7 +133,7 @@ class Table {
         let squares = row.selectAll(".cell")
             .data(function(d,i){return Object.values(d);})
         .enter().append("rect")
-            .attr("class", "cell")
+            .attr("class", (d,i) => `cell-${i}`)
             .attr("id",(d,i) => `${i}`)
             // .attr("y", function(d,i) {return y(i)})
             .attr("x", (d,i) => x(i))
@@ -208,8 +209,8 @@ class Table {
 
         function mouseoverCell(c,i) {
 
-            // Highlight cell
-            // d3.select(this).attr('fill','#2ee67a')
+            // Highlight column
+            d3.selectAll(`.cell-${i}`).attr('fill','orange')
 
             // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
             // INFOBOX
@@ -220,9 +221,12 @@ class Table {
 
             }
 
-        function mouseoutCell() {
+        function mouseoutCell(d,i) {
 
             // d3.select(this).attr('fill', (d) => color(d))
+            // Highlight column
+            d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+
             let highlighted = d3.selectAll('.highlighted')._groups[0][0];
             // Keeps info up if something's been clicked 
             // console.log(highlighted)
@@ -264,7 +268,7 @@ class Table {
                 d3.selectAll('.highlighted').style('fill',d => color(d))
                 d3.selectAll('.highlighted').classed("highlighted",false)
                 // Highlights newly selected
-                d3.select(this).classed("highlighted",true).style('fill','#37c3ed')
+                d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
             }
             
 
@@ -285,7 +289,7 @@ class Table {
         let that = this;
         let text = null;
         text = "<h3> run number: " + i+ "</h3>";
-        text = text + "<p> uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
+        text = text + "<p> node uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
         return text;
 
     }

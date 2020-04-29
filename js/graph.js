@@ -61,7 +61,7 @@ class Graph{
              let grey = d3.interpolateGreys
              let blue = d3.interpolateBlues
  
-             let link_color = blue;
+             let link_color = cool;
              let node_color = orange;
  
              // Link ranges
@@ -91,7 +91,7 @@ class Graph{
 
             this.linkRange = d3.extent(avg_arrayLM)
 
-            
+
             // Color scale for links
             this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
             this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
@@ -165,8 +165,11 @@ class Graph{
             let grey = d3.interpolateGreys
             let blue = d3.interpolateBlues
 
-            let link_color = blue;
-            let node_color = orange;
+            let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
+            let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
+
+            let link_color = cool;
+            let node_color = blue;
 
             //Node range 
             let node_range = [1,4];

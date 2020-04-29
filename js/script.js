@@ -223,6 +223,10 @@ Promise.all([
             // kids.removeClass( "active" );
             // $(`#${target}`).addClass("active")
 
+            // Clear anything in the mini graph canvas
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
             if (target == 'coarse'){
                 //TODO: Hide buttons that don't apply/ make buttons that do reappear
                 // changes active highlighting if it's a valid move
@@ -231,6 +235,8 @@ Promise.all([
                 let kids = $('#algDrop').find('a')
                 kids.removeClass( "active" );
                 $(`#${target}`).addClass("active")
+
+                
 
                 if (active_data == 'rectangle'){
                     //Render coarse graph for rect
@@ -291,6 +297,11 @@ Promise.all([
             let target = e.clickEvent.target.id
             // console.log(target)
 
+            // Clear anything in the mini graph canvas
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
+
             // Finds which algorithm is active 
             let active_alg = $('#algDrop').find('.active')[0].id;
             console.log("active algorithm",active_alg);
@@ -342,7 +353,7 @@ Promise.all([
       })
 
 
-      // Button inversion dropdown - simply changes active class the calls prep graph?
+      // Button inversion dropdown - simply changes active class then calls prep graph?
       $('#invertDrop').on('hide.bs.dropdown', function (e) {
         // console.log(e)
         let drop_invert = null;
@@ -360,17 +371,17 @@ Promise.all([
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
-            
+            //Redraws
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Feeding in graph data like this speeds things up really well!
+            full_rect.myGraph.graphData(full_rect.data)
+            proc_rect.myGraph.graphData(proc_rect.data)
         }
         // console.log('drop_edge',drop_invert)
 
-        //Redraws
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
-
-        // Feeding in graph data like this speeds things up really well!
-        full_rect.myGraph.graphData(full_rect.data)
-        proc_rect.myGraph.graphData(proc_rect.data)
+        
 
 
     })
@@ -379,6 +390,7 @@ Promise.all([
     /////////////////////// COARSENING RENDERING FUNCTIONS //////////////////////////////////////
 
     function renderCoarseRect(){
+
          //Sets default k
          this.k = 2
          let range = [2,12]
@@ -386,6 +398,9 @@ Promise.all([
 
          // deletes k bar if one exists  
         d3.select(".active-kBar").remove();
+
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
 
         //Creates k bar
         let k_Bar = new kBar(this.k,range,'coarse-rect');
@@ -507,8 +522,12 @@ Promise.all([
         // deletes k bar if one exists  
         d3.select(".active-kBar").remove();
 
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
+
         //Creates k bar
         let k_Bar = new kBar(this.k,range,'coarse-mis');
+        
 
         full_rect.data = full_mis_9;
         proc_rect.data = proc_mis_9;
@@ -627,6 +646,9 @@ Promise.all([
 
         // deletes k bar if one exists  
         d3.select(".active-kBar").remove();
+
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
 
         //Creates k bar
         let k_Bar = new kBar(this.k,range,'coarse-cele');

@@ -186,7 +186,7 @@
     position: absolute;
     text-align: center;
     left: 0px;
-    top: 10%;
+    top: 0%;
     width: 100%;
     height: auto;
     padding: 10px;
@@ -417,6 +417,6 @@
 
 
 /* Heatmap styling */
-.cell:hover{
-    fill: #37c3ed;
-}
+/* .cell:hover{
+    fill: orange;
+} */

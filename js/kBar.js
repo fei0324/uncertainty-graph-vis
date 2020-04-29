@@ -65,7 +65,7 @@ class kBar {
         let sliderText = null;
         if (this.id == 'spars-mis'){
             // Sets special text if it's sparsification
-            sliderText = sliderLabel.append('text').text(`% something: ${this.activeK}`);
+            sliderText = sliderLabel.append('text').text(`reduction ratio: ${this.activeK}`);
         }
         else{
             sliderText = sliderLabel.append('text').text(`k-clusters: ${this.activeK}`);
@@ -80,7 +80,7 @@ class kBar {
 
             if (that.id == 'spars-mis'){
                 // Sets special text if it's sparsification
-                sliderText =  sliderText.text(`% something: ${this.value}`);
+                sliderText =  sliderText.text(`reduction ratio: ${this.value}`);
             }
             else{
                 sliderText =  sliderText.text(`k-clusters: ${this.value}`);
