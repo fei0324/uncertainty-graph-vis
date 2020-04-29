@@ -3,9 +3,12 @@ class Table {
     /**
      * Creates a Table Object
      */
-    constructor(data,full_ref,proc_ref){
+    constructor(data,full_ref,proc_ref,data_name,uncert,k){
         // Set data variable
         this.data = data;
+        this.data_name = data_name;
+        this.uncert = uncert;
+        this.k = k;
 
         //Setting references
         this.full_ref = full_ref;
@@ -21,52 +24,62 @@ class Table {
         let boundingRect = this.LOCATION.getBoundingClientRect()
         this.WIDTH = boundingRect.width;
         this.HEIGHT = boundingRect.height;
-
+        
         this.myGraph(this.LOCATION)
                     .width(this.WIDTH)
                     .height(this.HEIGHT)
-                    .nodeRelSize(4)
                     .nodeColor(() => "black");
+
 
         //Margins for table cells- the bostock way
         this.margin = {top: 0, right: 10, bottom: 0, left: 10};
         this.width = 150 - this.margin.left - this.margin.right;
         this.height = 30 - this.margin.top-this.margin.bottom;
 
-        //Create scales for frequency and percentages
-        //Want to set this to width of the svg
-        this.freqScale = d3.scaleLinear().range([0,this.width]);
-        //Want to set this to height of the svg group
-        this.percAxScale = d3.scaleLinear().range([0,this.width]);
-        this.percScale = d3.scaleLinear().range([2,this.width/2]);
-
-
-        // I'm gonna make this an array of objects with keys and sorted values
-        this.tableHeaders = [
-            // {
-            //     'key':"phrase",
-            //     'sorted': false
-            // },
-            {
-                'key':"nodes",
-                'sorted': false
-            },
-            // {
-            //     'key': "links",
-            //     'sorted': false
-            // },
-            // {
-            //     'key': "total",
-            //     'sorted': false
-            // }
-        ];
 
     }
 
     createHeatMap(){
+
         /** Creates heat map **/
         let data = this.data
-        // console.log("heatmap data",data)
+        console.log("heatmap data",data)
+
+        // // Creating weight scales for nodes and edges
+
+        // //finding max and min of mean for link weights and means 
+        // let avg_arrayNW = data.map( d => d.weight );
+        // this.nodeRange = d3.extent(avg_arrayNW)
+
+        // //finding max and min of mean for link weights and means 
+        // let avg_arrayLW = data.links.map( d => d.weight );
+        // this.linkRange = d3.extent(avg_arrayLW)
+
+        // // Different color schemes
+        // let viridis = d3.interpolateViridis
+        // let inferno = d3.interpolateInferno
+        // let plasma =  d3.interpolatePlasma
+        let cool = d3.interpolateCool
+        // let warm = d3.interpolateWarm
+
+        // let green =  d3.interpolateGreens
+        // let purple = d3.interpolatePurples
+        // let orange = d3.interpolateOranges
+        // let grey = d3.interpolateGreys
+        let blue = d3.interpolateBlues
+
+        // let link_color = cool;
+        // let node_color = blue;
+
+        // // Color scales
+        // this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
+        // this.nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
+
+        // // Width and size scales
+        // this.linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1.4]);
+        // this.nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
+        
+
 
         //Setting width and height of canvas object
         let LOCATION = document.getElementById('heatmap')
@@ -104,9 +117,8 @@ class Table {
         for (let elem of data_values){
             mat_values = mat_values.concat(elem)
         }
-        let orange = d3.interpolateOranges
-        let viridis = d3.interpolateViridis
-        let blue = d3.interpolateBlues
+
+        
         let color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
         
         // Make rows
@@ -250,9 +262,39 @@ class Table {
             // Loading data and plotting graph
             that.myGraph.nodeVisibility(true)
             that.myGraph.linkVisibility(true)
-            d3.json('data/small_net.json').then(data => {
-                that.myGraph.graphData(data)
-            })
+            console.log(" in mouse click",that.data_name,that.k,that.uncert)
+            d3.json(`data/njw_spectral_clustering/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
+                // LOL - need to rename 'edges' to 'links'
+                my_data['links'] = my_data['edges'];
+
+                // scales
+                // //finding max and min of mean for link weights and means 
+                let avg_arrayNW = my_data.nodes.map( d => d.weight );
+                let nodeRange = d3.extent(avg_arrayNW)
+
+                //finding max and min of mean for link weights and means 
+                let avg_arrayLW = my_data.links.map( d => d.weight );
+                let linkRange = d3.extent(avg_arrayLW)
+
+                let link_color = cool;
+                let node_color = blue;
+
+                // Color scales
+                let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
+                let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
+
+                // Width and size scales
+                let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1.4]);
+                let nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
+
+                that.myGraph
+                    .graphData(my_data)
+                    .nodeVal(d => nodeScale(d.weight))
+                    .nodeColor(d => nodeColor(d.weight))
+                    .linkWidth( d => linkScale(d.weight))
+                    .linkColor(d => linkColor(d.weight));
+
+            });
 
             // If already selected it, then clears selection and removes graph
             console.log(" highlighted",d3.select('.highlighted')._groups[0][0])

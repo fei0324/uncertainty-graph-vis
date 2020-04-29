@@ -312,7 +312,7 @@ class Graph{
 
             let thatNode = this;
             // TODO: get rid of node legends 
-            let node_rel_size = 6;
+            let node_rel_size = 4;
             this.myGraph
                 .graphData(data)
                 .nodeRelSize(node_rel_size)

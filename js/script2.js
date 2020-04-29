@@ -3,25 +3,12 @@
 
 //This script loads data on demand instead of just all at once
 
-// TODO: Figure out loading data in better way than just doing it all at once at the beginning. 
-// TODO: Think what is slowing everyhting down is the continual call to drawing the graph, I can just pass
-// in the data when I'm in the same algorithm... implement this at some point
-
-// //Clustered
-// d3.json(`data/njw_spectral_clustering/rec_100/cluster_${i}/${type}/uncertainty_graph.json`).then(data => {
-//     that.myGraph.graphData(data)
-// })
-// //Original
-// d3.json(`data/njw_spectral_clustering/rec_100/cluster_${i}/${type}/ori_graph_with_cluster.json`).then(data => {
-//     that.myGraph.graphData(data)
-// })
-
 // Makes graph objects once, passing in no data to begin with
 let full_rect = new Graph(null,'graph-orig','orig');
 let proc_rect = new Graph(null,'graph-processed','clust');
 
 // Makes heatmap
-let heatMap = new Table(null,full_rect,proc_rect)
+let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 
 
 //Uncertainty dropdown
@@ -322,8 +309,14 @@ function renderCoarseRect(uncert){
         proc_rect.drawGraph(full_rect);
 
         // heatmap initial data
-        heatMap.data = files[2];
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
         heatMap.removeHeatMap()
+        heatMap.data = files[2];
+        heatMap.data_name = 'rec_100';
+        heatMap.uncert = uncert;
+        heatMap.k = this.k;
         heatMap.createHeatMap()
         // Pass references to heatmap as well
         heatMap.full_ref = full_rect;
@@ -350,17 +343,23 @@ function renderCoarseRect(uncert){
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
-            heatMap.data = files[2];
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
             heatMap.removeHeatMap()
+            heatMap.data = files[2];
+            heatMap.data_name = 'rec_100';
+            heatMap.uncert = uncert;
+            heatMap.k = k;
             heatMap.createHeatMap()
-            
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
 
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
+            
+            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
 
             // Feeding in graph data like this speeds things up really well!
             full_rect.myGraph.graphData(full_rect.data)
@@ -414,7 +413,13 @@ function renderCoarseLesmis(uncert){
         proc_rect.drawGraph(full_rect);
 
         // heatmap initial data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
         heatMap.data = files[2];
+        heatMap.data_name = 'lesmis_77';
+        heatMap.uncert = uncert;
+        heatMap.k = k;
         heatMap.removeHeatMap()
         heatMap.createHeatMap()
         // Pass references to heatmap as well
@@ -442,8 +447,14 @@ function renderCoarseLesmis(uncert){
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
-            heatMap.data = files[2];
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
             heatMap.removeHeatMap()
+            heatMap.data = files[2];
+            heatMap.data_name = 'lesmis_77';
+            heatMap.uncert = uncert;
+            heatMap.k = k;
             heatMap.createHeatMap()
             
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
@@ -505,8 +516,14 @@ function renderCoarseCele(uncert){
         proc_rect.drawGraph(full_rect);
 
         // heatmap initial data
-        heatMap.data = files[2];
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
         heatMap.removeHeatMap()
+        heatMap.data = files[2];
+        heatMap.data_name = 'celegans_453';
+        heatMap.uncert = uncert;
+        heatMap.k = k;
         heatMap.createHeatMap()
         // Pass references to heatmap as well
         heatMap.full_ref = full_rect;
@@ -533,8 +550,14 @@ function renderCoarseCele(uncert){
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
-            heatMap.data = files[2];
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
             heatMap.removeHeatMap()
+            heatMap.data = files[2];
+            heatMap.data_name = 'celegans_453';
+            heatMap.uncert = uncert;
+            heatMap.k = k;
             heatMap.createHeatMap()
             
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
@@ -649,79 +672,6 @@ function renderSparsLesmis(){
         })
 
     })
-    
-    // // detects change on bar and updates data shown accordingly
-    // d3.select('#spars-mis').on('input', function(d){
-    //     that.k = k_Bar.activeK;
-    //     // console.log('in script',that.k)
-        
-    //     if(k_Bar.activeK == 0.1){
-    //         // Draws graph and passes in references to other objects
-
-    //         proc_rect.data = mis_spars_1;
-            
-    
-    //     }
-    //     else if(k_Bar.activeK == 0.2){
-    //         // Draws graph and passes in references to other objects
-
-    //         proc_rect.data = mis_spars_2;
-            
-    
-    //     }
-    //     else if(k_Bar.activeK == 0.3){
-    //         // Draws graph and passes in references to other objects
-
-    //         proc_rect.data = mis_spars_3;
-
-    //     }
-    //     else if(k_Bar.activeK == 0.4){
-    //         // Draws graph and passes in references to other objects
-    //         proc_rect.data = mis_spars_4;
-
-    //     }
-    //     else if(k_Bar.activeK == 0.5){
-    //         // Draws graph and passes in references to other objects
-
-    //         proc_rect.data = mis_spars_5;
-
-    //     }
-    //     else if(k_Bar.activeK == 0.6){
-    //         // Draws graph and passes in references to other objects
-    //         proc_rect.data = mis_spars_6;
-
-
-    //     }
-    //     else if(k_Bar.activeK == 0.7){
-    //         // Draws graph and passes in references to other objects
-    //         proc_rect.data = mis_spars_7;
-
-
-    //     }
-    //     else if(k_Bar.activeK == 0.8){
-    //         // Draws graph and passes in references to other objects
-    //         proc_rect.data = mis_spars_8;
-
-
-    //     }
-    //     else if(k_Bar.activeK == 0.9){
-    //         // Draws graph and passes in references to other objects
-    //         proc_rect.data = mis_spars_9;
-
-
-    //     }
-    //     // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-    //     // full_rect.prepGraph(proc_rect);
-    //     proc_rect.prepGraph(full_rect);
-
-
-    //     // Feeding in graph data like this speeds things up really well!
-    //     // full_rect.myGraph.graphData(full_rect.data)
-    //     // Think I have to redraw the graph here
-    //     proc_rect.myGraph.graphData(proc_rect.data)
-
-
-    // })
 
 
 }
