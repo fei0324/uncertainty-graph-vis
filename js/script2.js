@@ -20,6 +20,11 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
     if (targetClass == 'dropdown-item'){
         let target = e.clickEvent.target.id
 
+        //Removes infobox if still up
+        d3.select(`#infobox-graph-orig`).transition()
+            .duration(200)
+            .style("opacity", 0);
+
         // Finds which dataset is active 
         let active_data = $('#datasetDrop').find('.active')[0].id;
         console.log("active data",active_data);
@@ -80,6 +85,11 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
     }
     if (targetClass == 'dropdown-item'){
         let target = e.clickEvent.target.id
+
+        //Removes infobox if still up
+        d3.select(`#infobox-graph-orig`).transition()
+            .duration(200)
+            .style("opacity", 0);
 
         // Finds which dataset is active 
         let active_data = $('#datasetDrop').find('.active')[0].id;
@@ -168,6 +178,11 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
     if (targetClass == 'dropdown-item'){
         let target = e.clickEvent.target.id
         // console.log(target)
+
+        //Removes infobox if still up
+        d3.select(`#infobox-graph-orig`).transition()
+            .duration(200)
+            .style("opacity", 0);
 
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)

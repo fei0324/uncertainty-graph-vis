@@ -45,16 +45,6 @@ class Table {
         let data = this.data
         console.log("heatmap data",data)
 
-        // // Creating weight scales for nodes and edges
-
-        // //finding max and min of mean for link weights and means 
-        // let avg_arrayNW = data.map( d => d.weight );
-        // this.nodeRange = d3.extent(avg_arrayNW)
-
-        // //finding max and min of mean for link weights and means 
-        // let avg_arrayLW = data.links.map( d => d.weight );
-        // this.linkRange = d3.extent(avg_arrayLW)
-
         // // Different color schemes
         // let viridis = d3.interpolateViridis
         // let inferno = d3.interpolateInferno
@@ -67,18 +57,6 @@ class Table {
         // let orange = d3.interpolateOranges
         // let grey = d3.interpolateGreys
         let blue = d3.interpolateBlues
-
-        // let link_color = cool;
-        // let node_color = blue;
-
-        // // Color scales
-        // this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
-        // this.nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
-
-        // // Width and size scales
-        // this.linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1.4]);
-        // this.nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
-        
 
 
         //Setting width and height of canvas object
