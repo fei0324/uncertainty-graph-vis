@@ -1270,7 +1270,7 @@ class Graph{
                     halo_color = '#EA000080'
                 }
                 else{
-                    let std_perc = node.uncertainty_std/node.uncertainty_mean;
+                    let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
                     let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
                     let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
                     // console.log(std_radius)

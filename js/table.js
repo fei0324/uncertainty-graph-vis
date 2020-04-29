@@ -255,7 +255,17 @@ class Table {
             })
 
             // If already selected it, then clears selection and removes graph
-            if (d3.select('.highlighted')._groups[0][0] == this){
+            console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
+            console.log(this.id)
+            
+            if(d3.select('.highlighted')._groups[0][0] == null){
+                // Selects previously highlighted and changes color back and reclasses it
+                d3.selectAll('.highlighted').style('fill',d => color(d))
+                d3.selectAll('.highlighted').classed("highlighted",false)
+                // Highlights newly selected
+                d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
+            }
+            else if (d3.select('.highlighted')._groups[0][0].id == this.id){
                 // Selects previously highlighted and changes color back and reclasses it
                 d3.selectAll('.highlighted').style('fill',d => color(d))
                 d3.selectAll('.highlighted').classed("highlighted",false)
@@ -263,14 +273,14 @@ class Table {
                 that.myGraph.nodeVisibility(false)
                 that.myGraph.linkVisibility(false)
             }
-            else {
+            else if (d3.select('.highlighted')._groups[0][0].id != this.id){
                 // Selects previously highlighted and changes color back and reclasses it
                 d3.selectAll('.highlighted').style('fill',d => color(d))
                 d3.selectAll('.highlighted').classed("highlighted",false)
                 // Highlights newly selected
                 d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
             }
-            
+
 
         }
         
