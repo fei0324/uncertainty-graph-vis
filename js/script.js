@@ -29,9 +29,13 @@ function resize (event) {
     proc_rect.myGraph.width(proc_width);
     proc_rect.myGraph.height(proc_height);
 
-    // Now I need to resize the heat map
-    heatMap.removeHeatMap()
-    heatMap.createHeatMap()
+    // Now I need to resize the heat map (only if there currently is one)
+    if (document.getElementById('row-g-0')){
+        console.log("heatmap exists")
+        heatMap.removeHeatMap()
+        heatMap.createHeatMap()
+    }
+    
     
 
 }
