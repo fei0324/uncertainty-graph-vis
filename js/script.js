@@ -10,6 +10,30 @@ let proc_rect = new Graph(null,'graph-processed','clust');
 // Makes heatmap
 let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 
+// Handling resizing stuff
+window.addEventListener("resize", resize);
+var redraw = document.getElementById("redraw");
+function resize (event) {
+    // Gets new sizes and sets new canvas dimensions
+    let orig_loc = document.getElementById('graph-orig');
+    let proc_loc = document.getElementById('graph-processed');
+    let boundingRect_orig = orig_loc.getBoundingClientRect()
+    let boundingRect_proc = proc_loc.getBoundingClientRect()
+    let orig_width = boundingRect_orig.width;
+    let orig_height = boundingRect_orig.height;
+    let proc_width = boundingRect_proc.width;
+    let proc_height = boundingRect_proc.height;
+
+    full_rect.myGraph.width(orig_width);
+    full_rect.myGraph.height(orig_height);
+    proc_rect.myGraph.width(proc_width);
+    proc_rect.myGraph.height(proc_height);
+
+    // Now I need to resixe the heat map
+
+    
+}
+
 
 //Uncertainty dropdown
 $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
