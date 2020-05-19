@@ -6,23 +6,23 @@
     /* font-family: "Montserrat", sans-serif; */
     /* font-weight: 300; */
 
-    margin-right: auto; 
+    /* margin-right: auto; 
     margin-left:  auto; 
-    max-width: 1450px; /* for 13 inch*/
+    max-width: 3200px; */
 
     /* padding-right: 10px; 
     padding-left:  10px; */
     
-    display: grid;
-    grid-template-columns: repeat(6,185px) repeat(2,150px);  /*For 13 inch*/
-
-    grid-template-rows: 50px 50px 450px minmax(230px,auto);
+    /* display: grid;
+    grid-template-columns: repeat(3,1fr) repeat(3,1fr) 1fr 0.5fr;
+    grid-template-rows: 120px 20px 1fr 1fr minmax(230px,auto);
     grid-template-areas: 
-            "title title title selections selections selections bars bars"
-            "info info info info info info bars bars"
+            "title title title title selections selections selections selections"
+            "info info info info info info info info "
+            "orig orig orig processed processed processed panel panel"
             "orig orig orig processed processed processed panel panel"
             "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
-    /* width: 100vw;
+    width: 100vw;
     height: 99vh; */
 
 }
@@ -48,32 +48,27 @@
 
 /* title styling */
 .title{
-    grid-area: title;
+    /* grid-area: title; */
     text-align: left;
-    font-size: 30px;
+    font-size: 40px;
     padding-top: 10px;
-    padding-left: 10px;
+    padding-left: 50px;
     font-weight: 600;
     /* font-style: normal; */
 }
 
 /* selections div styling */
 .selections{
-    grid-area: selections;
+    /* grid-area: selections; */
     padding-left: 0px;
 }
 
 /* INFO div styling */
 .info{
-    grid-area: info;
+    /* grid-area: info; */
     font-size: 25px;
     font-weight: 100;
     
-}
-
-/* bars styling */
-.bars{
-    grid-area: bars;
 }
 
 #full-label{
@@ -81,10 +76,9 @@
     /* width: 100px; */
     /* text-align: left; */
     position: relative;
-    top: 10px;
-    left: 20px;
-    color: rgb(0, 0, 0);
-    z-index: 100;
+    top: -100%;
+    left: 5%;
+    color: gray;
 }
 
 #processed-label{
@@ -92,10 +86,9 @@
     /* width: 100px; */
     /* text-align: center; */
     position: relative;
-    top: 10px;
-    left: 500px;
+    top: -100%;
+    left: 37%;
     color: gray;
-    z-index: 100;
 }
 
 /* #panel-label{
@@ -109,25 +102,27 @@
 /* Graph styling */
 #graph-orig{
     position: relative;
-    grid-area: orig;
+    /* grid-area: orig; */
     border: var(--border-width) solid var(--border-color);
     border-bottom-left-radius: 10px 10px;
     border-top-left-radius: 10px 10px;
     background-color: var(--canvas-color);
+    padding:0px;
 }
 
 #graph-processed{
     position: relative;
-    grid-area: processed;
+    /* grid-area: processed; */
     border: var(--border-width)  solid var(--border-color);
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px;
     background-color: var(--canvas-color);
+    padding-left:2px;
 }
 
 #graph-mini{
     position: relative;
-    grid-area: mini;
+    /* grid-area: mini; */
     border: var(--border-width)  solid var(--border-color);
     border-bottom-left-radius: 10px 10px;
     border-top-left-radius: 10px 10px;
@@ -139,7 +134,7 @@
 /* heatmap styling */
 #heatmap{
     position: relative;
-    grid-area: heatmap;
+    /* grid-area: heatmap; */
     /* background-color: rgba(116, 255, 236, 0.363); */
     /* border: var(--border-width)  solid var(--border-color);
     border-bottom-right-radius: 20px 20px;
@@ -167,7 +162,7 @@
 
 #data-panel{
     position: relative;
-    grid-area: panel;
+    /* grid-area: panel; */
     /* border: var(--border-width)  solid var(--border-color);
     border-bottom-right-radius: 20px 20px;
     border-top-right-radius: 20px 20px;
@@ -290,7 +285,7 @@
 
 .slider {
     -webkit-appearance: none;
-    width: 200px;
+    width: 300px;
     height: 10px;
     border-radius: 5px;
     background: #d3d3d3;
@@ -327,7 +322,7 @@
 }
 
 .slider-label svg {
-    width: 200px;
+    width: 300px;
     height: 35px;
 
 }
@@ -340,7 +335,7 @@
 /* FILTER */
 .slider-f {
     -webkit-appearance: none;
-    width: 200px;
+    width: 300px;
     height: 10px;
     border-radius: 5px;
     background: #d3d3d3;
@@ -377,7 +372,7 @@
 }
 
 .slider-label-f svg {
-    width: 200px;
+    width: 300px;
     height: 35px;
 
 }
@@ -405,7 +400,7 @@
     position: relative;
     top: var(--slider-top);
     left: var(--slider-left);
-    font-size: 15px;
+    font-size: 20px;
     fill: gray;
 }
 
@@ -414,7 +409,7 @@
     position: relative;
     top: var(--slider-top);
     left: 5%;
-    font-size: 15px;
+    font-size: 20px;
     fill: gray;
 }
 

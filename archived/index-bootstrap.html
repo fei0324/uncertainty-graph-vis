@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Uncertainty Graph Visualization</title>
 	<!-- bootstrap -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<!-- Our stylesheet -->
-	<link rel="stylesheet" href="styles.css"/>
+	<link rel="stylesheet" href="styles-bootstrap.css"/>
 	<!-- D3 -->
 	<script src="https://d3js.org/d3.v5.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@observablehq/stdlib"></script>
 	<script src="//unpkg.com/force-graph"></script>
 	
 </head>
-<body scroll="yes" style="overflow:visible">
-	<div class="container">
-		<div class="title overflow-auto">
+<body scroll="no" style="overflow: hidden">
+	<div class="row">
+		<div class='title col-6'>
 			Uncertainty Graph Visualization
 		</div>
-		<div class="selections">
+		<div class="selections col-6">
 			<div class="data-btn-group" id='datasetDrop'>
-				<button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				  dataset
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -30,7 +30,7 @@
 				</div>
 			  </div>
 			<div class="alg-btn-group" id='algDrop'>
-				<button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				  algorithm
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -39,7 +39,7 @@
 				</div>
 			  </div>
 			<div class="uncertainty-btn-group" id='uncertaintyDrop'>
-				<button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					uncertainty
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="edge-btn-group" id='edgeDrop'>
-				<button class="btn btn-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					edge vis
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -63,7 +63,7 @@
 				</div>
 			</div>
 			<div class="node-btn-group" id='nodeDrop'>
-				<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					node vis
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -74,7 +74,7 @@
 				</div>
 			</div>
 			<div class="invert-btn-group" id='invertDrop'>
-				<button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					scale
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -83,41 +83,41 @@
 				</div>
 			</div>
 			<!-- slider bars -->
-			<!-- <div class="kBar justify-content-center">
-			</div>
-			<div class="fBar justify-content-center">
-			</div> -->
-		
-		</div>
-		<div class="info">
-			<div id='full-label'>original</div>
-			<div id='processed-label'>reduced</div>
-
-		</div>
-
-		<div id="data-panel">
-			<svg id='legend-SVG'></svg>
-		</div>
-		<div id="graph-orig">
-			<div id='full-label'>original</div>
-		</div>
-		<div id="graph-processed">
-			<div id='processed-label'>reduced</div>
-		</div>
-		<div id="graph-mini">
-			<!-- <div id='processed-label'>processed</div> -->
-		</div>
-
-		<div id='heatmap'></div>
-		
-		<div class="bars">
-			<!-- slider bars -->
 			<div class="kBar justify-content-center">
+                <!-- <div id="activeK-bar"></div> -->
 			</div>
 			<div class="fBar justify-content-center">
+                <!-- <div id="activeF-bar"></div> -->
 			</div>
+		
+		</div>
+	</div>
+
+
+	<div class='container-fluid'>
+		<div class="info row">
+			<div id='full-label'>original</div>
+			<div id='processed-label'>reduced</div>
 		</div>
 
+		<div class='row' style="height: 450px">
+			<div class ='col-5' id="graph-orig">
+				<!-- <div id='full-label'>original</div> -->
+			</div>
+			<div class ='col-5' id="graph-processed">
+				<!-- <div id='processed-label'>processed</div> -->
+			</div>
+			<div class ='col-2' id="data-panel">
+				<svg id='legend-SVG'></svg>
+			</div>
+		</div>
+		
+		<div class='row' style="height: 200px">
+			<div class='col-10' id='heatmap'></div>
+			<div class='col-2' id="graph-mini">
+				<!-- <div id='processed-label'>processed</div> -->
+			</div>
+		</div>
 		
 	</div>
 
