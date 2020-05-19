@@ -1,37 +1,161 @@
 /* Site layout CSS */
-.container{
+@media (max-width: 1440px) {
+    /* CSS that should be displayed if width is equal to or less than 1440px goes here */
+    .container{
 
-    /* font-family:'Helvetica Neue', sans-serif; */
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    /* font-family: "Montserrat", sans-serif; */
-    /* font-weight: 300; */
-
-    margin-right: auto; 
-    margin-left:  auto; 
-    max-width: 1450px; /* for 13 inch*/
-
-    /* padding-right: 10px; 
-    padding-left:  10px; */
+        /* font-family:'Helvetica Neue', sans-serif; */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        /* font-family: "Montserrat", sans-serif; */
+        /* font-weight: 300; */
     
-    display: grid;
-    grid-template-columns: repeat(6,185px) repeat(2,150px);  /*For 13 inch*/
-
-    grid-template-rows: 50px 50px 450px minmax(230px,auto);
-    grid-template-areas: 
-            "title title title selections selections selections bars bars"
-            "info info info info info info bars bars"
-            "orig orig orig processed processed processed panel panel"
-            "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
-    /* width: 100vw;
-    height: 99vh; */
-
+        margin-right: auto; 
+        margin-left:  auto; 
+        max-width: 1450px; /* for 13 inch*/
+    
+        /* padding-right: 10px; 
+        padding-left:  10px; */
+        
+        display: grid;
+        grid-template-columns: repeat(6,185px) repeat(2,150px);
+    
+        grid-template-rows: 50px 50px 450px minmax(230px,auto);
+        grid-template-areas: 
+                "title title title selections selections selections bars bars"
+                "info info info info info info bars bars"
+                "orig orig orig processed processed processed panel panel"
+                "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+        /* width: 100vw;
+        height: 99vh; */
+    }
 }
+
+@media (max-width: 1600px) and (min-width: 1441px) {
+    /* CSS that should be displayed if width is equal to or less than 1440px goes here */
+    .container{
+
+        /* font-family:'Helvetica Neue', sans-serif; */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        /* font-family: "Montserrat", sans-serif; */
+        /* font-weight: 300; */
+    
+        margin-right: auto; 
+        margin-left:  auto; 
+        max-width: 1600px; /* for 13 inch*/
+    
+        /* padding-right: 10px; 
+        padding-left:  10px; */
+        
+        display: grid;
+        grid-template-columns: repeat(6,210px) repeat(2,150px);
+    
+        grid-template-rows: 50px 50px 530px minmax(230px,auto);
+        grid-template-areas: 
+                "title title title selections selections selections bars bars"
+                "info info info info info info bars bars"
+                "orig orig orig processed processed processed panel panel"
+                "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+        /* width: 100vw;
+        height: 99vh; */
+    }
+}
+
+@media (max-width: 1800px) and (min-width: 1601px) {
+    /* CSS that should be displayed if width is equal to or less than 1440px goes here */
+    .container{
+
+        /* font-family:'Helvetica Neue', sans-serif; */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        /* font-family: "Montserrat", sans-serif; */
+        /* font-weight: 300; */
+    
+        margin-right: auto; 
+        margin-left:  auto; 
+        max-width: 1800px; /* for 13 inch*/
+    
+        /* padding-right: 10px; 
+        padding-left:  10px; */
+        
+        display: grid;
+        grid-template-columns: repeat(6,240px) repeat(2,150px);
+    
+        grid-template-rows: 50px 50px 640px minmax(230px,auto);
+        grid-template-areas: 
+                "title title title selections selections selections bars bars"
+                "info info info info info info bars bars"
+                "orig orig orig processed processed processed panel panel"
+                "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+        /* width: 100vw;
+        height: 99vh; */
+    }
+}
+
+@media (max-width: 1920px) and (min-width: 1801px) {
+    /* CSS that should be displayed if width is equal to or less than 1440px goes here */
+    .container{
+
+        /* font-family:'Helvetica Neue', sans-serif; */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        /* font-family: "Montserrat", sans-serif; */
+        /* font-weight: 300; */
+    
+        margin-right: auto; 
+        margin-left:  auto; 
+        max-width: 1920px; /* for 13 inch*/
+    
+        /* padding-right: 10px; 
+        padding-left:  10px; */
+        
+        display: grid;
+        grid-template-columns: repeat(6,260px) repeat(2,150px);
+    
+        grid-template-rows: 50px 50px 700px minmax(230px,auto);
+        grid-template-areas: 
+                "title title title selections selections selections bars bars"
+                "info info info info info info bars bars"
+                "orig orig orig processed processed processed panel panel"
+                "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+        /* width: 100vw;
+        height: 99vh; */
+    }
+}
+
+@media (max-width: 5760px) and (min-width: 1921px) {
+    /* CSS that should be displayed if width is equal to or less than 1440px goes here */
+    .container{
+
+        /* font-family:'Helvetica Neue', sans-serif; */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        /* font-family: "Montserrat", sans-serif; */
+        /* font-weight: 300; */
+    
+        margin-right: auto; 
+        margin-left:  auto; 
+        max-width: 2160px; /* for 13 inch*/
+    
+        /* padding-right: 10px; 
+        padding-left:  10px; */
+        
+        display: grid;
+        grid-template-columns: repeat(6,300px) repeat(2,150px);
+    
+        grid-template-rows: 50px 50px 800px minmax(230px,auto);
+        grid-template-areas: 
+                "title title title selections selections selections bars bars"
+                "info info info info info info bars bars"
+                "orig orig orig processed processed processed panel panel"
+                "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+        /* width: 100vw;
+        height: 99vh; */
+    }
+}
+
+
 
 /* canvas{
     width: auto;
     height: auto;
 } */
-
+@media all{
 /* Setting variables */
 :root{
     /* graph borders */
@@ -83,7 +207,7 @@
     position: relative;
     top: 10px;
     left: 20px;
-    color: rgb(0, 0, 0);
+    color:gray;
     z-index: 100;
 }
 
@@ -93,7 +217,7 @@
     /* text-align: center; */
     position: relative;
     top: 10px;
-    left: 500px;
+    left: 45%;
     color: gray;
     z-index: 100;
 }
@@ -290,7 +414,7 @@
 
 .slider {
     -webkit-appearance: none;
-    width: 200px;
+    width: 250px;
     height: 10px;
     border-radius: 5px;
     background: #d3d3d3;
@@ -327,7 +451,7 @@
 }
 
 .slider-label svg {
-    width: 200px;
+    width: 250px;
     height: 35px;
 
 }
@@ -340,7 +464,7 @@
 /* FILTER */
 .slider-f {
     -webkit-appearance: none;
-    width: 200px;
+    width: 250px;
     height: 10px;
     border-radius: 5px;
     background: #d3d3d3;
@@ -377,7 +501,7 @@
 }
 
 .slider-label-f svg {
-    width: 200px;
+    width: 250px;
     height: 35px;
 
 }
@@ -403,8 +527,8 @@
 .kBar{
     display: inline-flex;
     position: relative;
-    top: var(--slider-top);
-    left: var(--slider-left);
+    top: 10px;
+    left: 30px;
     font-size: 15px;
     fill: gray;
 }
@@ -412,8 +536,8 @@
 .fBar{
     display: inline-flex;
     position: relative;
-    top: var(--slider-top);
-    left: 5%;
+    top: 0px;
+    left: 30px;
     font-size: 15px;
     fill: gray;
 }
@@ -427,3 +551,4 @@
 /* .cell:hover{
     fill: orange;
 } */
+}

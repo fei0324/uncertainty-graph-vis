@@ -73,8 +73,8 @@ class kBar {
         }
         
         // sliderText.attr('x', kScale(this.activeK));
-        sliderText.attr('x',100);
-        sliderText.attr('y', 20);
+        sliderText.attr('x',125);
+        sliderText.attr('y', 15);
 
         this.kSlider.on('input', function() {
 
