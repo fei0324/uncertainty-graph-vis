@@ -29,9 +29,11 @@ function resize (event) {
     proc_rect.myGraph.width(proc_width);
     proc_rect.myGraph.height(proc_height);
 
-    // Now I need to resixe the heat map
-
+    // Now I need to resize the heat map
+    heatMap.removeHeatMap()
+    heatMap.createHeatMap()
     
+
 }
 
 
