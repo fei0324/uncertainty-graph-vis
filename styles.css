@@ -54,6 +54,7 @@
 .selections{
     grid-area: selections;
     padding-left: 0px;
+    padding-top: 20px;
 }
 
 /* INFO div styling */

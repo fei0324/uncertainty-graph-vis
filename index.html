@@ -19,76 +19,79 @@
 			Uncertainty Graph Visualization
 		</div>
 		<div class="selections">
-			<div class="data-btn-group" id='datasetDrop'>
-				<button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				  dataset
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				  <a class="dropdown-item" href="#" id='rectangle'>rectangle</a>
-				  <a class="dropdown-item" href="#" id='lesmis'>lés mis</a>
-				  <a class="dropdown-item" href="#" id='cele'>c. elegans</a>
+			<div class='btn-group' role='group' id='button-toolbar'>
+				<div class="btn-group btn-group-sm" id='datasetDrop' role='group'>
+					<button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						dataset
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='rectangle'>rectangle</a>
+						<a class="dropdown-item" href="#" id='lesmis'>lés mis</a>
+						<a class="dropdown-item" href="#" id='cele'>c. elegans</a>
+					</div>
 				</div>
-			  </div>
-			<div class="alg-btn-group" id='algDrop'>
-				<button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				  algorithm
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<a class="dropdown-item active" href="#" id='coarse'>coarsening</a>
-				  	<a class="dropdown-item" href="#" id='spars'>sparsification</a>
+
+				<div class="btn-group btn-group-sm" id='algDrop' role='group'>
+					<button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						algorithm
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item active" href="#" id='coarse'>coarsening</a>
+						<a class="dropdown-item" href="#" id='spars'>sparsification</a>
+					</div>
 				</div>
-			  </div>
-			<div class="uncertainty-btn-group" id='uncertaintyDrop'>
-				<button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					uncertainty
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<a class="dropdown-item active" href="#" id='local_adjusted_rand_index'>adjusted rand index</a>
-					<a class="dropdown-item" href="#" id='local_jaccard_index'>jaccard index</a>
-					<a class="dropdown-item" href="#" id='local_mutual_information'>mutual information</a>
+
+				<div class="btn-group btn-group-sm" id='uncertaintyDrop' role='group'>
+					<button class="btn-outline-info btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						uncertainty
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item active" href="#" id='local_adjusted_rand_index'>adjusted rand index</a>
+						<a class="dropdown-item" href="#" id='local_jaccard_index'>jaccard index</a>
+						<a class="dropdown-item" href="#" id='local_mutual_information'>mutual information</a>
+					</div>
 				</div>
+
+				<div class="btn-group btn-group-sm" id='edgeDrop' role='group'>
+					<button class="btn-outline-danger btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						edge vis
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='square'>square</a>
+						<!-- <a class="dropdown-item" href="#" id='sqareOD'>square on demand</a> -->
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#" id='spline'>spline</a>
+						<a class="dropdown-item active" href="#" id='splineOD'>spline on demand</a>
+						<!-- <div class="dropdown-divider" ></div> -->
+						<!-- <a class="dropdown-item" href="#" id='stdevO'>stdev only</a> -->
+					</div>
+				</div>
+
+				<div class="btn-group btn-group-sm" id='nodeDrop' role='group'>
+					<button class="btn-outline-secondary btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						node vis
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='mean'>mean</a>
+						<!-- <a class="dropdown-item" href="#" id='std'>std</a> -->
+						<a class="dropdown-item active" href="#" id='mstdev'>mean+stdev</a>
+						<!-- <a class="dropdown-item" href="#" id='mstdevOD'>mean+stdev on demand</a> -->
+					</div>
+				</div>
+
+				<div class="btn-group btn-group-sm" id='invertDrop' role='group'>
+					<button class="btn-outline-warning btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						scale
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item active" href="#" id='normal'>normal</a>
+						<a class="dropdown-item" href="#" id='invert'>inverted</a>
+					</div>
+				</div>
+
 			</div>
-			<div class="edge-btn-group" id='edgeDrop'>
-				<button class="btn btn-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					edge vis
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<a class="dropdown-item" href="#" id='square'>square</a>
-					<!-- <a class="dropdown-item" href="#" id='sqareOD'>square on demand</a> -->
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="#" id='spline'>spline</a>
-					<a class="dropdown-item active" href="#" id='splineOD'>spline on demand</a>
-					<!-- <div class="dropdown-divider" ></div> -->
-					<!-- <a class="dropdown-item" href="#" id='stdevO'>stdev only</a> -->
-				</div>
-			</div>
-			<div class="node-btn-group" id='nodeDrop'>
-				<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					node vis
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<a class="dropdown-item" href="#" id='mean'>mean</a>
-					<!-- <a class="dropdown-item" href="#" id='std'>std</a> -->
-					<a class="dropdown-item active" href="#" id='mstdev'>mean+stdev</a>
-					<!-- <a class="dropdown-item" href="#" id='mstdevOD'>mean+stdev on demand</a> -->
-				</div>
-			</div>
-			<div class="invert-btn-group" id='invertDrop'>
-				<button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					scale
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<a class="dropdown-item active" href="#" id='normal'>normal</a>
-					<a class="dropdown-item" href="#" id='invert'>inverted</a>
-				</div>
-			</div>
-			<!-- slider bars -->
-			<!-- <div class="kBar justify-content-center">
-			</div>
-			<div class="fBar justify-content-center">
-			</div> -->
-		
 		</div>
+
 		<div class="info">
 			<div id='full-label'>original</div>
 			<div id='processed-label'>reduced</div>

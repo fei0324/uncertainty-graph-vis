@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+	<title>Uncertainty Graph Visualization</title>
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<!-- Our stylesheet -->
+	<link rel="stylesheet" href="styles.css"/>
+	<!-- D3 -->
+	<script src="https://d3js.org/d3.v5.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@observablehq/stdlib"></script>
+	<script src="//unpkg.com/force-graph"></script>
+	
+</head>
+<body scroll="yes" style="overflow:visible">
+	<div class="container">
+		<div class="title">
+			Uncertainty Graph Visualization
+		</div>
+		<div class="selections">
+			<div class='btn-group' role='toolbar'>
+
+			
+				<button class="btn-outline-success btn-sm dropdown-toggle" type="button" id=datasetDrop' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				  dataset
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				  <a class="dropdown-item" href="#" id='rectangle'>rectangle</a>
+				  <a class="dropdown-item" href="#" id='lesmis'>lés mis</a>
+				  <a class="dropdown-item" href="#" id='cele'>c. elegans</a>
+				</div>
+				<button class="btn-outline-primary btn-sm dropdown-toggle" type="button" id='algDrop' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				  algorithm
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item active" href="#" id='coarse'>coarsening</a>
+				  	<a class="dropdown-item" href="#" id='spars'>sparsification</a>
+				</div>
+				<button class="btn-outline-info btn-sm dropdown-toggle" type="button" id='uncertaintyDrop' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					uncertainty
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item active" href="#" id='local_adjusted_rand_index'>adjusted rand index</a>
+					<a class="dropdown-item" href="#" id='local_jaccard_index'>jaccard index</a>
+					<a class="dropdown-item" href="#" id='local_mutual_information'>mutual information</a>
+				</div>
+				<button class="btn-outline-danger btn-sm dropdown-toggle" type="button" id='edgeDrop' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					edge vis
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item" href="#" id='square'>square</a>
+					<!-- <a class="dropdown-item" href="#" id='sqareOD'>square on demand</a> -->
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" id='spline'>spline</a>
+					<a class="dropdown-item active" href="#" id='splineOD'>spline on demand</a>
+					<!-- <div class="dropdown-divider" ></div> -->
+					<!-- <a class="dropdown-item" href="#" id='stdevO'>stdev only</a> -->
+				</div>
+				<button class="btn-outline-secondary btn-sm dropdown-toggle" type="button" id='nodeDrop' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					node vis
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item" href="#" id='mean'>mean</a>
+					<!-- <a class="dropdown-item" href="#" id='std'>std</a> -->
+					<a class="dropdown-item active" href="#" id='mstdev'>mean+stdev</a>
+					<!-- <a class="dropdown-item" href="#" id='mstdevOD'>mean+stdev on demand</a> -->
+				</div>
+				<button class="btn-outline-warning btn-sm dropdown-toggle" type="button" id='invertDrop' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					scale
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item active" href="#" id='normal'>normal</a>
+					<a class="dropdown-item" href="#" id='invert'>inverted</a>
+				</div>
+			<!-- slider bars -->
+			<!-- <div class="kBar justify-content-center">
+			</div>
+			<div class="fBar justify-content-center">
+			</div> -->
+		</div>
+		
+		</div>
+		<div class="info">
+			<div id='full-label'>original</div>
+			<div id='processed-label'>reduced</div>
+
+		</div>
+
+		<div id="data-panel">
+			<svg id='legend-SVG'></svg>
+		</div>
+		<div id="graph-orig">
+			<div id='full-label'>original</div>
+		</div>
+		<div id="graph-processed">
+			<div id='processed-label'>reduced</div>
+		</div>
+		<div id="graph-mini">
+			<!-- <div id='processed-label'>processed</div> -->
+		</div>
+
+		<div id='heatmap'></div>
+		
+		<div class="bars">
+			<!-- slider bars -->
+			<div class="kBar justify-content-center">
+			</div>
+			<div class="fBar justify-content-center">
+			</div>
+		</div>
+
+		
+	</div>
+
+	
+	<!-- Table stuff -->
+	<!-- <div class="view2" id="table-view">
+		<table id="mytable">
+			<thead>
+			<tr> -->
+				<!-- <th><div>phrase</div></th> -->
+				<!-- <th ><div id = "nodeHeader">nodes</div><span class="glyphicon glyphicon-sort"></span></th> -->
+				<!-- <th ><div id="percHeader">percentages</div></th>
+				<th><div>total</div></th> -->
+			<!-- </tr>
+			</thead>
+		</table> -->
+		<!-- <table id="mytable2">
+			<tbody>
+			</tbody>
+		</table>
+		</table> -->
+	
+	<!-- </div> -->
+
+
+	<!-- Bootstrap scripts -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<!-- Our scripts -->
+	
+	<script type="application/javascript" src="js/graph.js"></script>
+	<script type="application/javascript" src="js/kBar.js"></script>
+	<script type="application/javascript" src="js/fBar.js"></script>
+	<script type="application/javascript" src="js/table.js"></script>
+	<script type="application/javascript" src="js/script.js"></script>
+</body>
+</html>
