@@ -17,17 +17,23 @@ function resize (event) {
     // Gets new sizes and sets new canvas dimensions
     let orig_loc = document.getElementById('graph-orig');
     let proc_loc = document.getElementById('graph-processed');
-    let boundingRect_orig = orig_loc.getBoundingClientRect()
-    let boundingRect_proc = proc_loc.getBoundingClientRect()
+    let mini_loc = document.getElementById('graph-mini');
+    let boundingRect_orig = orig_loc.getBoundingClientRect();
+    let boundingRect_proc = proc_loc.getBoundingClientRect();
+    let boundingRect_mini = mini_loc.getBoundingClientRect();
     let orig_width = boundingRect_orig.width;
     let orig_height = boundingRect_orig.height;
     let proc_width = boundingRect_proc.width;
     let proc_height = boundingRect_proc.height;
+    let mini_width = boundingRect_mini.width;
+    let mini_height = boundingRect_mini.height;
 
     full_rect.myGraph.width(orig_width);
     full_rect.myGraph.height(orig_height);
     proc_rect.myGraph.width(proc_width);
     proc_rect.myGraph.height(proc_height);
+    heatMap.myGraph.width(mini_width);
+    heatMap.myGraph.height(mini_height);
 
     // Now I need to resize the heat map (only if there currently is one)
     if (document.getElementById('row-g-0')){
@@ -35,9 +41,11 @@ function resize (event) {
         heatMap.removeHeatMap()
         heatMap.createHeatMap()
     }
-    
-    
 
+    // Resize legend.... this is tricky
+    proc_rect.legend(proc_rect.link_legend,proc_rect,proc_rect.linkColor,'link');
+    proc_rect.legend(proc_rect.node_legend,proc_rect,proc_rect.color,'node');
+    
 }
 
 
