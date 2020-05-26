@@ -8,14 +8,14 @@
 
     /* margin-right: auto; 
     margin-left:  auto;  */
-    max-width: 2800px;
+    max-width: 3200px;
 
     /* padding-right: 10px; 
     padding-left:  10px; */
     
     display: grid;
     grid-template-columns: repeat(6,1fr) repeat(2,1fr);
-    grid-template-rows: minmax(100px,auto) minmax(50px,auto) minmax(450px,auto) minmax(230px,auto);
+    grid-template-rows: minmax(75px,auto) minmax(50px,auto) minmax(400px,2fr) minmax(200px,1fr);
     grid-template-areas: 
             "title title title selections selections selections bars bars"
             "info info info info info info bars bars"
@@ -420,4 +420,3 @@
 /* .cell:hover{
     fill: orange;
 } */
-}

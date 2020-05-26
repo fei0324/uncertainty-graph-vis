@@ -18,12 +18,15 @@ function resize (event) {
     let orig_loc = document.getElementById('graph-orig');
     let proc_loc = document.getElementById('graph-processed');
     let mini_loc = document.getElementById('graph-mini');
+
     let boundingRect_orig = orig_loc.getBoundingClientRect();
     let boundingRect_proc = proc_loc.getBoundingClientRect();
     let boundingRect_mini = mini_loc.getBoundingClientRect();
+
     let orig_width = boundingRect_orig.width;
     let orig_height = boundingRect_orig.height;
     let proc_width = boundingRect_proc.width;
+    
     let proc_height = boundingRect_proc.height;
     let mini_width = boundingRect_mini.width;
     let mini_height = boundingRect_mini.height;
