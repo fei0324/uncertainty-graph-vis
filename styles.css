@@ -59,7 +59,7 @@
     grid-area: selections;
     padding-left: 0px;
     padding-top: 20px;
-    overflow: scroll;
+    overflow: visible;
     /* border: 1px solid rgb(165, 165, 165);
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px; */
