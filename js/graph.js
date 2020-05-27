@@ -116,7 +116,7 @@ class Graph{
             // Creating link legend
             this.link_legend = legendSVG.append("g")
                 .attr("class","link-legend")
-                .attr("transform", "translate(0,15)");
+                .attr("transform", "translate(0,60)");
 
             // Link legends
             if (edge_active == 'stdevO'){
@@ -140,11 +140,11 @@ class Graph{
             // Creating legend
             this.node_legend = legendSVG.append("g")
                 .attr("class","node-legend")
-                .attr("transform", "translate(0,60)");
+                .attr("transform", "translate(0,15)");
 
             this.link_legend = legendSVG.append("g")
                 .attr("class","link-legend")
-                .attr("transform", "translate(0,15)");
+                .attr("transform", "translate(0,60)");
     
 
 

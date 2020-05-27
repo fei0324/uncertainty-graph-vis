@@ -164,6 +164,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#rectangle`).removeClass('disabled')
             $(`#cele`).removeClass('disabled')
 
+            //re-enables buttons that didn't work with sparsification algo
+            // uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
 
             if (active_data == 'rectangle'){
                 //Render coarse graph for rect
@@ -197,9 +203,16 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 // kids.addClass('disabled')
                 // $(`#${target}`).removeClass("disabled")
                 $(`#${target}`).addClass("active")
+
                 // disables datasets without sparsification data
                 $(`#rectangle`).addClass('disabled')
                 $(`#cele`).addClass('disabled')
+
+                //disable buttons that don't work with sparsification algo
+                // uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).addClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).addClass('disabled')
 
 
 
@@ -478,10 +491,11 @@ function renderCoarseLesmis(uncert){
         full_rect.data = files[1];
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        proc_rect.type = 'clust'
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
-        proc_rect.type = 'clust'
+        
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
