@@ -26,7 +26,7 @@ function resize (event) {
     let orig_width = boundingRect_orig.width;
     let orig_height = boundingRect_orig.height;
     let proc_width = boundingRect_proc.width;
-    
+
     let proc_height = boundingRect_proc.height;
     let mini_width = boundingRect_mini.width;
     let mini_height = boundingRect_mini.height;
@@ -160,6 +160,10 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
+            // Enables datasets with course algorithm
+            $(`#rectangle`).removeClass('disabled')
+            $(`#cele`).removeClass('disabled')
+
 
             if (active_data == 'rectangle'){
                 //Render coarse graph for rect
@@ -190,9 +194,18 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 console.log("active start",start_active)
                 let kids = $('#algDrop').find('a')
                 kids.removeClass( "active" );
+                // kids.addClass('disabled')
+                // $(`#${target}`).removeClass("disabled")
                 $(`#${target}`).addClass("active")
+                // disables datasets without sparsification data
+                $(`#rectangle`).addClass('disabled')
+                $(`#cele`).addClass('disabled')
+
+
+
                 //Render sparse graph for lesmis
                 renderSparsLesmis()
+
 
             }
             else if(active_data == 'cele'){
@@ -246,12 +259,16 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#${target}`).addClass("active")
 
             if (target == 'rectangle'){
+
+                $(`#spars`).addClass('disabled')
                 renderCoarseRect(active_uncertainty)
             }
             else if(target =='lesmis'){
+                $(`#spars`).removeClass("disabled")
                 renderCoarseLesmis(active_uncertainty)
             }
             else if(target =='cele'){
+                $(`#spars`).addClass('disabled')
                 renderCoarseCele(active_uncertainty)
 
             }
