@@ -15,7 +15,7 @@
     
     display: grid;
     grid-template-columns: repeat(6,1fr) repeat(2,1fr);
-    grid-template-rows: minmax(75px,auto) minmax(50px,auto) minmax(400px,2fr) minmax(200px,1fr);
+    grid-template-rows: auto minmax(50px,auto) minmax(400px,2fr) minmax(200px,1fr);
     grid-template-areas: 
             "title title title selections selections selections bars bars"
             "info info info info info info bars bars"
@@ -47,6 +47,10 @@
     padding-top: 10px;
     padding-left: 10px;
     font-weight: 600;
+    /* border: 1px solid rgb(165, 165, 165);
+    border-bottom-left-radius: 10px 10px;
+    border-top-left-radius: 10px 10px; */
+    
     /* font-style: normal; */
 }
 
@@ -55,6 +59,10 @@
     grid-area: selections;
     padding-left: 0px;
     padding-top: 20px;
+    overflow: scroll;
+    /* border: 1px solid rgb(165, 165, 165);
+    border-bottom-right-radius: 10px 10px;
+    border-top-right-radius: 10px 10px; */
 }
 
 /* INFO div styling */
@@ -68,6 +76,7 @@
 /* bars styling */
 .bars{
     grid-area: bars;
+    margin:auto;
 }
 
 #full-label{
@@ -395,19 +404,19 @@
 } */
 
 .kBar{
-    display: inline-flex;
+    display: block;
     position: relative;
     top: 10px;
-    left: 30px;
+    /* left: 25%; */
     font-size: 15px;
     fill: gray;
 }
 
 .fBar{
-    display: inline-flex;
+    display: block;
     position: relative;
     top: 0px;
-    left: 30px;
+    /* left: 25%; */
     font-size: 15px;
     fill: gray;
 }
