@@ -601,6 +601,17 @@ class Graph{
             //TODO: when I highlight node here, it highlights corresoinding supercluster
             const NODE_R = 8;
 
+            // Detects if sparsification is active algo and sets is_sparse accordingly
+            let is_sparse = null;
+            let active_alg = $('#algDrop').find('.active')[0].id;
+            if (active_alg == 'spars'){
+                is_sparse = true;
+            }
+            else{
+                is_sparse = false;
+            }
+            console.log("is_sparse:",is_sparse)
+
             this.myGraph
                 .graphData(data)
                 .nodeRelSize(NODE_R)
@@ -634,7 +645,7 @@ class Graph{
                         d3.select(`#infobox-graph-processed`).transition()
                             .duration(200)
                             .style("opacity", 1);
-                        d3.select(`#infobox-graph-processed`).html(this.infoboxRenderOrig(node));
+                        d3.select(`#infobox-graph-processed`).html(this.infoboxRenderOrig(node,is_sparse));
 
                     }
                     else{
@@ -1460,12 +1471,14 @@ class Graph{
      * @param data
      * @returns {string}
      */
-    infoboxRenderOrig(node) {
+    infoboxRenderOrig(node,sparse) {
         // console.log(node)
         let that = this;
         let text = null;
         text = "<h3>" + node.id + "</h3>";
-        text = text + "<p> clusters to: " + node.cluster + "</p>";
+        if (sparse!=true){
+            text = text + "<p> clusters to: " + node.cluster + "</p>";
+        }
         return text;
 
     }

@@ -188,6 +188,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
+            //Shows minigraph
+            d3.select('#graph-mini').style('visibility','visible')
+
 
             if (active_data == 'rectangle'){
                 //Render coarse graph for rect
@@ -233,6 +236,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 $(`#dropdownMenuButtonNode`).addClass('disabled')
 
 
+                // Hides minigraph
+                d3.select('#graph-mini').style('visibility','hidden')
 
                 //Render sparse graph for lesmis
                 renderSparsLesmis()
@@ -263,6 +268,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+            //Shows minigraph
+            d3.select('#graph-mini').style('visibility','visible')
 
 
             if (active_data == 'rectangle'){
