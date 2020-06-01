@@ -94,17 +94,17 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
         if (active_alg == 'coarse'){
             if (active_data == 'rectangle'){
                 //Render coarse graph for rect
-                renderCoarseRect(target)
+                renderCoarseRect(target,'njw_spectral_clustering')
 
             }
             else if(active_data =='lesmis'){
                 //Render coarse graph for lesmis
-                renderCoarseLesmis(target)
+                renderCoarseLesmis(target,'njw_spectral_clustering')
 
             }
             else if(active_data == 'cele'){
                 //Render coarse graph for cele
-                renderCoarseCele(target)
+                renderCoarseCele(target,'njw_spectral_clustering')
 
             }
         }
@@ -112,6 +112,24 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
 
             //TODO print message
             console.log("can't do nothin")
+
+        }
+        else if (active_alg == 'spec_coarse'){
+            if (active_data == 'rectangle'){
+                //Render coarse graph for rect
+                renderCoarseRect(target,'spectral_coarsening')
+
+            }
+            else if(active_data =='lesmis'){
+                //Render coarse graph for lesmis
+                renderCoarseLesmis(target,'spectral_coarsening')
+
+            }
+            else if(active_data == 'cele'){
+                //Render coarse graph for cele
+                renderCoarseCele(target,'spectral_coarsening')
+
+            }
 
         }
     }
@@ -173,15 +191,15 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             if (active_data == 'rectangle'){
                 //Render coarse graph for rect
-                renderCoarseRect(active_uncertainty)
+                renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(active_data =='lesmis'){
                 //Render coarse graph for lesmis
-                renderCoarseLesmis(active_uncertainty)
+                renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(active_data == 'cele'){
                 //Render coarse graph for cele
-                renderCoarseCele(active_uncertainty)
+                renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
             }
 
@@ -226,7 +244,39 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
 
             }
+        }
+        else if (target == 'spec_coarse'){
+            //TODO: Hide buttons that don't apply/ make buttons that do reappear
+            // changes active highlighting if it's a valid move
+            let start_active = $('#algDrop').find('active');
+            console.log("active start",start_active)
+            let kids = $('#algDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
 
+            // Enables datasets with spectral coursening algorithm
+            $(`#rectangle`).removeClass('disabled')
+            $(`#cele`).removeClass('disabled')
+
+            //re-enables buttons that didn't work with sparsification algo
+            // uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+
+            if (active_data == 'rectangle'){
+                //Render spectral coarse graph for rect
+                renderCoarseRect(active_uncertainty,'spectral_coarsening')
+            }
+            else if(active_data =='lesmis'){
+                //Render spectral coarse graph for lesmis
+                renderCoarseLesmis(active_uncertainty,'spectral_coarsening')
+            }
+            else if(active_data == 'cele'){
+                //Render spectral coarse graph for cele
+                renderCoarseCele(active_uncertainty,'spectral_coarsening')
+            }
 
         }
     }
@@ -274,15 +324,15 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             if (target == 'rectangle'){
 
                 $(`#spars`).addClass('disabled')
-                renderCoarseRect(active_uncertainty)
+                renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='lesmis'){
                 $(`#spars`).removeClass("disabled")
-                renderCoarseLesmis(active_uncertainty)
+                renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='cele'){
                 $(`#spars`).addClass('disabled')
-                renderCoarseCele(active_uncertainty)
+                renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
             }
         }
@@ -304,9 +354,29 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             else if(target == 'cele'){
                 console.log('sparsification data not available')
 
-
             }
 
+        }
+        else if (active_alg=='spec_coarse'){
+            // changes active highlighting
+            let kids = $('#datasetDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            if (target == 'rectangle'){
+
+                $(`#spars`).addClass('disabled')
+                renderCoarseRect(active_uncertainty,'spectral_coarsening')
+            }
+            else if(target =='lesmis'){
+                $(`#spars`).removeClass("disabled")
+                renderCoarseLesmis(active_uncertainty,'spectral_coarsening')
+            }
+            else if(target =='cele'){
+                $(`#spars`).addClass('disabled')
+                renderCoarseCele(active_uncertainty,'spectral_coarsening')
+
+            }
         }
         
     }
@@ -348,12 +418,13 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
 })
 
 
-/////////////////////// COARSENING RENDERING FUNCTIONS //////////////////////////////////////
+/////////////////////// NJW SPECTRAL CLUSTERING RENDERING FUNCTIONS //////////////////////////////////////
 
-function renderCoarseRect(uncert){
+function renderCoarseRect(uncert,file){
 
     // Type of uncertainty
     this.uncert = uncert;
+    console.log("my file",file)
 
     console.log("type of uncertainty",this.uncert)
 
@@ -375,11 +446,11 @@ function renderCoarseRect(uncert){
 
     Promise.all([
         //reduced
-        d3.json(`data/njw_spectral_clustering/rec_100/cluster_${2}/${uncert}/uncertainty_graph.json`),
+        d3.json(`data/${file}/rec_100/cluster_${2}/${uncert}/uncertainty_graph.json`),
         //original
-        d3.json(`data/njw_spectral_clustering/rec_100/cluster_${2}/${uncert}/ori_graph_with_cluster.json`),
+        d3.json(`data/${file}/rec_100/cluster_${2}/${uncert}/ori_graph_with_cluster.json`),
         // uncertainty matrix
-        d3.csv(`data/njw_spectral_clustering/rec_100/cluster_${2}/${uncert}/uncertain_mat.csv`)
+        d3.csv(`data/${file}/rec_100/cluster_${2}/${uncert}/uncertain_mat.csv`)
 
     ]).then(function(files){
         
@@ -419,11 +490,11 @@ function renderCoarseRect(uncert){
         // Loads data based on parameters 
         Promise.all([
             //reduced
-            d3.json(`data/njw_spectral_clustering/rec_100/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/rec_100/cluster_${k}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/njw_spectral_clustering/rec_100/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/rec_100/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/njw_spectral_clustering/rec_100/cluster_${k}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/rec_100/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
             proc_rect.data = files[0];
@@ -456,7 +527,7 @@ function renderCoarseRect(uncert){
     })
 }
 
-function renderCoarseLesmis(uncert){
+function renderCoarseLesmis(uncert,file){
 
     // Type of coarsening uncertainty vis
     this.uncert=uncert;
@@ -479,11 +550,11 @@ function renderCoarseLesmis(uncert){
 
     Promise.all([
         //reduced
-        d3.json(`data/njw_spectral_clustering/lesmis_77/cluster_${9}/${uncert}/uncertainty_graph.json`),
+        d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertainty_graph.json`),
         //original
-        d3.json(`data/njw_spectral_clustering/lesmis_77/cluster_${9}/${uncert}/ori_graph_with_cluster.json`),
+        d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/ori_graph_with_cluster.json`),
         // uncertainty matrix
-        d3.csv(`data/njw_spectral_clustering/lesmis_77/cluster_${9}/${uncert}/uncertain_mat.csv`)
+        d3.csv(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertain_mat.csv`)
 
     ]).then(function(files){
         
@@ -524,11 +595,11 @@ function renderCoarseLesmis(uncert){
         // Loads data based on parameters 
         Promise.all([
             //reduced
-            d3.json(`data/njw_spectral_clustering/lesmis_77/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/njw_spectral_clustering/lesmis_77/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/njw_spectral_clustering/lesmis_77/cluster_${k}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
             proc_rect.data = files[0];
@@ -561,7 +632,7 @@ function renderCoarseLesmis(uncert){
     })
 }
 
-function renderCoarseCele(uncert){
+function renderCoarseCele(uncert,file){
 
     // Type of uncertainty
     this.uncert = uncert;
@@ -583,11 +654,11 @@ function renderCoarseCele(uncert){
 
     Promise.all([
         //reduced
-        d3.json(`data/njw_spectral_clustering/celegans_453/cluster_${10}/${uncert}/uncertainty_graph.json`),
+        d3.json(`data/${file}/celegans_453/cluster_${10}/${uncert}/uncertainty_graph.json`),
         //original
-        d3.json(`data/njw_spectral_clustering/celegans_453/cluster_${10}/${uncert}/ori_graph_with_cluster.json`),
+        d3.json(`data/${file}/celegans_453/cluster_${10}/${uncert}/ori_graph_with_cluster.json`),
         // uncertainty matrix
-        d3.csv(`data/njw_spectral_clustering/celegans_453/cluster_${10}/${uncert}/uncertain_mat.csv`)
+        d3.csv(`data/${file}/celegans_453/cluster_${10}/${uncert}/uncertain_mat.csv`)
 
     ]).then(function(files){
         
@@ -627,11 +698,11 @@ function renderCoarseCele(uncert){
         // Loads data based on parameters 
         Promise.all([
             //reduced
-            d3.json(`data/njw_spectral_clustering/celegans_453/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/njw_spectral_clustering/celegans_453/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/njw_spectral_clustering/celegans_453/cluster_${k}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
             proc_rect.data = files[0];
