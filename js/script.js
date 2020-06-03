@@ -10,6 +10,12 @@ let proc_rect = new Graph(null,'graph-processed','clust');
 // Makes heatmap
 let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 
+
+// Populates default view
+
+renderCoarseRect('local_adjusted_rand_index','njw_spectral_clustering');
+
+
 // Handling resizing stuff
 window.addEventListener("resize", resize);
 var redraw = document.getElementById("redraw");

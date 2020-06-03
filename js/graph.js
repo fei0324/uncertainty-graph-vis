@@ -282,7 +282,6 @@ class Graph{
         // TODO: Clear on background click for node or link selectiin
         // TODO: Node selection on click
         // TODO: Add animations
-        // TODO: Add infobox
         // TODO: implement zooming on node (or edge) 
             // Could be cool idea that when we click on a node, only the nodes neighbors are rendered
             // Same with links - look into if I can do this....
@@ -311,7 +310,6 @@ class Graph{
             console.log("IN SPARS IN DRAW GRAPH")
 
             let thatNode = this;
-            // TODO: get rid of node legends 
             let node_rel_size = 4;
             this.myGraph
                 .graphData(data)
@@ -683,8 +681,7 @@ class Graph{
                     ctx.fill();
                 })
                 .linkWidth(1)
-                .linkColor(() => '#878787')
-                .zoom(1);
+                .linkColor(() => '#878787');
         }
 
 
@@ -1284,7 +1281,7 @@ class Graph{
                     let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
                     let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
                     let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
-                    // console.log(std_radius)
+                    //console.log(std_radius)
                     NODE_R = std_radius;
                     // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
                     halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});

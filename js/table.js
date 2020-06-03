@@ -303,10 +303,8 @@ class Table {
                 d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
             }
 
-
         }
         
-
     }
 
     removeHeatMap(){
