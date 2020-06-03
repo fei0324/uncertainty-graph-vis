@@ -32,7 +32,7 @@
     --border-color: rgb(243, 243, 243);
     --border-width: thin;
     /* dropdown alignment */
-    --button-top: 20%;
+    --button-top: 0px;
     --slider-top: 25%;
     --slider-left: 0%;
     /* canvas background */
@@ -49,6 +49,7 @@
     padding-left: 10px;
     font-weight: 600;
     /* border: 1px solid rgb(165, 165, 165);
+    border-right: white;
     border-bottom-left-radius: 10px 10px;
     border-top-left-radius: 10px 10px; */
     
@@ -62,6 +63,7 @@
     padding-top: 20px;
     overflow: visible;
     /* border: 1px solid rgb(165, 165, 165);
+    border-left: white;
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px; */
 }
@@ -268,7 +270,10 @@
 
 /* dropdown stylings */
 
-.data-btn-group{
+#button-toolbar{
+    top: var(--button-top)
+}
+/* .data-btn-group{
     display: inline-block;
     position: relative;
     top: var(--button-top);
@@ -300,7 +305,7 @@
     display: inline-block;
     position: relative;
     top: var(--button-top);
-}
+} */
 
 /* legend styling */
 
@@ -437,7 +442,7 @@
 .kBar{
     display: block;
     position: relative;
-    top: 10px;
+    top: 5px;
     /* left: 25%; */
     font-size: 15px;
     fill: gray;

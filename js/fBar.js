@@ -44,7 +44,7 @@ class fBar {
 
         
         
-        let sliderText = sliderLabel.append('text').text(`edge filter: ${this.activeF}`);
+        let sliderText = sliderLabel.append('text').attr("id","filter-text").text(`edge filter: ${this.activeF}`);
         
         sliderText.attr('x', 125);
         sliderText.attr('y', 15);

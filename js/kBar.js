@@ -65,10 +65,10 @@ class kBar {
         let sliderText = null;
         if (this.id == 'spars-mis'){
             // Sets special text if it's sparsification
-            sliderText = sliderLabel.append('text').text(`reduction ratio: ${this.activeK}`);
+            sliderText = sliderLabel.append('text').attr("id","reduction-text").text(`reduction ratio: ${this.activeK}`);
         }
         else{
-            sliderText = sliderLabel.append('text').text(`k-clusters: ${this.activeK}`);
+            sliderText = sliderLabel.append('text').attr("id","cluster-text").text(`k-clusters: ${this.activeK}`);
 
         }
         

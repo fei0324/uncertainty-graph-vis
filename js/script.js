@@ -173,6 +173,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
+        
 
         if (target == 'coarse'){
             //TODO: Hide buttons that don't apply/ make buttons that do reappear
@@ -193,8 +194,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
-            //Shows minigraph
+            //Shows minigraph and labels
             d3.select('#graph-mini').style('visibility','visible')
+            d3.select('.labels').style('visibility','visible')
 
 
             if (active_data == 'rectangle'){
@@ -210,6 +212,26 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
             }
+
+            // Need to load these when they exist on alg drop
+            let k_description = d3.select("#cluster-text");
+
+            k_description
+                .on("mouseover",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+                        // .style("left",(d3.event.pageX+15) + "px") 
+                        // .style("top", (d3.event.pageY+15) + "px");     
+                })
+                .on("mouseout",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                });
 
 
         }
@@ -241,11 +263,51 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 $(`#dropdownMenuButtonNode`).addClass('disabled')
 
 
-                // Hides minigraph
+                // Hides minigraph and labels div
                 d3.select('#graph-mini').style('visibility','hidden')
+                d3.select('.labels').style('visibility','hidden')
 
                 //Render sparse graph for lesmis
                 renderSparsLesmis()
+
+
+                // Need to load these when they exist on alg drop
+                let filter_description = d3.select("#filter-text");
+                let reduction_description = d3.select("#reduction-text");
+
+                filter_description
+                    .on("mouseover",function(){
+                        d3.select("#info-tooltip")
+                            .transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>");
+                            // .style("left",(d3.event.pageX+15) + "px") 
+                            // .style("top", (d3.event.pageY+15) + "px");     
+                    })
+                    .on("mouseout",function(){
+                        d3.select("#info-tooltip")
+                            .transition()
+                            .duration(200)
+                            .style("opacity", 0);
+                    });
+
+                reduction_description
+                    .on("mouseover",function(){
+                        d3.select("#info-tooltip")
+                            .transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios... (needs more explanation) </p>");
+                            // .style("left",(d3.event.pageX+15) + "px") 
+                            // .style("top", (d3.event.pageY+15) + "px");     
+                    })
+                    .on("mouseout",function(){
+                        d3.select("#info-tooltip")
+                            .transition()
+                            .duration(200)
+                            .style("opacity", 0);
+                    });
 
 
             }
@@ -290,6 +352,26 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 //Render spectral coarse graph for cele
                 renderCoarseCele(active_uncertainty,'spectral_coarsening')
             }
+
+            // Need to load these when they exist on alg drop
+            let k_description = d3.select("#cluster-text");
+
+            k_description
+                .on("mouseover",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+                        // .style("left",(d3.event.pageX+15) + "px") 
+                        // .style("top", (d3.event.pageY+15) + "px");     
+                })
+                .on("mouseout",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                });
 
         }
     }
@@ -914,9 +996,6 @@ heatmap_description
     });
 
 
-
-
-
 mini_description
     .on("mouseover",function(){
         d3.select("#info-tooltip")
@@ -924,6 +1003,64 @@ mini_description
             .duration(200)
             .style("opacity", 1);
         d3.select("#info-tooltip").html("<p> The graph of the individual instance selected from the heatmap. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
+
+// Need to load these when they exist on alg drop
+let k_description = d3.select("#cluster-text");
+let filter_description = d3.select("#filter-text");
+let reduction_description = d3.select("#reduction-text");
+
+k_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+filter_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+reduction_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios... (needs more explanation) </p>");
             // .style("left",(d3.event.pageX+15) + "px") 
             // .style("top", (d3.event.pageY+15) + "px");     
     })
