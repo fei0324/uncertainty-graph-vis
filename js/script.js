@@ -12,8 +12,7 @@ let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 
 
 // Populates default view
-
-renderCoarseRect('local_adjusted_rand_index','njw_spectral_clustering');
+renderCoarseLesmis('local_adjusted_rand_index','njw_spectral_clustering');
 
 
 // Handling resizing stuff
@@ -848,3 +847,89 @@ function renderSparsLesmis(){
 
 }
     
+
+
+///////////// TUTORIAL RENDERING  /////////////////
+//make tooltip div for descriptions
+d3.select("#data-panel")
+    .append("div")
+    .attr("id", "info-tooltip")
+    .style("opacity", 0);
+
+//Creating descriptive tooltips etc
+let original_description = d3.select("#full-label");
+let reduced_description = d3.select("#processed-label");
+let heatmap_description = d3.select("#heatmap-label");
+let mini_description = d3.select("#mini-label");
+
+original_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> The original graph with no algorithm applied to it. Highlight the nodes to see how they correspond to the reduced graph. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+reduced_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> The 'reduced' graph which has had the selected algorithm applied to it. Highlight nodes to see how it corresponds to the original graph. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+heatmap_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> A heatmap where every row corresponds to a node in the reduced graph and every column corresponds to an individual run using the selected algorithm. Click on columns to view the graph associated with that particular run. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
+
+
+
+mini_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> The graph of the individual instance selected from the heatmap. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });

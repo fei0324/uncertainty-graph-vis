@@ -15,11 +15,12 @@
     
     display: grid;
     grid-template-columns: repeat(6,1fr) repeat(2,1fr);
-    grid-template-rows: auto minmax(50px,auto) minmax(400px,2fr) minmax(200px,1fr);
+    grid-template-rows: auto minmax(50px,auto) minmax(400px,2fr) minmax(25px,auto) minmax(200px,1fr);
     grid-template-areas: 
             "title title title selections selections selections bars bars"
             "info info info info info info bars bars"
             "orig orig orig processed processed processed panel panel"
+            "label label label label label label label label"
             "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
     width: 100vw;
     height: 99vh;
@@ -73,6 +74,14 @@
     
 }
 
+/* label div styling */
+.labels{
+    grid-area: label;
+    font-size: 25px;
+    font-weight: 100;
+    
+}
+
 /* bars styling */
 .bars{
     grid-area: bars;
@@ -97,6 +106,28 @@
     position: relative;
     top: 10px;
     left: 45%;
+    color: gray;
+    z-index: 100;
+}
+
+#heatmap-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: left; */
+    position: relative;
+    top: 5px;
+    left: 20px;
+    color:gray;
+    z-index: 100;
+}
+
+#mini-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: center; */
+    position: relative;
+    top: 0px;
+    left: 70%;
     color: gray;
     z-index: 100;
 }
@@ -430,3 +461,34 @@
 /* .cell:hover{
     fill: orange;
 } */
+
+
+/* TUTUORIAL STYLING */
+/* #original-tooltip{
+    position:absolute;
+    left: 450px;
+    top: 20px;
+    text-align: center;
+    width:700px;
+    padding: 10px;
+    background: rgb(255, 255, 255);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+    font-size: 25px;
+} */
+
+#info-tooltip{
+    position: absolute;
+    text-align: center;
+    left: 0px;
+    top: 0%;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    background: rgba(221, 109, 109, 0);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+    font-size: 20px;
+}
