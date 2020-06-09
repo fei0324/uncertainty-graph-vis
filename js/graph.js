@@ -188,7 +188,7 @@ class Graph{
             // console.log("invert active",invert_active)
             if (invert_active == 'invert'){
                 //Node range 
-                node_range = [4,1];
+                node_range = [7,1];
 
                 // Link ranges
                 squareRange = [2.5,1]
@@ -1314,7 +1314,8 @@ class Graph{
 
         myGraph
             .nodeRelSize(node_rel_size)
-            .nodeVal(node => scope.meanScale(node.uncertainty_mean))
+            .nodeVal(node => scope.sumScale(node.uncertainty_mean))
+            // .nodeVal(node => scope.meanScale(node.uncertainty_mean))
             .nodeLabel(node => node.id)
             .nodeColor(node => scope.color(node.uncertainty_mean))
             .onNodeClick(node => {
