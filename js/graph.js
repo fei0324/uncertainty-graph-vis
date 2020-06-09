@@ -1230,6 +1230,10 @@ class Graph{
                 let that = this
                 // console.log(node)
                 if (node){
+                    // commented code below confirms my stdev calculations
+                    // console.log(highlightNodes)
+                    // this.myGraph.nodeColor(node => node === highlightNodes[0] ? '#00ff0000' : '#00ff0000');
+
                     // Need to select node with id that is node.cluster
                     let my_data = scope.reference.myGraph.graphData();
                     // console.log(my_data.nodes)
@@ -1269,23 +1273,25 @@ class Graph{
             .nodeCanvasObjectMode(()=> 'before')
             .nodeCanvasObject((node, ctx) => {
                 // Calculate radius for std
-                //let stdSCALING = highlightNodes.indexOf(node) !== -1 ? 4000 : 1000;
+                //let stdSCALING = highlighTNodes.indexOf(node) !== -1 ? 4000 : 1000;
                 let stdSCALING = 1;
                 let NODE_R = 0;
                 let halo_color = null;
+                // Sets the red circle of defined size around node when highlighted
                 if (highlightNodes.indexOf(node) !== -1){
                     NODE_R = 12;
                     halo_color = '#EA000080'
                 }
+                // Sets the stdev ring around node when not highlighted
                 else{
+                    // calculates percentage of node uncertainty over mean
                     let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
+                    // calculates the radius of the node 
                     let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
-                    let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
-                    //console.log(std_radius)
+                    // makes the stdev ring by adding the stdev to the mean radius 
+                    let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius;
                     NODE_R = std_radius;
-                    // NODE_R = Math.sqrt(this.meanScale(node.uncertainty_mean))*node_rel_size  +  Math.sqrt(this.meanScale(node.uncertainty_std))*node_rel_size;
                     halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
-
                 }
                 // add a halo for stdev
                 ctx.beginPath();
