@@ -112,6 +112,11 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseCele(target,'njw_spectral_clustering')
 
             }
+            else if(active_data == 'email'){
+                //Render coarse graph for cele
+                renderCoarseEmail(target,'njw_spectral_clustering')
+
+            }
         }
         else if (active_alg == 'sparse'){
 
@@ -187,6 +192,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             // Enables datasets with course algorithm
             $(`#rectangle`).removeClass('disabled')
             $(`#cele`).removeClass('disabled')
+            $(`#email`).removeClass('disabled')
 
             //re-enables buttons that didn't work with sparsification algo
             // uncertainty button
@@ -210,6 +216,11 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             else if(active_data == 'cele'){
                 //Render coarse graph for cele
                 renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
+
+            }
+            else if(active_data == 'email'){
+                //Render coarse graph for email
+                renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
 
             }
 
@@ -255,6 +266,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 // disables datasets without sparsification data
                 $(`#rectangle`).addClass('disabled')
                 $(`#cele`).addClass('disabled')
+                $(`#email`).addClass('disabled')
 
                 //disable buttons that don't work with sparsification algo
                 // uncertainty button
@@ -419,15 +431,24 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             if (target == 'rectangle'){
 
                 $(`#spars`).addClass('disabled')
+                $(`#spec_coarse`).removeClass('disabled')
                 renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='lesmis'){
                 $(`#spars`).removeClass("disabled")
+                $(`#spec_coarse`).removeClass('disabled')
                 renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='cele'){
                 $(`#spars`).addClass('disabled')
+                $(`#spec_coarse`).removeClass('disabled')
                 renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
+
+            }
+            else if(target =='email'){
+                $(`#spars`).addClass('disabled')
+                $(`#spec_coarse`).addClass('disabled')
+                renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
 
             }
         }
@@ -830,6 +851,119 @@ function renderCoarseCele(uncert,file){
     })
 
 }
+
+
+function renderCoarseEmail(uncert,file){
+
+    // Type of uncertainty
+    this.uncert = uncert;
+    console.log("my file",file)
+
+    console.log("type of uncertainty",this.uncert)
+
+    //Sets default k
+    this.k = 20
+    let range = [20,50]
+    let that = this;
+
+        // deletes k bar if one exists  
+    d3.select(".active-kBar").remove();
+
+    // deletes f bar if one exists  
+    d3.select(".active-fBar").remove();
+
+    //Creates k bar
+    let k_Bar = new kBar(this.k,range,'coarse-email');
+
+    // Initial k is 2, so draws this
+
+    Promise.all([
+        //reduced
+        d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertainty_graph.json`),
+        //original
+        d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/ori_graph_with_cluster.json`),
+        // uncertainty matrix
+        d3.csv(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertain_mat.csv`)
+
+    ]).then(function(files){
+        
+        proc_rect.data = files[0];
+        full_rect.data = files[1];
+
+        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+
+        proc_rect.type = 'clust'
+        full_rect.drawGraph(proc_rect);
+        proc_rect.drawGraph(full_rect);
+
+        // heatmap initial data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
+        heatMap.removeHeatMap()
+        heatMap.data = files[2];
+        heatMap.data_name = 'email_1005';
+        heatMap.uncert = uncert;
+        heatMap.k = this.k;
+        heatMap.createHeatMap()
+        // Pass references to heatmap as well
+        heatMap.full_ref = full_rect;
+        heatMap.proc_ref = proc_rect;
+
+
+    })
+
+    // detects change on bar and updates data shown accordingly
+    d3.select('#coarse-email').on('input', function(d){
+        let k = k_Bar.activeK;
+        //  console.log('in script',that.k)
+                
+        // Loads data based on parameters 
+        Promise.all([
+            //reduced
+            d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            //original
+            d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            // uncertainty matrix
+            d3.csv(`data/${file}/email_1005/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+        ]).then(function(files){
+            proc_rect.data = files[0];
+            full_rect.data = files[1];
+
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
+            heatMap.removeHeatMap()
+            heatMap.data = files[2];
+            heatMap.data_name = 'email_1005';
+            heatMap.uncert = uncert;
+            heatMap.k = k;
+            heatMap.createHeatMap()
+
+            // Pass references to heatmap as well
+            heatMap.full_ref = full_rect;
+            heatMap.proc_ref = proc_rect;
+            
+            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Feeding in graph data like this speeds things up really well!
+            full_rect.myGraph.graphData(full_rect.data)
+            proc_rect.myGraph.graphData(proc_rect.data)
+
+        })
+
+    })
+}
+
+
+
+
+
 
 
 ////////////////////////////// SPARSIFICATION RENDERING FUNCTIONS ////////////////////////////////////////

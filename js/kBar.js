@@ -38,6 +38,10 @@ class kBar {
             // lesmes_spars, step = 1
             step = 0.1
         }
+        else if (this.range[0] == 20){
+            // email...need to figure out step, step = 1
+            step = 1
+        }
 
         //Slider to change to the datasets with correct k 
 
