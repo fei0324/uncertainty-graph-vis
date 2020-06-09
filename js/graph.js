@@ -152,6 +152,8 @@ class Graph{
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
             let std_array = this.data.nodes.map( d => d.uncertainty_std );
 
+            let sum_array = this.data.nodes.map(d => d.uncertainty_mean + d.uncertainty_std*8)
+ 
             // Different color schemes
             let viridis = d3.interpolateViridis
             let inferno = d3.interpolateInferno
@@ -172,7 +174,8 @@ class Graph{
             let node_color = blue;
 
             //Node range 
-            let node_range = [1,4];
+            // let node_range = [1,4];
+            let node_range = [1,7];
 
             // Link ranges
             let squareRange = [1,2.5]
@@ -207,6 +210,7 @@ class Graph{
             this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range(node_range)
             this.nodeStdScale = d3.scaleLinear().domain(d3.extent(std_array)).range(node_range)
 
+            this.sumScale = d3.scaleLinear().domain([d3.min(avg_array), d3.max(sum_array)]).range(node_range);
 
             // LINK
 
@@ -1217,7 +1221,8 @@ class Graph{
 
         myGraph
             .nodeRelSize(node_rel_size)
-            .nodeVal(node => scope.meanScale(node.uncertainty_mean))
+            .nodeVal(node => scope.sumScale(node.uncertainty_mean))
+            // .nodeVal(node => scope.meanScale(node.uncertainty_mean))
             .nodeLabel(node => node.id)
             .nodeColor(node => scope.color(node.uncertainty_mean))
             .onNodeClick(node => {
@@ -1284,12 +1289,11 @@ class Graph{
                 }
                 // Sets the stdev ring around node when not highlighted
                 else{
-                    // calculates percentage of node uncertainty over mean
-                    let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
-                    // calculates the radius of the node 
+                    // let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
                     let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
-                    // makes the stdev ring by adding the stdev to the mean radius 
-                    let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius;
+                    // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                    let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
+                    //console.log(std_radius)
                     NODE_R = std_radius;
                     halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
                 }
