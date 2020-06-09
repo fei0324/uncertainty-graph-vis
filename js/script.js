@@ -895,9 +895,19 @@ function renderCoarseEmail(uncert,file){
         proc_rect.prepGraph(full_rect);
 
         proc_rect.type = 'clust'
+
+        full_rect.myGraph
+            // .d3AlphaDecay(0)
+            // .d3VelocityDecay(0.08)
+            .cooldownTime(60000)
+            .linkColor(() => 'rgba(0,0,0,0.05)')
+            .zoom(0.2) 
+            .enablePointerInteraction(false);
+        
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
+        
         // heatmap initial data
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
