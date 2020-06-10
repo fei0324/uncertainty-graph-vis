@@ -1,0 +1,27 @@
+/* Site layout CSS */
+.container{
+
+    /* font-family:'Helvetica Neue', sans-serif; */
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    /* font-family: "Montserrat", sans-serif; */
+    /* font-weight: 300; */
+
+    /* margin-right: auto; 
+    margin-left:  auto;  */
+    max-width: 3200px;
+
+    /* padding-right: 10px; 
+    padding-left:  10px; */
+    
+    display: grid;
+    grid-template-columns: repeat(6,1fr) repeat(2,1fr);
+    grid-template-rows: auto minmax(50px,auto) minmax(400px,2fr) minmax(25px,auto) minmax(200px,1fr);
+    grid-template-areas: 
+            "title title title selections selections selections bars bars"
+            "info info info info info info bars bars"
+            "orig orig orig processed processed processed panel panel"
+            "label label label label label label label label"
+            "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+    width: 100vw;
+    height: 99vh;
+}

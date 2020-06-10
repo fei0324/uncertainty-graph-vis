@@ -1063,15 +1063,16 @@ function renderCoarseEmail(uncert,file){
             // .d3AlphaDecay(0)
             // .d3VelocityDecay(0.08)
             .nodeRelSize(6)
-            .cooldownTime(60000)
-            .linkColor(() => 'rgba(0,0,0,0.05)')
-            .zoom(0.2) ;
+            .cooldownTime(5000)
+            // .linkColor(() => 'rgba(0,0,0,0.05)')
+            .linkVisibility(false)
+            // .onNodeHover( (d,i) => console.log(d) )
+            .zoom(0.2);
             // .enablePointerInteraction(false);
         
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
-        
         // heatmap initial data
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
@@ -1087,8 +1088,9 @@ function renderCoarseEmail(uncert,file){
         heatMap.full_ref = full_rect;
         heatMap.proc_ref = proc_rect;
 
-
     })
+
+    
 
     // detects change on bar and updates data shown accordingly
     d3.select('#coarse-email').on('input', function(d){
