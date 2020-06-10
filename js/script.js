@@ -358,6 +358,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             //Shows minigraph
             d3.select('#graph-mini').style('visibility','visible')
+            d3.select('.labels').style('visibility','visible')
 
 
             if (active_data == 'rectangle'){
@@ -408,7 +409,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             
             // removes buttons without
             $(`#cele`).addClass('disabled')
-            $(`#rect`).addClass('disabled')
+            $(`#rectangle`).addClass('disabled')
             $(`#email`).addClass('disabled')
 
             //re-enables buttons that didn't work with sparsification algo
@@ -419,6 +420,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             //Shows minigraph
             d3.select('#graph-mini').style('visibility','visible')
+            d3.select('.labels').style('visibility','visible')
 
 
             if(active_data =='lesmis'){
@@ -492,22 +494,26 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             if (target == 'rectangle'){
 
                 $(`#spars`).addClass('disabled')
+                $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
                 renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='lesmis'){
                 $(`#spars`).removeClass("disabled")
+                $(`#unifying_framework_coarse`).removeClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
                 renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='cele'){
                 $(`#spars`).addClass('disabled')
+                $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
                 renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
             }
             else if(target =='email'){
                 $(`#spars`).addClass('disabled')
+                $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).addClass('disabled')
                 renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
 
