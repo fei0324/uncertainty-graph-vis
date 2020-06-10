@@ -42,6 +42,10 @@ class kBar {
             // email...need to figure out step, step = 1
             step = 1
         }
+        else if (this.id == 'unif-spars'){
+            step = 0.1
+        }
+
 
         //Slider to change to the datasets with correct k 
 
@@ -71,6 +75,10 @@ class kBar {
             // Sets special text if it's sparsification
             sliderText = sliderLabel.append('text').attr("id","reduction-text").text(`reduction ratio: ${this.activeK}`);
         }
+        else if (this.id == 'unif-spars'){
+            // Sets special text if it's sparsification
+            sliderText = sliderLabel.append('text').attr("id","reduction-text").text(`reduction ratio: ${this.activeK}`);
+        }
         else{
             sliderText = sliderLabel.append('text').attr("id","cluster-text").text(`k-clusters: ${this.activeK}`);
 
@@ -83,6 +91,10 @@ class kBar {
         this.kSlider.on('input', function() {
 
             if (that.id == 'spars-mis'){
+                // Sets special text if it's sparsification
+                sliderText =  sliderText.text(`reduction ratio: ${this.value}`);
+            }
+            else if (that.id == 'unif-spars'){
                 // Sets special text if it's sparsification
                 sliderText =  sliderText.text(`reduction ratio: ${this.value}`);
             }

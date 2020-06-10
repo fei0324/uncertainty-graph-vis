@@ -609,6 +609,9 @@ class Graph{
             if (active_alg == 'spars'){
                 is_sparse = true;
             }
+            else if(active_alg == 'unifying_framework_spars'){
+                is_sparse = true;
+            }
             else{
                 is_sparse = false;
             }

@@ -424,7 +424,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
 
             if(active_data =='lesmis'){
-                //Render spectral coarse graph for lesmis
+                //Render unifying coarse graph for lesmis
                 renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
             }
 
@@ -449,6 +449,69 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 });
 
         }
+
+        else if (target == 'unifying_framework_spars'){
+            //TODO: Hide buttons that don't apply/ make buttons that do reappear
+            // changes active highlighting if it's a valid move
+            let start_active = $('#algDrop').find('active');
+            console.log("active start",start_active)
+            let kids = $('#algDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            // Enables datasets with unifying framework algorithm
+            $(`#lesmis`).removeClass('disabled')
+            $(`#rectangle`).removeClass('disabled')
+            
+            // removes buttons without
+            $(`#cele`).addClass('disabled')
+            $(`#email`).addClass('disabled')
+
+            //disable buttons that don't work with sparsification algo
+            // uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).addClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).addClass('disabled')
+
+            // Hides minigraph and labels div
+            d3.select('#graph-mini').style('visibility','hidden')
+            d3.select('.labels').style('visibility','hidden')
+
+
+            if(active_data =='lesmis'){
+                //Render spectral coarse graph for lesmis
+                renderUnifSpars('lesmis_77','unifying_framework_sparsify')
+            }
+            else if(active_data =='rectangle'){
+                //Render unifying spars graph for rectangle
+                renderUnifSpars('rec_100','unifying_framework_sparsify')
+            }
+
+            // Need to load these when they exist on alg drop
+            let k_description = d3.select("#cluster-text");
+
+            k_description
+                .on("mouseover",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+                        // .style("left",(d3.event.pageX+15) + "px") 
+                        // .style("top", (d3.event.pageY+15) + "px");     
+                })
+                .on("mouseout",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                });
+
+        }
+
+
+
+
     }
 
 
@@ -570,6 +633,22 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             if(target =='lesmis'){
                 $(`#spars`).removeClass("disabled")
                 renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
+            }
+        }
+        else if (active_alg=='unifying_framework_spars'){
+            // changes active highlighting
+            let kids = $('#datasetDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            if(target =='lesmis'){
+                $(`#spars`).removeClass("disabled")
+                renderUnifSpars('lesmis_77','unifying_framework_sparsify')
+            }
+            else if(target =='rectangle'){
+                $(`#spars`).addClass("disabled")
+                $(`#unifying_framework_coarsen`).addClass("disabled")
+                renderUnifSpars('rec_100','unifying_framework_sparsify')
             }
         }
         
@@ -1160,7 +1239,114 @@ function renderSparsLesmis(){
 
 }
     
+//////////////// UNIFYING FRAMEWORK SPARSIFICATION /////////////////////
 
+function renderUnifSpars(data_name,file){
+
+    this.data_name = data_name;
+    this.file = file;
+
+    //Sets default k
+    this.k = 0.1
+    let range = null;
+    if (data_name == 'lesmis_77'){
+        range = [0.7,0.9]
+    }
+    else{
+        range = [0.6,0.9]
+    }
+    console.log(range)
+    let that = this;
+
+    //Sets default filter
+    this.f = 0
+    let f_range = [0,1]
+
+    // deletes k bar if one exists  
+    d3.select(".active-kBar").remove();
+
+    //Creates k bar
+    let k_Bar = new kBar(this.k,range,'unif-spars');
+
+    // deletes f bar if one exists  
+    d3.select(".active-fBar").remove();
+
+    //Creates f bar
+    let f_Bar = new fBar(this.f,f_range,'spars-mis-f');
+
+    // Can choose any data for full graph, there's no linked views with this.
+    // full_rect.data = full_mis_9;
+    // Loads data based on parameters 
+    Promise.all([
+        //reduced
+        d3.json(`data/${file}/${data_name}/${data_name}_${0.7}/sparsified_uncertainty_graph_${0.7}.json`),
+        //original
+        d3.json(`data/${data_name}/original_10.json`),
+
+    ]).then(function(files){
+        proc_rect.data = files[0];
+        full_rect.data = files[1];
+        
+        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        proc_rect.prepGraph();
+
+        proc_rect.type = 'spars'
+        full_rect.prepGraph();
+        proc_rect.prepGraph();
+
+        full_rect.drawGraph();
+        proc_rect.drawGraph();
+
+        proc_rect.myGraph.nodeRelSize(2);
+
+        heatMap.removeHeatMap()
+
+    })
+
+
+    // FILTER BAR FUNCTIONALITY
+    // Detects changes and messes with graph edge visibility
+    d3.select('#spars-mis-f').on('input', function(d){
+        that.f = f_Bar.activeF
+        // console.log(that.f)
+
+        let threshold = proc_rect.linkRange[1]*that.f;
+        console.log(threshold)
+        proc_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.mean) >= threshold) ? true : false )
+
+
+    })
+
+    // detects change on bar and updates data shown accordingly
+    d3.select('#unif-spars').on('input', function(d){
+        let k = k_Bar.activeK;
+        //  console.log('in script',that.k)
+                
+        // Loads data based on parameters 
+        Promise.all([
+            //reduced
+        d3.json(`data/${file}/${data_name}/${data_name}_${k}/sparsified_uncertainty_graph_${k}.json`),
+        //original
+        d3.json(`data/${data_name}/original_10.json`),
+
+        ]).then(function(files){
+            proc_rect.data = files[0];
+            
+            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            proc_rect.prepGraph();
+
+            // Feeding in graph data like this speeds things up really well!
+            proc_rect.myGraph.graphData(proc_rect.data)
+
+        })
+
+    })
+
+
+
+
+
+}
 
 
 
