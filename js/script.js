@@ -142,6 +142,14 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
             }
 
         }
+        else if (active_alg == 'unifying_framework_coarse'){
+            if(active_data =='lesmis'){
+                //Render coarse graph for lesmis
+                renderCoarseLesmis(target,'unifying_framework_coarsen')
+
+            }
+
+        }
     }
 
 });
@@ -386,6 +394,59 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 });
 
         }
+        else if (target == 'unifying_framework_coarse'){
+            //TODO: Hide buttons that don't apply/ make buttons that do reappear
+            // changes active highlighting if it's a valid move
+            let start_active = $('#algDrop').find('active');
+            console.log("active start",start_active)
+            let kids = $('#algDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            // Enables datasets with unifying framework algorithm
+            $(`#lesmis`).removeClass('disabled')
+            
+            // removes buttons without
+            $(`#cele`).addClass('disabled')
+            $(`#rect`).addClass('disabled')
+            $(`#email`).addClass('disabled')
+
+            //re-enables buttons that didn't work with sparsification algo
+            // uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+            //Shows minigraph
+            d3.select('#graph-mini').style('visibility','visible')
+
+
+            if(active_data =='lesmis'){
+                //Render spectral coarse graph for lesmis
+                renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
+            }
+
+            // Need to load these when they exist on alg drop
+            let k_description = d3.select("#cluster-text");
+
+            k_description
+                .on("mouseover",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+                        // .style("left",(d3.event.pageX+15) + "px") 
+                        // .style("top", (d3.event.pageY+15) + "px");     
+                })
+                .on("mouseout",function(){
+                    d3.select("#info-tooltip")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                });
+
+        }
     }
 
 
@@ -494,6 +555,17 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
 
             }
         }
+        else if (active_alg=='unifying_framework_coarse'){
+            // changes active highlighting
+            let kids = $('#datasetDrop').find('a')
+            kids.removeClass( "active" );
+            $(`#${target}`).addClass("active")
+
+            if(target =='lesmis'){
+                $(`#spars`).removeClass("disabled")
+                renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
+            }
+        }
         
     }
 
@@ -587,6 +659,7 @@ function renderCoarseRect(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.active_alg = file;
         heatMap.data_name = 'rec_100';
         heatMap.uncert = uncert;
         heatMap.k = this.k;
@@ -621,6 +694,7 @@ function renderCoarseRect(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.active_alg = file;
             heatMap.data_name = 'rec_100';
             heatMap.uncert = uncert;
             heatMap.k = k;
@@ -692,6 +766,7 @@ function renderCoarseLesmis(uncert,file){
 
         heatMap.data = files[2];
         heatMap.data_name = 'lesmis_77';
+        heatMap.active_alg = file;
         heatMap.uncert = uncert;
         heatMap.k = k;
         heatMap.removeHeatMap()
@@ -727,6 +802,7 @@ function renderCoarseLesmis(uncert,file){
             heatMap.removeHeatMap()
             heatMap.data = files[2];
             heatMap.data_name = 'lesmis_77';
+            heatMap.active_alg = file;
             heatMap.uncert = uncert;
             heatMap.k = k;
             heatMap.createHeatMap()
@@ -795,6 +871,7 @@ function renderCoarseCele(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.active_alg = file;
         heatMap.data_name = 'celegans_453';
         heatMap.uncert = uncert;
         heatMap.k = k;
@@ -829,6 +906,7 @@ function renderCoarseCele(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.active_alg = file;
             heatMap.data_name = 'celegans_453';
             heatMap.uncert = uncert;
             heatMap.k = k;
@@ -916,6 +994,7 @@ function renderCoarseEmail(uncert,file){
         heatMap.removeHeatMap()
         heatMap.data = files[2];
         heatMap.data_name = 'email_1005';
+        heatMap.active_alg = file;
         heatMap.uncert = uncert;
         heatMap.k = this.k;
         heatMap.createHeatMap()
@@ -950,6 +1029,7 @@ function renderCoarseEmail(uncert,file){
             heatMap.removeHeatMap()
             heatMap.data = files[2];
             heatMap.data_name = 'email_1005';
+            heatMap.active_alg = file;
             heatMap.uncert = uncert;
             heatMap.k = k;
             heatMap.createHeatMap()
@@ -1074,6 +1154,9 @@ function renderSparsLesmis(){
 
 }
     
+
+
+
 
 
 ///////////// TUTORIAL RENDERING  /////////////////

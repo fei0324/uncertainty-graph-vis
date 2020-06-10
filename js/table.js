@@ -3,12 +3,13 @@ class Table {
     /**
      * Creates a Table Object
      */
-    constructor(data,full_ref,proc_ref,data_name,uncert,k){
+    constructor(data,full_ref,proc_ref,data_name,uncert,k,active_alg){
         // Set data variable
         this.data = data;
         this.data_name = data_name;
         this.uncert = uncert;
         this.k = k;
+        this.active_alg = active_alg;
 
         //Setting references
         this.full_ref = full_ref;
@@ -242,8 +243,8 @@ class Table {
             // Loading data and plotting graph
             that.myGraph.nodeVisibility(true)
             that.myGraph.linkVisibility(true)
-            console.log(" in mouse click",that.data_name,that.k,that.uncert)
-            d3.json(`data/njw_spectral_clustering/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
+            console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg)
+            d3.json(`data/${that.active_alg}/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
                 // LOL - need to rename 'edges' to 'links'
                 my_data['links'] = my_data['edges'];
 
