@@ -96,10 +96,10 @@ class Table {
         let data_values = this.data.map( d => Object.values(d) );
         let mat_values = new Array()
         for (let elem of data_values){
-            mat_values = mat_values.concat(elem)
+            mat_values = mat_values.concat(parseFloat(elem).toFixed(5))
         }
 
-        
+        console.log(d3.extent(mat_values))
         let color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
         
         // Make rows
@@ -172,6 +172,8 @@ class Table {
                 .duration(100)
                 .style('opacity',1);
 
+            
+
 
         }
 
@@ -204,6 +206,7 @@ class Table {
 
             // Highlight column
             d3.selectAll(`.cell-${i}`).attr('fill','orange')
+            
 
             // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
             // INFOBOX
@@ -243,7 +246,7 @@ class Table {
             // Loading data and plotting graph
             that.myGraph.nodeVisibility(true)
             that.myGraph.linkVisibility(true)
-            console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg)
+            console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg,i)
             d3.json(`data/${that.active_alg}/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
                 // LOL - need to rename 'edges' to 'links'
                 my_data['links'] = my_data['edges'];
@@ -319,7 +322,7 @@ class Table {
     infoboxRender(value,i){
         let that = this;
         let text = null;
-        text = "<h3> run number: " + i+ "</h3>";
+        text = "<h3> run number: " + i + "</h3>";
         text = text + "<p> node uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
         return text;
 
