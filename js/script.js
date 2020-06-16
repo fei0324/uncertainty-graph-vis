@@ -210,7 +210,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             //Shows minigraph and labels
             d3.select('#graph-mini').style('visibility','visible')
-            d3.select('.labels').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
 
 
             if (active_data == 'rectangle'){
@@ -285,7 +287,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
                 // Hides minigraph and labels div
                 d3.select('#graph-mini').style('visibility','hidden')
-                d3.select('.labels').style('visibility','hidden')
+                d3.select('#heatmap-label').style('visibility','visible')
+                d3.select('#instances-label').style('visibility','hidden')
+                d3.select('#mini-label').style('visibility','visible')
 
                 //Render sparse graph for lesmis
                 renderSparsLesmis()
@@ -358,7 +362,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             //Shows minigraph
             d3.select('#graph-mini').style('visibility','visible')
-            d3.select('.labels').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
 
 
             if (active_data == 'rectangle'){
@@ -420,7 +426,10 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             //Shows minigraph
             d3.select('#graph-mini').style('visibility','visible')
-            d3.select('.labels').style('visibility','visible')
+            // d3.select('.labels').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
 
 
             if(active_data =='lesmis'){
@@ -474,9 +483,10 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonNode`).addClass('disabled')
 
             // Hides minigraph and labels div
-            d3.select('#graph-mini').style('visibility','hidden')
-            d3.select('.labels').style('visibility','hidden')
-
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','hidden')
+            d3.select('#instances-label').style('visibility','visible')
+            d3.select('#mini-label').style('visibility','visible')
 
             if(active_data =='lesmis'){
                 //Render spectral coarse graph for lesmis
@@ -559,18 +569,21 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 $(`#spars`).addClass('disabled')
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
+                $(`#unifying_framework_spars`).removeClass('disabled')
                 renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='lesmis'){
                 $(`#spars`).removeClass("disabled")
                 $(`#unifying_framework_coarse`).removeClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
+                $(`#unifying_framework_spars`).removeClass('disabled')
                 renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='cele'){
                 $(`#spars`).addClass('disabled')
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
+                $(`#unifying_framework_spars`).addClass('disabled')
                 renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
             }
@@ -578,6 +591,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 $(`#spars`).addClass('disabled')
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).addClass('disabled')
+                $(`#unifying_framework_spars`).addClass('disabled')
                 renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
 
             }
@@ -735,6 +749,9 @@ function renderCoarseRect(uncert,file){
         proc_rect.prepGraph(full_rect);
 
         proc_rect.type = 'clust'
+        full_rect.myGraph
+            .linkVisibility(true);
+
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
@@ -838,10 +855,13 @@ function renderCoarseLesmis(uncert,file){
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
         proc_rect.type = 'clust'
+        full_rect.myGraph
+            .linkVisibility(true);
+
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
-        
+    
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
@@ -947,6 +967,9 @@ function renderCoarseCele(uncert,file){
         proc_rect.prepGraph(full_rect);
 
         proc_rect.type = 'clust'
+        full_rect.myGraph
+            .linkVisibility(true);
+
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
@@ -1187,6 +1210,9 @@ function renderSparsLesmis(){
         proc_rect.prepGraph();
 
         proc_rect.type = 'spars'
+        full_rect.myGraph
+            .linkVisibility(true);
+
         full_rect.prepGraph();
         proc_rect.prepGraph();
 
@@ -1248,8 +1274,9 @@ function renderUnifSpars(data_name,file){
     this.data_name = data_name;
     this.file = file;
 
+    
+
     //Sets default k
-    this.k = 0.1
     let range = null;
     if (data_name == 'lesmis_77'){
         range = [0.7,0.9]
@@ -1259,6 +1286,7 @@ function renderUnifSpars(data_name,file){
     }
     console.log(range)
     let that = this;
+    this.k = range[0];
 
     //Sets default filter
     this.f = 0
@@ -1281,9 +1309,11 @@ function renderUnifSpars(data_name,file){
     // Loads data based on parameters 
     Promise.all([
         //reduced
-        d3.json(`data/${file}/${data_name}/${data_name}_${0.7}/sparsified_uncertainty_graph_${0.7}.json`),
+        d3.json(`data/${file}/${data_name}/${data_name}_${range[0]}/sparsified_uncertainty_graph_${range[0]}.json`),
         //original
         d3.json(`data/${data_name}/original_10.json`),
+        // selection skeleton for individual instances
+        d3.csv(`data/${file}/${data_name}/uncertain_mat.csv`)
 
     ]).then(function(files){
         proc_rect.data = files[0];
@@ -1293,6 +1323,9 @@ function renderUnifSpars(data_name,file){
         proc_rect.prepGraph();
 
         proc_rect.type = 'spars'
+        full_rect.myGraph
+            .linkVisibility(true);
+            
         full_rect.prepGraph();
         proc_rect.prepGraph();
 
@@ -1301,7 +1334,32 @@ function renderUnifSpars(data_name,file){
 
         proc_rect.myGraph.nodeRelSize(2);
 
+        // heatMap.removeHeatMap()
+
+        // heatmap initial data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
+        // let spars_data_skeleton =  Array(Object.assign({},Array.from(Array(100).keys())));
+        // spars_data_skeleton.length = 100;
+        // spars_data_skeleton.columns = Array.from(Array(100).keys());
+        // console.log('data:',spars_data_skeleton)
+        // console.log('spars lengeth:',spars_data_skeleton.length)
+        // console.log(spars_data_skeleton.map( d => Object.values(d)));
+
+
+
         heatMap.removeHeatMap()
+        heatMap.unif_spars = true;
+        heatMap.data = files[2];
+        heatMap.data_name = data_name;
+        heatMap.active_alg = file;
+        heatMap.uncert = uncert;
+        heatMap.k = k;
+        heatMap.createHeatMap()
+        // Pass references to heatmap as well
+        heatMap.full_ref = full_rect;
+        heatMap.proc_ref = proc_rect;
 
     })
 
@@ -1322,7 +1380,7 @@ function renderUnifSpars(data_name,file){
     // detects change on bar and updates data shown accordingly
     d3.select('#unif-spars').on('input', function(d){
         let k = k_Bar.activeK;
-        //  console.log('in script',that.k)
+         console.log('in script',k)
                 
         // Loads data based on parameters 
         Promise.all([
@@ -1330,6 +1388,8 @@ function renderUnifSpars(data_name,file){
         d3.json(`data/${file}/${data_name}/${data_name}_${k}/sparsified_uncertainty_graph_${k}.json`),
         //original
         d3.json(`data/${data_name}/original_10.json`),
+        // selection skeleton for individual instances
+        d3.csv(`data/${file}/${data_name}/uncertain_mat.csv`)
 
         ]).then(function(files){
             proc_rect.data = files[0];
@@ -1339,6 +1399,22 @@ function renderUnifSpars(data_name,file){
 
             // Feeding in graph data like this speeds things up really well!
             proc_rect.myGraph.graphData(proc_rect.data)
+
+            // heatmap initial data
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
+            heatMap.removeHeatMap()
+            heatMap.unif_spars = true;
+            heatMap.data = files[2];
+            heatMap.data_name = data_name;
+            heatMap.active_alg = file;
+            heatMap.uncert = uncert;
+            heatMap.k = k;
+            heatMap.createHeatMap()
+            // Pass references to heatmap as well
+            heatMap.full_ref = full_rect;
+            heatMap.proc_ref = proc_rect;
 
         })
 
@@ -1365,6 +1441,7 @@ let original_description = d3.select("#full-label");
 let reduced_description = d3.select("#processed-label");
 let heatmap_description = d3.select("#heatmap-label");
 let mini_description = d3.select("#mini-label");
+let instances_description = d3.select("#instances-label");
 
 original_description
     .on("mouseover",function(){
@@ -1416,6 +1493,25 @@ heatmap_description
             .duration(200)
             .style("opacity", 0);
     });
+
+instances_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html("<p> A row of all the individual instances where each rectangle represents one of the instances used in computing the sparsified graph above. </p>");
+            // .style("left",(d3.event.pageX+15) + "px") 
+            // .style("top", (d3.event.pageY+15) + "px");     
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
 
 
 mini_description

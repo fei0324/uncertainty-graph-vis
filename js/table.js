@@ -3,13 +3,14 @@ class Table {
     /**
      * Creates a Table Object
      */
-    constructor(data,full_ref,proc_ref,data_name,uncert,k,active_alg){
+    constructor(data,full_ref,proc_ref,data_name,uncert,k,active_alg,unif_spars=false){
         // Set data variable
         this.data = data;
         this.data_name = data_name;
         this.uncert = uncert;
         this.k = k;
         this.active_alg = active_alg;
+        this.unif_spars = unif_spars;
 
         //Setting references
         this.full_ref = full_ref;
@@ -47,6 +48,7 @@ class Table {
         /** Creates heat map **/
         let data = this.data
         console.log("heatmap data",data)
+        
 
         // // Different color schemes
         // let viridis = d3.interpolateViridis
@@ -85,7 +87,7 @@ class Table {
             .attr("width", width)
             .attr("height", height);
 
-        
+
         // Data scales and such
         let y = d3.scaleBand().range([0, height]).domain(d3.range(data.length));
         let x = d3.scaleBand().range([0, width]).domain(d3.range(data.columns.length));
@@ -99,8 +101,9 @@ class Table {
             mat_values = mat_values.concat(parseFloat(elem).toFixed(5))
         }
 
-        console.log(d3.extent(mat_values))
+        // console.log(d3.extent(mat_values))
         let color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
+        
         
         // Make rows
         let row = svg.selectAll(".row")
@@ -143,62 +146,78 @@ class Table {
             // console.log("in row",i)
             // console.log(that.proc_ref)
 
+            if (that.unif_spars == true){
 
-            // PROCESSED HIGHLIGHTING
-            // Need to select node with id that is node.cluster
-            let my_data = that.proc_ref.myGraph.graphData();
-            // console.log(my_data.nodes)
-            let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
-            // console.log("selected node",da_node)
-            that.proc_ref.myGraph
-                .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
-
-            // FULL HIGHLIGHTING
-            // Need to select node with id that is node.cluster
-            let my_full_data = that.full_ref.myGraph.graphData();
-            let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
-            that.full_ref.myGraph
-                .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
-
-            // INFOBOX
-            d3.select(`#infobox-graph-processed`).transition()
-                .duration(200)
-                .style("opacity", 1);
-            d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
-
-
-            //Row highlighting
-            d3.select(`#row-${i}`).transition()
+                //Row highlighting
+                d3.select(`#row-${i}`).transition()
                 .duration(100)
                 .style('opacity',1);
 
-            
+            }
+            else{
+                // PROCESSED HIGHLIGHTING
+                // Need to select node with id that is node.cluster
+                let my_data = that.proc_ref.myGraph.graphData();
+                // console.log(my_data.nodes)
+                let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
+                // console.log("selected node",da_node)
+                that.proc_ref.myGraph
+                    .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+
+                // FULL HIGHLIGHTING
+                // Need to select node with id that is node.cluster
+                let my_full_data = that.full_ref.myGraph.graphData();
+                let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
+                that.full_ref.myGraph
+                    .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+                // INFOBOX
+                d3.select(`#infobox-graph-processed`).transition()
+                    .duration(200)
+                    .style("opacity", 1);
+                d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
+
+
+                //Row highlighting
+                d3.select(`#row-${i}`).transition()
+                    .duration(100)
+                    .style('opacity',1);
+            }
 
 
         }
 
         function mouseoutRow(r,i) {
 
-            // PROCESSED DE-HIGHLIGHTING
-            that.proc_ref.myGraph
-                .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+            if (that.unif_spars == true){
 
-            // FULL DE- HIGHLIGHTING
-            let highlightNodes = []
-            // Need to reset da_node's color to what it was
-            that.full_ref.myGraph
-                .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                //Row de-highlighting
+                d3.select(`#row-${i}`).transition()
+                    .duration(100)
+                    .style('opacity',0);
 
-            //INFOBOX 
-            d3.select(`#infobox-graph-processed`).transition()
-                .duration(200)
-                .style("opacity", 0);
+            }
+            else{
+                // PROCESSED DE-HIGHLIGHTING
+                that.proc_ref.myGraph
+                    .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
 
-            //Row de-highlighting
-            d3.select(`#row-${i}`).transition()
-                .duration(100)
-                .style('opacity',0);
+                // FULL DE- HIGHLIGHTING
+                let highlightNodes = []
+                // Need to reset da_node's color to what it was
+                that.full_ref.myGraph
+                    .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
 
+                //INFOBOX 
+                d3.select(`#infobox-graph-processed`).transition()
+                    .duration(200)
+                    .style("opacity", 0);
+
+                //Row de-highlighting
+                d3.select(`#row-${i}`).transition()
+                    .duration(100)
+                    .style('opacity',0);
+            }
             
         }
 
@@ -207,39 +226,70 @@ class Table {
             // Highlight column
             d3.selectAll(`.cell-${i}`).attr('fill','orange')
             
-
-            // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
-            // INFOBOX
-            d3.select(`#infobox-graph-orig`).transition()
-                .duration(200)
-                .style("opacity", 1);
-            d3.select(`#infobox-graph-orig`).html(that.infoboxRender(c,i));
-
-            }
-
-        function mouseoutCell(d,i) {
-
-            // d3.select(this).attr('fill', (d) => color(d))
-            // Highlight column
-            d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
-
-            let highlighted = d3.selectAll('.highlighted')._groups[0][0];
-            // Keeps info up if something's been clicked 
-            // console.log(highlighted)
-            if(highlighted){
+            if (that.unif_spars == true){
                 d3.select(`#infobox-graph-orig`).transition()
                     .duration(200)
                     .style("opacity", 1);
-                d3.select(`#infobox-graph-orig`).html(that.infoboxRender(highlighted.__data__,highlighted.id));
+                d3.select(`#infobox-graph-orig`).html(that.infoboxRenderSpars(c,i)); 
             }
             else{
-                //INFOBOX 
+                // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
+                // INFOBOX
                 d3.select(`#infobox-graph-orig`).transition()
                     .duration(200)
-                    .style("opacity", 0);
+                    .style("opacity", 1);
+                d3.select(`#infobox-graph-orig`).html(that.infoboxRenderSpars(c,i));     
             }
+    
+
+        }
+
+        function mouseoutCell(d,i) {
+
+            if (that.unif_spars == true){
+                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+
+                let highlighted = d3.selectAll('.highlighted')._groups[0][0];
+                // Keeps info up if something's been clicked 
+                // console.log(highlighted)
+                if(highlighted){
+                    d3.select(`#infobox-graph-orig`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-orig`).html(that.infoboxRenderSpars(highlighted.__data__,highlighted.id));
+                }
+                else{
+                    //INFOBOX 
+                    d3.select(`#infobox-graph-orig`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
+
 
             }
+            else{
+                // d3.select(this).attr('fill', (d) => color(d))
+                // Highlight column
+                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+
+                let highlighted = d3.selectAll('.highlighted')._groups[0][0];
+                // Keeps info up if something's been clicked 
+                // console.log(highlighted)
+                if(highlighted){
+                    d3.select(`#infobox-graph-orig`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-orig`).html(that.infoboxRender(highlighted.__data__,highlighted.id));
+                }
+                else{
+                    //INFOBOX 
+                    d3.select(`#infobox-graph-orig`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
+            }
+
+        }
 
         function mouseClick(c,i){
 
@@ -247,38 +297,76 @@ class Table {
             that.myGraph.nodeVisibility(true)
             that.myGraph.linkVisibility(true)
             console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg,i)
-            d3.json(`data/${that.active_alg}/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
-                // LOL - need to rename 'edges' to 'links'
-                my_data['links'] = my_data['edges'];
+            if (that.unif_spars == true){
+                console.log("in unif spars load")
+                d3.json(`data/unifying_framework_sparsify/${that.data_name}/${that.data_name}_${that.k}/individual_instances/${that.data_name}_${that.k}_${i}.json`).then(my_data => {
+                    
+                    console.log(my_data)
 
-                // scales
-                // //finding max and min of mean for link weights and means 
-                let avg_arrayNW = my_data.nodes.map( d => d.weight );
-                let nodeRange = d3.extent(avg_arrayNW)
+                    // scales
+                    // //finding max and min of mean for link weights and means 
+                    let avg_arrayNW = my_data.nodes.map( d => d.weight );
+                    let nodeRange = d3.extent(avg_arrayNW)
 
-                //finding max and min of mean for link weights and means 
-                let avg_arrayLW = my_data.links.map( d => d.weight );
-                let linkRange = d3.extent(avg_arrayLW)
+                    //finding max and min of mean for link weights and means 
+                    let avg_arrayLW = my_data.links.map( d => d.weight );
+                    let linkRange = d3.extent(avg_arrayLW)
 
-                let link_color = cool;
-                let node_color = blue;
+                    let link_color = cool;
+                    let node_color = blue;
 
-                // Color scales
-                let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
-                let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
+                    // Color scales
+                    let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
+                    let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
 
-                // Width and size scales
-                let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1.4]);
-                let nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
+                    // Width and size scales
+                    let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,8]);
+                    let nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
 
-                that.myGraph
-                    .graphData(my_data)
-                    .nodeVal(d => nodeScale(d.weight))
-                    .nodeColor(d => nodeColor(d.weight))
-                    .linkWidth( d => linkScale(d.weight))
-                    .linkColor(d => linkColor(d.weight));
+                    that.myGraph
+                        .graphData(my_data)
+                        .nodeVal(d => nodeScale(d.weight))
+                        .nodeColor(d => 'black')
+                        .linkWidth( d => linkScale(d.weight))
+                        .linkColor(d => linkColor(d.weight));
 
-            });
+                });
+
+            }   
+            else{
+                d3.json(`data/${that.active_alg}/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
+                    // LOL - need to rename 'edges' to 'links'
+                    my_data['links'] = my_data['edges'];
+
+                    // scales
+                    // //finding max and min of mean for link weights and means 
+                    let avg_arrayNW = my_data.nodes.map( d => d.weight );
+                    let nodeRange = d3.extent(avg_arrayNW)
+
+                    //finding max and min of mean for link weights and means 
+                    let avg_arrayLW = my_data.links.map( d => d.weight );
+                    let linkRange = d3.extent(avg_arrayLW)
+
+                    let link_color = cool;
+                    let node_color = blue;
+
+                    // Color scales
+                    let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
+                    let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
+
+                    // Width and size scales
+                    let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1.4]);
+                    let nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
+
+                    that.myGraph
+                        .graphData(my_data)
+                        .nodeVal(d => nodeScale(d.weight))
+                        .nodeColor(d => nodeColor(d.weight))
+                        .linkWidth( d => linkScale(d.weight))
+                        .linkColor(d => linkColor(d.weight));
+
+                });
+            }
 
             // If already selected it, then clears selection and removes graph
             console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
@@ -324,6 +412,14 @@ class Table {
         let text = null;
         text = "<h3> run number: " + i + "</h3>";
         text = text + "<p> node uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
+        return text;
+
+    }
+
+    infoboxRenderSpars(value,i){
+        let that = this;
+        let text = null;
+        text = "<h3> instance number: " + i + "</h3>";
         return text;
 
     }

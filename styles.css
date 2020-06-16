@@ -134,6 +134,18 @@
     z-index: 100;
 }
 
+#instances-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: left; */
+    position: relative;
+    top: 5px;
+    left: -250px;
+    color:gray;
+    z-index: 100;
+    visibility: hidden;
+}
+
 /* #panel-label{
     display: inline-block;
     position: relative;
