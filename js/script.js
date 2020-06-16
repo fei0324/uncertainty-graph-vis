@@ -193,7 +193,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
-            let kids = $('#algDrop').find('a')
+            let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
@@ -267,7 +267,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 // changes active highlighting if it's a valid move
                 let start_active = $('#algDrop').find('active');
                 console.log("active start",start_active)
-                let kids = $('#algDrop').find('a')
+                let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
                 // kids.addClass('disabled')
                 // $(`#${target}`).removeClass("disabled")
@@ -287,9 +287,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
                 // Hides minigraph and labels div
                 d3.select('#graph-mini').style('visibility','hidden')
-                d3.select('#heatmap-label').style('visibility','visible')
+                d3.select('#heatmap-label').style('visibility','hidden')
                 d3.select('#instances-label').style('visibility','hidden')
-                d3.select('#mini-label').style('visibility','visible')
+                d3.select('#mini-label').style('visibility','hidden')
 
                 //Render sparse graph for lesmis
                 renderSparsLesmis()
@@ -346,7 +346,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
-            let kids = $('#algDrop').find('a')
+            let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
@@ -406,7 +406,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
-            let kids = $('#algDrop').find('a')
+            let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
@@ -464,7 +464,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
-            let kids = $('#algDrop').find('a')
+            let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
@@ -1325,7 +1325,7 @@ function renderUnifSpars(data_name,file){
         proc_rect.type = 'spars'
         full_rect.myGraph
             .linkVisibility(true);
-            
+
         full_rect.prepGraph();
         proc_rect.prepGraph();
 
@@ -1443,6 +1443,13 @@ let heatmap_description = d3.select("#heatmap-label");
 let mini_description = d3.select("#mini-label");
 let instances_description = d3.select("#instances-label");
 
+// algorithms
+let njw_description = d3.select("#coarse");
+let spec_spars_description = d3.select("#spars");
+let spec_coarse_description = d3.select("#spec_coarse");
+let unif_coarse_description = d3.select("#unifying_framework_coarse");
+let unif_spars_description = d3.select("#unifying_framework_spars");
+
 original_description
     .on("mouseover",function(){
         d3.select("#info-tooltip")
@@ -1512,8 +1519,6 @@ instances_description
     });
 
 
-
-
 mini_description
     .on("mouseover",function(){
         d3.select("#info-tooltip")
@@ -1531,6 +1536,84 @@ mini_description
             .style("opacity", 0);
     });
 
+
+njw_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html(`<p> NJW is.... </p>`); 
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
+spec_spars_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html(`<p> Spectral sparsification is.... </p>`); 
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+spec_coarse_description 
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html(`<p> Spectral coarsening is.... </p>`); 
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
+unif_coarse_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html(`<p> Unifying framework coarsening is.... </p>`); 
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
+unif_spars_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html(`<p> Unifying framework sparsification is.... </p>`); 
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
 
 
 // Need to load these when they exist on alg drop

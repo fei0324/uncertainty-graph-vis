@@ -238,7 +238,7 @@ class Table {
                 d3.select(`#infobox-graph-orig`).transition()
                     .duration(200)
                     .style("opacity", 1);
-                d3.select(`#infobox-graph-orig`).html(that.infoboxRenderSpars(c,i));     
+                d3.select(`#infobox-graph-orig`).html(that.infoboxRender(c,i));     
             }
     
 
