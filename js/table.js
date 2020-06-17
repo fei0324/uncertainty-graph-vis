@@ -101,15 +101,15 @@ class Table {
             mat_values = mat_values.concat(parseFloat(elem).toFixed(5))
         }
 
-        let color = null;
+        
         // console.log(d3.extent(mat_values))
+        let color = null;
         if (this.unif_spars==true){
             color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
         }
         else{
             color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
         }
-        
         
         // Make rows
         let row = svg.selectAll(".row")

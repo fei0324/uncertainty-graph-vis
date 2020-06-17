@@ -745,8 +745,7 @@ function renderCoarseRect(uncert,file){
         full_rect.data = files[1];
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.type = 'clust';
-
+        proc_rect.type = 'clust'
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -969,7 +968,7 @@ function renderCoarseCele(uncert,file){
         full_rect.data = files[1];
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.type = 'clust'
+        proc_rect.type = 'clust';
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -1021,6 +1020,7 @@ function renderCoarseCele(uncert,file){
             heatMap.myGraph.linkVisibility(false)
 
             heatMap.removeHeatMap()
+            heatMap.unif_spars = false;
             heatMap.data = files[2];
             heatMap.unif_spars = false;
             heatMap.active_alg = file;
@@ -1147,6 +1147,7 @@ function renderCoarseEmail(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.unif_spars = false;
             heatMap.data_name = 'email_1005';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
@@ -1216,10 +1217,8 @@ function renderSparsLesmis(){
         full_rect.data = files[1];
         
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.type = 'spars'
+        proc_rect.type = 'spars';
 
-        proc_rect.prepGraph();
-        
         full_rect.myGraph
             .linkVisibility(true);
 
@@ -1330,18 +1329,18 @@ function renderUnifSpars(data_name,file){
         full_rect.data = files[1];
         
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.type = 'spars'
-
+        // For some reason completely bewildering to me, this prepgraph needs to be here or things break??
         proc_rect.prepGraph();
-        
-        full_rect.myGraph
-            .linkVisibility(true);
+        proc_rect.type = 'spars';
 
         full_rect.prepGraph();
         proc_rect.prepGraph();
 
         full_rect.drawGraph();
         proc_rect.drawGraph();
+
+        full_rect.myGraph
+            .linkVisibility(true);
 
         proc_rect.myGraph.nodeRelSize(2);
 

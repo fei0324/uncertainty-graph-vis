@@ -44,8 +44,7 @@ class Graph{
 
     prepGraph(){
         // Creating scales and legend
-        console.log("PREP GRAPH!!!!!!!!",this.type)
-
+        console.log("PREP GRAPH!!!!!!",this.type)
         //Scales for sparsification
         if (this.type == 'spars'){
 
