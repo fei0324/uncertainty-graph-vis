@@ -366,8 +366,8 @@ class Table {
                     let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
 
                     // Width and size scales
-                    let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1.4]);
-                    let nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,4]);
+                    let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,8]);
+                    let nodeScale = d3.scaleLinear().domain(d3.extent(avg_arrayNW)).range([1,5]);
 
                     that.myGraph
                         .graphData(my_data)
@@ -407,6 +407,118 @@ class Table {
             }
 
         }
+
+
+        /////////////// GRAPH STUFF //////////////////
+        this.myGraph
+            .onNodeHover(node => {
+                // let highlightNodes = node ? [node] : []
+
+                if (that.unif_spars==true){
+                    if (node){
+                        let i = node;
+                        // PROCESSED HIGHLIGHTING
+                        // Need to select node with id that is node.cluster
+                        let my_data = that.proc_ref.myGraph.graphData();
+                        // console.log(my_data.nodes)
+                        let da_node = my_data.nodes.filter(l => l.id == i.id); // extract node with correct id
+                        // console.log("selected node",da_node)
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black'); 
+                        // INFOBOX
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(this.infoboxRenderInstance(node,null)); 
+
+                    }
+                    else{
+                        // PROCESSED DE-HIGHLIGHTING
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => 'black');
+
+                        //INFOBOX 
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+                    }
+
+                }
+                else{
+                    // console.log(node)
+                    if (node){
+                        let i = node;
+                        // console.log(node)
+                        // PROCESSED HIGHLIGHTING
+                        // Need to select node with id that is node.cluster
+                        let my_data = that.proc_ref.myGraph.graphData();
+                        // console.log(my_data.nodes)
+                        let da_node = my_data.nodes.filter(l => l.id == i.id); // extract node with correct id
+                        // console.log("selected node",da_node)
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+
+                        // FULL HIGHLIGHTING
+                        // Need to select node with id that is node.cluster
+                        let my_full_data = that.full_ref.myGraph.graphData();
+                        let da_nodes = my_full_data.nodes.filter(l => l.cluster == i.id); // extract node with correct id
+                        that.full_ref.myGraph
+                            .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+                        // INFOBOX
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(this.infoboxRenderInstance(node,null));
+
+
+                        //Row highlighting
+                        d3.select(`#row-${i.id}`).transition()
+                            .duration(100)
+                            .style('opacity',1);
+
+                    }
+                    else{
+                        // PROCESSED DE-HIGHLIGHTING
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+
+                        // FULL DE- HIGHLIGHTING
+                        let highlightNodes = []
+                        // Need to reset da_node's color to what it was
+                        that.full_ref.myGraph
+                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+                        //INFOBOX 
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+
+                        //Row de-highlighting
+                        d3.selectAll(`.row-back`).transition()
+                            .duration(100)
+                            .style('opacity',0);
+
+                    }
+
+                }
+                
+
+            })
+            .onLinkHover(link => {
+                if (link){
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(this.infoboxRenderLink(link));
+                }
+                else{
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
+
+            })
         
     }
 
@@ -435,5 +547,27 @@ class Table {
 
     }
 
+    infoboxRenderInstance(node){
+        let that = this;
+        let text = null;
+        text = "<h3> node: " + node.id + "</h3>";
+        text = text + "<p> node weight: " + parseFloat(node.weight) + "</p>";
+        return text;
+
+    }
+    /**
+     * Returns info for infobox
+     * @param data
+     * @returns {string}
+     */
+    infoboxRenderLink(link) {
+        // console.log(link)
+        let that = this;
+        let text = null;
+        text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
+        text = text + "<p> weight: " + link.weight + "</p>";
+        return text;
+
+    }
 
 }

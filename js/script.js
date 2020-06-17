@@ -1500,7 +1500,7 @@ heatmap_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> A heatmap where every row corresponds to a node in the reduced graph and every column corresponds to an individual run using the selected algorithm. Click on columns to view the graph associated with that particular run. </p>");
+        d3.select("#info-tooltip").html("<p> A heatmap where every row corresponds to a node in the reduced graph and every column corresponds to an individual run using the selected algorithm. Squares are colored by the value of the uncertainty of a node. Click on columns to view the graph associated with that particular run. </p>");
             // .style("left",(d3.event.pageX+15) + "px") 
             // .style("top", (d3.event.pageY+15) + "px");     
     })
@@ -1535,7 +1535,7 @@ mini_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> The graph of the individual instance selected from the heatmap. </p>");
+        d3.select("#info-tooltip").html("<p> The graph of the individual instance selected from the heatmap. Node size in this graph is scaled by weight, unlike the nodes in the reduced graph which are scaled by the uncertainty mean.</p>");
             // .style("left",(d3.event.pageX+15) + "px") 
             // .style("top", (d3.event.pageY+15) + "px");     
     })
