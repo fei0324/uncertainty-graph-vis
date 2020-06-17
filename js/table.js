@@ -96,13 +96,18 @@ class Table {
             // c = d3.scale.category10().domain(d3.range(10));
 
         let data_values = this.data.map( d => Object.values(d) );
+        console.log("data values",data_values)
         let mat_values = new Array()
         for (let elem of data_values){
-            mat_values = mat_values.concat(parseFloat(elem).toFixed(5))
+            for (let i of elem){
+                // console.log(i)
+                // console.log(parseFloat(i).toFixed(5));
+                mat_values = mat_values.concat(parseFloat(i).toFixed(5))
+            }
         }
-
-        
+        // console.log('my mat',mat_values)
         // console.log(d3.extent(mat_values))
+
         let color = null;
         if (this.unif_spars==true){
             color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
