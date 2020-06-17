@@ -51,7 +51,7 @@ class Table {
         
 
         // // Different color schemes
-        // let viridis = d3.interpolateViridis
+        let viridis = d3.interpolateViridis
         // let inferno = d3.interpolateInferno
         // let plasma =  d3.interpolatePlasma
         let cool = d3.interpolateCool
@@ -101,8 +101,14 @@ class Table {
             mat_values = mat_values.concat(parseFloat(elem).toFixed(5))
         }
 
+        let color = null;
         // console.log(d3.extent(mat_values))
-        let color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
+        if (this.unif_spars==true){
+            color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
+        }
+        else{
+            color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
+        }
         
         
         // Make rows

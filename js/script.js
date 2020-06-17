@@ -745,10 +745,12 @@ function renderCoarseRect(uncert,file){
         full_rect.data = files[1];
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        proc_rect.type = 'clust';
+
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
-        proc_rect.type = 'clust'
+        
         full_rect.myGraph
             .linkVisibility(true);
 
@@ -761,6 +763,7 @@ function renderCoarseRect(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.unif_spars = false;
         heatMap.active_alg = file;
         heatMap.data_name = 'rec_100';
         heatMap.uncert = uncert;
@@ -796,6 +799,7 @@ function renderCoarseRect(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.unif_spars = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'rec_100';
             heatMap.uncert = uncert;
@@ -870,6 +874,7 @@ function renderCoarseLesmis(uncert,file){
         heatMap.myGraph.linkVisibility(false)
 
         heatMap.data = files[2];
+        heatMap.unif_spars = false;
         heatMap.data_name = 'lesmis_77';
         heatMap.active_alg = file;
         heatMap.uncert = uncert;
@@ -906,6 +911,7 @@ function renderCoarseLesmis(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.unif_spars = false;
             heatMap.data_name = 'lesmis_77';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
@@ -963,10 +969,11 @@ function renderCoarseCele(uncert,file){
         full_rect.data = files[1];
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        proc_rect.type = 'clust'
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
-        proc_rect.type = 'clust'
+        
         full_rect.myGraph
             .linkVisibility(true);
 
@@ -979,6 +986,7 @@ function renderCoarseCele(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.unif_spars = false;
         heatMap.active_alg = file;
         heatMap.data_name = 'celegans_453';
         heatMap.uncert = uncert;
@@ -1014,6 +1022,7 @@ function renderCoarseCele(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.unif_spars = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'celegans_453';
             heatMap.uncert = uncert;
@@ -1077,10 +1086,9 @@ function renderCoarseEmail(uncert,file){
         full_rect.data = files[1];
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        proc_rect.type = 'clust';
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
-
-        proc_rect.type = 'clust'
 
         full_rect.myGraph
             // .d3AlphaDecay(0)
@@ -1102,6 +1110,7 @@ function renderCoarseEmail(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.unif_spars = false;
         heatMap.data_name = 'email_1005';
         heatMap.active_alg = file;
         heatMap.uncert = uncert;
@@ -1207,9 +1216,10 @@ function renderSparsLesmis(){
         full_rect.data = files[1];
         
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.prepGraph();
-
         proc_rect.type = 'spars'
+
+        proc_rect.prepGraph();
+        
         full_rect.myGraph
             .linkVisibility(true);
 
@@ -1320,9 +1330,10 @@ function renderUnifSpars(data_name,file){
         full_rect.data = files[1];
         
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.prepGraph();
-
         proc_rect.type = 'spars'
+
+        proc_rect.prepGraph();
+        
         full_rect.myGraph
             .linkVisibility(true);
 
