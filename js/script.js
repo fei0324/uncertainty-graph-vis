@@ -837,6 +837,10 @@ function renderCoarseRect(uncert,file){
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
+        proc_rect.myGraph
+            .zoom(2.8);
+        full_rect.myGraph
+            .zoom(0.8);
         
         full_rect.myGraph
             .linkVisibility(true);
@@ -880,6 +884,11 @@ function renderCoarseRect(uncert,file){
         ]).then(function(files){
             proc_rect.data = files[0];
             full_rect.data = files[1];
+
+            proc_rect.myGraph
+                .zoom(2.8);
+            full_rect.myGraph
+                .zoom(0.8);
 
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
@@ -949,6 +958,11 @@ function renderCoarseLesmis(uncert,file){
         full_rect.myGraph
             .linkVisibility(true);
 
+        proc_rect.myGraph
+            .zoom(2.7);
+        full_rect.myGraph
+            .zoom(0.8);
+
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -992,6 +1006,11 @@ function renderCoarseLesmis(uncert,file){
         ]).then(function(files){
             proc_rect.data = files[0];
             full_rect.data = files[1];
+
+            proc_rect.myGraph
+                .zoom(2.7);
+            full_rect.myGraph
+                .zoom(0.8);
 
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
@@ -1060,6 +1079,10 @@ function renderCoarseCele(uncert,file){
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
+        proc_rect.myGraph
+            .zoom(3);
+        full_rect.myGraph
+            .zoom(0.35);
         
         full_rect.myGraph
             .linkVisibility(true);
@@ -1103,6 +1126,11 @@ function renderCoarseCele(uncert,file){
         ]).then(function(files){
             proc_rect.data = files[0];
             full_rect.data = files[1];
+
+            proc_rect.myGraph
+                .zoom(3);
+            full_rect.myGraph
+                .zoom(0.35);
 
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
@@ -1178,15 +1206,18 @@ function renderCoarseEmail(uncert,file){
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
+        proc_rect.myGraph
+            .zoom(2.5);
+
         full_rect.myGraph
             // .d3AlphaDecay(0)
             // .d3VelocityDecay(0.08)
-            .nodeRelSize(6)
-            .cooldownTime(5000)
+            // .nodeRelSize(6)
+            .cooldownTime(8000)
             // .linkColor(() => 'rgba(0,0,0,0.05)')
             .linkVisibility(false)
             // .onNodeHover( (d,i) => console.log(d) )
-            .zoom(0.2);
+            .zoom(0.1);
             // .enablePointerInteraction(false);
         
         full_rect.drawGraph(proc_rect);
@@ -1229,6 +1260,11 @@ function renderCoarseEmail(uncert,file){
         ]).then(function(files){
             proc_rect.data = files[0];
             full_rect.data = files[1];
+
+            proc_rect.myGraph
+                .zoom(2.5);
+            full_rect.myGraph
+                .zoom(0.1);
 
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
@@ -1313,10 +1349,15 @@ function renderSparsLesmis(){
         full_rect.prepGraph();
         proc_rect.prepGraph();
 
+        proc_rect.myGraph
+            .zoom(0.8);
+        full_rect.myGraph
+            .zoom(0.8);
+
         full_rect.drawGraph();
         proc_rect.drawGraph();
 
-        proc_rect.myGraph.nodeRelSize(2);
+        proc_rect.myGraph.nodeRelSize(4);
 
         heatMap.removeHeatMap()
 
@@ -1353,6 +1394,11 @@ function renderSparsLesmis(){
             
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.prepGraph();
+
+            proc_rect.myGraph
+                .zoom(0.8);
+            full_rect.myGraph
+                .zoom(0.8);
 
             // Feeding in graph data like this speeds things up really well!
             proc_rect.myGraph.graphData(proc_rect.data)
@@ -1427,6 +1473,11 @@ function renderUnifSpars(data_name,file){
         full_rect.drawGraph();
         proc_rect.drawGraph();
 
+        proc_rect.myGraph
+            .zoom(0.8);
+        full_rect.myGraph
+            .zoom(0.8);
+
         full_rect.myGraph
             .linkVisibility(true);
 
@@ -1483,7 +1534,11 @@ function renderUnifSpars(data_name,file){
             
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.prepGraph();
-
+            
+            proc_rect.myGraph
+                .zoom(0.8);
+            full_rect.myGraph
+                .zoom(0.8);
             // Feeding in graph data like this speeds things up really well!
             proc_rect.myGraph.graphData(proc_rect.data)
 
@@ -1548,15 +1603,19 @@ function renderGemsecTv(uncert,file){
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
+        proc_rect.myGraph
+            .zoom(3);
+
         full_rect.myGraph
             // .d3AlphaDecay(0)
             // .d3VelocityDecay(0.08)
-            .nodeRelSize(6)
-            .cooldownTime(5000)
+            // .nodeRelSize(6)
+            // .nodeVal(5)
+            .cooldownTime(8000)
             // .linkColor(() => 'rgba(0,0,0,0.05)')
             .linkVisibility(false)
             // .onNodeHover( (d,i) => console.log(d) )
-            .zoom(0.2);
+            .zoom(0.07);
             // .enablePointerInteraction(false);
         // full_rect.myGraph
         //     .linkVisibility(true);
@@ -1579,7 +1638,6 @@ function renderGemsecTv(uncert,file){
         // Pass references to heatmap as well
         heatMap.full_ref = full_rect;
         heatMap.proc_ref = proc_rect;
-
 
     })
 
