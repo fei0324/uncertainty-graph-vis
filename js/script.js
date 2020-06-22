@@ -13,6 +13,7 @@ let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 
 // Populates default view
 renderCoarseLesmis('local_adjusted_rand_index','njw_spectral_clustering');
+$(`#gemsec`).addClass('disabled')
 
 
 // Handling resizing stuff
@@ -146,6 +147,14 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
             if(active_data =='lesmis'){
                 //Render coarse graph for lesmis
                 renderCoarseLesmis(target,'unifying_framework_coarsen')
+
+            }
+
+        }
+        else if (active_alg == 'gemsec'){
+            if(active_data =='tv'){
+                //Render coarse graph for lesmis
+                renderGemsecTv(target,'gemsec')
 
             }
 
@@ -570,6 +579,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
                 $(`#coarse`).addClass("active")
+                $(`#coarse`).removeClass('disabled')
 
                 //Reenables uncertainty buttons
                 //re-enables buttons that didn't work with sparsification algo
@@ -583,6 +593,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
                 $(`#unifying_framework_spars`).removeClass('disabled')
+                $(`#gemsec`).addClass('disabled')
                 renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='lesmis'){
@@ -590,6 +601,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
                 $(`#coarse`).addClass("active")
+                $(`#coarse`).removeClass('disabled')
 
                 //Reenables uncertainty buttons
                 //re-enables buttons that didn't work with sparsification algo
@@ -602,6 +614,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 $(`#unifying_framework_coarse`).removeClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
                 $(`#unifying_framework_spars`).removeClass('disabled')
+                $(`#gemsec`).addClass('disabled')
                 renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='cele'){
@@ -609,6 +622,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
                 $(`#coarse`).addClass("active")
+                $(`#coarse`).removeClass('disabled')
 
                 //Reenables uncertainty buttons
                 //re-enables buttons that didn't work with sparsification algo
@@ -621,6 +635,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
                 $(`#unifying_framework_spars`).addClass('disabled')
+                $(`#gemsec`).addClass('disabled')
                 renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
             }
@@ -629,6 +644,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
                 $(`#coarse`).addClass("active")
+                $(`#coarse`).removeClass('disabled')
 
                 //Reenables uncertainty buttons
                 //re-enables buttons that didn't work with sparsification algo
@@ -641,7 +657,30 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).addClass('disabled')
                 $(`#unifying_framework_spars`).addClass('disabled')
+                $(`#gemsec`).addClass('disabled')
                 renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
+
+            }
+            else if(target =='tv'){
+                // highlights coarse algorithm
+                let kids = $('#algDrop').find('div')
+                kids.removeClass( "active" );
+                $(`#gemsec`).addClass("active")
+                $(`#gemsec`).removeClass('disabled')
+
+                //Reenables uncertainty buttons
+                //re-enables buttons that didn't work with sparsification algo
+                //uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+                $(`#spars`).addClass('disabled')
+                $(`#unifying_framework_coarse`).addClass('disabled')
+                $(`#spec_coarse`).addClass('disabled')
+                $(`#unifying_framework_spars`).addClass('disabled')
+                $(`#coarse`).addClass('disabled')
+                renderGemsecTv(active_uncertainty,'gemsec')
 
             }
         // }
@@ -1469,6 +1508,134 @@ function renderUnifSpars(data_name,file){
 }
 
 
+
+////////////////////////////// GEMSEC RENDERING ///////////////////////////////////////
+function renderGemsecTv(uncert,file){
+
+    // Type of uncertainty
+    this.uncert = uncert;
+
+    // Loads gemsec dataset
+    //Sets default k - no default k for gemsec, only 20 clusters
+    // this.k = 10
+    // let range = [10,14]
+    let that = this;
+
+    // deletes k bar if one exists  
+    d3.select(".active-kBar").remove();
+
+    // deletes f bar if one exists  
+    d3.select(".active-fBar").remove();
+
+    //Creates k bar - no kbar for gemsec 
+    // let k_Bar = new kBar(this.k,range,'coarse-cele');
+
+    Promise.all([
+        //reduced
+        d3.json(`data/${file}/tvshow_3892/cluster_20/${uncert}/uncertainty_graph.json`),
+        //original
+        d3.json(`data/${file}/tvshow_3892/cluster_20/${uncert}/ori_graph_with_cluster.json`),
+        // uncertainty matrix
+        d3.csv(`data/${file}/tvshow_3892/cluster_20/${uncert}/uncertain_mat.csv`)
+
+    ]).then(function(files){
+        
+        proc_rect.data = files[0];
+        full_rect.data = files[1];
+
+        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        proc_rect.type = 'clust';
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+
+        full_rect.myGraph
+            // .d3AlphaDecay(0)
+            // .d3VelocityDecay(0.08)
+            .nodeRelSize(6)
+            .cooldownTime(5000)
+            // .linkColor(() => 'rgba(0,0,0,0.05)')
+            .linkVisibility(false)
+            // .onNodeHover( (d,i) => console.log(d) )
+            .zoom(0.2);
+            // .enablePointerInteraction(false);
+        // full_rect.myGraph
+        //     .linkVisibility(true);
+
+        full_rect.drawGraph(proc_rect);
+        proc_rect.drawGraph(full_rect);
+
+        // heatmap initial data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
+        heatMap.removeHeatMap()
+        heatMap.data = files[2];
+        heatMap.unif_spars = false;
+        heatMap.active_alg = file;
+        heatMap.data_name = 'tvshow_3892';
+        heatMap.uncert = uncert;
+        heatMap.k = 20;
+        heatMap.createHeatMap()
+        // Pass references to heatmap as well
+        heatMap.full_ref = full_rect;
+        heatMap.proc_ref = proc_rect;
+
+
+    })
+
+    // // detects change on bar and updates data shown accordingly
+    // d3.select('#coarse-cele').on('input', function(d){
+    //     let k = k_Bar.activeK;
+    //     //  console.log('in script',that.k)
+                
+    //     // Loads data based on parameters 
+    //     Promise.all([
+    //         //reduced
+    //         d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertainty_graph.json`),
+    //         //original
+    //         d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+    //         // uncertainty matrix
+    //         d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+    //     ]).then(function(files){
+    //         proc_rect.data = files[0];
+    //         full_rect.data = files[1];
+
+    //         heatMap.myGraph.nodeVisibility(false)
+    //         heatMap.myGraph.linkVisibility(false)
+
+    //         heatMap.removeHeatMap()
+    //         heatMap.unif_spars = false;
+    //         heatMap.data = files[2];
+    //         heatMap.unif_spars = false;
+    //         heatMap.active_alg = file;
+    //         heatMap.data_name = 'celegans_453';
+    //         heatMap.uncert = uncert;
+    //         heatMap.k = k;
+    //         heatMap.createHeatMap()
+            
+    //         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+    //         full_rect.prepGraph(proc_rect);
+    //         proc_rect.prepGraph(full_rect);
+
+    //         // Pass references to heatmap as well
+    //         heatMap.full_ref = full_rect;
+    //         heatMap.proc_ref = proc_rect;
+
+    //         // Feeding in graph data like this speeds things up really well!
+    //         full_rect.myGraph.graphData(full_rect.data)
+    //         proc_rect.myGraph.graphData(proc_rect.data)
+
+    //     })
+
+    // })
+
+}
+
+
+
+
+
 ///////////// TUTORIAL RENDERING  /////////////////
 //make tooltip div for descriptions
 d3.select("#data-panel")
@@ -1489,6 +1656,7 @@ let spec_spars_description = d3.select("#spars");
 let spec_coarse_description = d3.select("#spec_coarse");
 let unif_coarse_description = d3.select("#unifying_framework_coarse");
 let unif_spars_description = d3.select("#unifying_framework_spars");
+let gemsec_description = d3.select("#gemsec");
 
 original_description
     .on("mouseover",function(){
@@ -1647,6 +1815,22 @@ unif_spars_description
             .duration(200)
             .style("opacity", 1);
         d3.select("#info-tooltip").html(`<p> Unifying framework sparsification is.... </p>`); 
+    })
+    .on("mouseout",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    });
+
+
+gemsec_description
+    .on("mouseover",function(){
+        d3.select("#info-tooltip")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+        d3.select("#info-tooltip").html(`<p> GESMEC is.... </p>`); 
     })
     .on("mouseout",function(){
         d3.select("#info-tooltip")
