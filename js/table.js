@@ -551,7 +551,7 @@ class Table {
         let that = this;
         let text = null;
         text = "<h3> node: " + node.id + "</h3>";
-        text = text + "<p> node weight: " + parseFloat(node.weight) + "</p>";
+        text = text + "<p> node weight: " + parseFloat(node.weight).toFixed(4) + "</p>";
         return text;
 
     }
@@ -565,7 +565,7 @@ class Table {
         let that = this;
         let text = null;
         text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
-        text = text + "<p> weight: " + link.weight + "</p>";
+        text = text + "<p> weight: " + parseFloat(link.weight).toFixed(4) + "</p>";
         return text;
 
     }

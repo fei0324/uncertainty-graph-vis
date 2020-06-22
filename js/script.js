@@ -1344,22 +1344,11 @@ function renderUnifSpars(data_name,file){
 
         proc_rect.myGraph.nodeRelSize(2);
 
-        // heatMap.removeHeatMap()
-
         // heatmap initial data
-        heatMap.myGraph.nodeVisibility(false)
-        heatMap.myGraph.linkVisibility(false)
+        heatMap.myGraph.nodeVisibility(false);
+        heatMap.myGraph.linkVisibility(false);
 
-        // let spars_data_skeleton =  Array(Object.assign({},Array.from(Array(100).keys())));
-        // spars_data_skeleton.length = 100;
-        // spars_data_skeleton.columns = Array.from(Array(100).keys());
-        // console.log('data:',spars_data_skeleton)
-        // console.log('spars lengeth:',spars_data_skeleton.length)
-        // console.log(spars_data_skeleton.map( d => Object.values(d)));
-
-
-
-        heatMap.removeHeatMap()
+        heatMap.removeHeatMap();
         heatMap.unif_spars = true;
         heatMap.data = files[2];
         heatMap.data_name = data_name;
@@ -1427,16 +1416,8 @@ function renderUnifSpars(data_name,file){
             heatMap.proc_ref = proc_rect;
 
         })
-
     })
-
-
-
-
-
 }
-
-
 
 
 ///////////// TUTORIAL RENDERING  /////////////////
