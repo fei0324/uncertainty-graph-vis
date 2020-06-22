@@ -1213,9 +1213,10 @@ function renderCoarseEmail(uncert,file){
             // .d3AlphaDecay(0)
             // .d3VelocityDecay(0.08)
             // .nodeRelSize(6)
-            .cooldownTime(8000)
+            .cooldownTime(6000)
             // .linkColor(() => 'rgba(0,0,0,0.05)')
             .linkVisibility(false)
+            .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
             // .onNodeHover( (d,i) => console.log(d) )
             .zoom(0.1);
             // .enablePointerInteraction(false);
@@ -1268,6 +1269,18 @@ function renderCoarseEmail(uncert,file){
                 .zoom(2.5);
             full_rect.myGraph
                 .zoom(0.1);
+
+            full_rect.myGraph
+                // .d3AlphaDecay(0)
+                // .d3VelocityDecay(0.08)
+                // .nodeRelSize(6)
+                .cooldownTime(6000)
+                // .linkColor(() => 'rgba(0,0,0,0.05)')
+                .linkVisibility(false)
+                .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
+                // .onNodeHover( (d,i) => console.log(d) )
+                .zoom(0.1);
+                // .enablePointerInteraction(false);
 
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
@@ -1616,11 +1629,12 @@ function renderGemsecTv(uncert,file){
             // .d3VelocityDecay(0.08)
             // .nodeRelSize(6)
             // .nodeVal(5)
-            .cooldownTime(8000)
-            // .linkColor(() => 'rgba(0,0,0,0.05)')
+            .cooldownTime(9000)
+            .linkColor(() => 'rgba(0,0,0,0.005)')
             .linkVisibility(false)
             // .onNodeHover( (d,i) => console.log(d) )
-            .zoom(0.07);
+            .zoom(0.07)
+            .onEngineStop(() => full_rect.myGraph.linkVisibility(true));
             // .enablePointerInteraction(false);
         // full_rect.myGraph
         //     .linkVisibility(true);

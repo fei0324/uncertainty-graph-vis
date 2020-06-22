@@ -24,11 +24,17 @@ Promise.all([
         .graphData(data)
         .d3AlphaDecay(0)
         .d3VelocityDecay(0.08)
-        .cooldownTime(60000)
+        .cooldownTime(10000)
         .linkColor(() => 'rgba(0,0,0,0.05)')
-        .linkVisibility('hidden')
-        .zoom(0.05)
+        .linkVisibility(false)
+        .zoom(1)
+        // .onEngineTick(() => console.log('ticked'))
+        .onEngineStop(() => Graph.linkVisibility(true))
         .enablePointerInteraction(false);
+
+
+
+    
 
 
 });
