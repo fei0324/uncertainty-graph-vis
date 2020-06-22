@@ -99,11 +99,15 @@ class kBar {
                 sliderText =  sliderText.text(`reduction ratio: ${this.value}`);
             }
             else{
-                sliderText =  sliderText.text(`k-clusters: ${this.value}`);
+                let email_vals = [20,30,40,41,42,43,44,50];
+
+                if (this.value < 20 || email_vals.includes(parseInt(this.value))){
+                    sliderText =  sliderText.text(`k-clusters: ${this.value}`);
+                }
+                
     
             }
             that.activeK = this.value;
-            console.log(this.value)
 
         });
 	}

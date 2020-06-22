@@ -1247,6 +1247,9 @@ function renderCoarseEmail(uncert,file){
     d3.select('#coarse-email').on('input', function(d){
         let k = k_Bar.activeK;
         //  console.log('in script',that.k)
+
+        let email_vals = [20,30,40,41,42,43,44,50];
+        if (email_vals.includes(parseInt(k))){
                 
         // Loads data based on parameters 
         Promise.all([
@@ -1291,8 +1294,10 @@ function renderCoarseEmail(uncert,file){
             proc_rect.myGraph.graphData(proc_rect.data)
 
         })
+    }
 
     })
+    
 }
 
 
