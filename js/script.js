@@ -198,9 +198,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#${target}`).addClass("active")
 
             // Enables datasets with course algorithm
-            $(`#rectangle`).removeClass('disabled')
-            $(`#cele`).removeClass('disabled')
-            $(`#email`).removeClass('disabled')
+            // $(`#rectangle`).removeClass('disabled')
+            // $(`#cele`).removeClass('disabled')
+            // $(`#email`).removeClass('disabled')
 
             //re-enables buttons that didn't work with sparsification algo
             // uncertainty button
@@ -274,9 +274,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 $(`#${target}`).addClass("active")
 
                 // disables datasets without sparsification data
-                $(`#rectangle`).addClass('disabled')
-                $(`#cele`).addClass('disabled')
-                $(`#email`).addClass('disabled')
+                // $(`#rectangle`).addClass('disabled')
+                // $(`#cele`).addClass('disabled')
+                // $(`#email`).addClass('disabled')
 
                 //disable buttons that don't work with sparsification algo
                 // uncertainty button
@@ -351,8 +351,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#${target}`).addClass("active")
 
             // Enables datasets with spectral coursening algorithm
-            $(`#rectangle`).removeClass('disabled')
-            $(`#cele`).removeClass('disabled')
+            // $(`#rectangle`).removeClass('disabled')
+            // $(`#cele`).removeClass('disabled')
 
             //re-enables buttons that didn't work with sparsification algo
             // uncertainty button
@@ -411,12 +411,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#${target}`).addClass("active")
 
             // Enables datasets with unifying framework algorithm
-            $(`#lesmis`).removeClass('disabled')
+            // $(`#lesmis`).removeClass('disabled')
             
             // removes buttons without
-            $(`#cele`).addClass('disabled')
-            $(`#rectangle`).addClass('disabled')
-            $(`#email`).addClass('disabled')
+            // $(`#cele`).addClass('disabled')
+            // $(`#rectangle`).addClass('disabled')
+            // $(`#email`).addClass('disabled')
 
             //re-enables buttons that didn't work with sparsification algo
             // uncertainty button
@@ -469,12 +469,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             $(`#${target}`).addClass("active")
 
             // Enables datasets with unifying framework algorithm
-            $(`#lesmis`).removeClass('disabled')
-            $(`#rectangle`).removeClass('disabled')
+            // $(`#lesmis`).removeClass('disabled')
+            // $(`#rectangle`).removeClass('disabled')
             
             // removes buttons without
-            $(`#cele`).addClass('disabled')
-            $(`#email`).addClass('disabled')
+            // $(`#cele`).addClass('disabled')
+            // $(`#email`).addClass('disabled')
 
             //disable buttons that don't work with sparsification algo
             // uncertainty button
@@ -558,13 +558,26 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         console.log("active uncertainty",active_uncertainty);
         
 
-        if (active_alg=='coarse'){
+        // if (active_alg=='coarse'){
             // changes active highlighting
             let kids = $('#datasetDrop').find('a')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
 
             if (target == 'rectangle'){
+
+                // highlights coarse algorithm
+                let kids = $('#algDrop').find('div')
+                kids.removeClass( "active" );
+                $(`#coarse`).addClass("active")
+
+                //Reenables uncertainty buttons
+                //re-enables buttons that didn't work with sparsification algo
+                //uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
 
                 $(`#spars`).addClass('disabled')
                 $(`#unifying_framework_coarse`).addClass('disabled')
@@ -573,6 +586,18 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='lesmis'){
+                // highlights coarse algorithm
+                let kids = $('#algDrop').find('div')
+                kids.removeClass( "active" );
+                $(`#coarse`).addClass("active")
+
+                //Reenables uncertainty buttons
+                //re-enables buttons that didn't work with sparsification algo
+                //uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
                 $(`#spars`).removeClass("disabled")
                 $(`#unifying_framework_coarse`).removeClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
@@ -580,6 +605,18 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
             }
             else if(target =='cele'){
+                // highlights coarse algorithm
+                let kids = $('#algDrop').find('div')
+                kids.removeClass( "active" );
+                $(`#coarse`).addClass("active")
+
+                //Reenables uncertainty buttons
+                //re-enables buttons that didn't work with sparsification algo
+                //uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
                 $(`#spars`).addClass('disabled')
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).removeClass('disabled')
@@ -588,6 +625,18 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
 
             }
             else if(target =='email'){
+                // highlights coarse algorithm
+                let kids = $('#algDrop').find('div')
+                kids.removeClass( "active" );
+                $(`#coarse`).addClass("active")
+
+                //Reenables uncertainty buttons
+                //re-enables buttons that didn't work with sparsification algo
+                //uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
                 $(`#spars`).addClass('disabled')
                 $(`#unifying_framework_coarse`).addClass('disabled')
                 $(`#spec_coarse`).addClass('disabled')
@@ -595,76 +644,76 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
 
             }
-        }
-        else if (active_alg=='spars'){
-            if (target == 'rectangle'){
-                // TODO: Display message on screen 
-                console.log('sparsification data not available')
+        // }
+        // else if (active_alg=='spars'){
+        //     if (target == 'rectangle'){
+        //         // TODO: Display message on screen 
+        //         console.log('sparsification data not available')
 
-            }
-            else if(target =='lesmis'){
-                // changes active highlighting
-                let kids = $('#datasetDrop').find('a')
-                kids.removeClass( "active" );
-                $(`#${target}`).addClass("active")
-                //Render sparse graph for lesmis
-                renderSparsLesmis()
+        //     }
+        //     else if(target =='lesmis'){
+        //         // changes active highlighting
+        //         let kids = $('#datasetDrop').find('a')
+        //         kids.removeClass( "active" );
+        //         $(`#${target}`).addClass("active")
+        //         //Render sparse graph for lesmis
+        //         renderSparsLesmis()
 
-            }
-            else if(target == 'cele'){
-                console.log('sparsification data not available')
+        //     }
+        //     else if(target == 'cele'){
+        //         console.log('sparsification data not available')
 
-            }
+        //     }
 
-        }
-        else if (active_alg=='spec_coarse'){
-            // changes active highlighting
-            let kids = $('#datasetDrop').find('a')
-            kids.removeClass( "active" );
-            $(`#${target}`).addClass("active")
+        // }
+        // else if (active_alg=='spec_coarse'){
+        //     // changes active highlighting
+        //     let kids = $('#datasetDrop').find('a')
+        //     kids.removeClass( "active" );
+        //     $(`#${target}`).addClass("active")
 
-            if (target == 'rectangle'){
+        //     if (target == 'rectangle'){
 
-                $(`#spars`).addClass('disabled')
-                renderCoarseRect(active_uncertainty,'spectral_coarsening')
-            }
-            else if(target =='lesmis'){
-                $(`#spars`).removeClass("disabled")
-                renderCoarseLesmis(active_uncertainty,'spectral_coarsening')
-            }
-            else if(target =='cele'){
-                $(`#spars`).addClass('disabled')
-                renderCoarseCele(active_uncertainty,'spectral_coarsening')
+        //         $(`#spars`).addClass('disabled')
+        //         renderCoarseRect(active_uncertainty,'spectral_coarsening')
+        //     }
+        //     else if(target =='lesmis'){
+        //         $(`#spars`).removeClass("disabled")
+        //         renderCoarseLesmis(active_uncertainty,'spectral_coarsening')
+        //     }
+        //     else if(target =='cele'){
+        //         $(`#spars`).addClass('disabled')
+        //         renderCoarseCele(active_uncertainty,'spectral_coarsening')
 
-            }
-        }
-        else if (active_alg=='unifying_framework_coarse'){
-            // changes active highlighting
-            let kids = $('#datasetDrop').find('a')
-            kids.removeClass( "active" );
-            $(`#${target}`).addClass("active")
+        //     }
+        // }
+        // else if (active_alg=='unifying_framework_coarse'){
+        //     // changes active highlighting
+        //     let kids = $('#datasetDrop').find('a')
+        //     kids.removeClass( "active" );
+        //     $(`#${target}`).addClass("active")
 
-            if(target =='lesmis'){
-                $(`#spars`).removeClass("disabled")
-                renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
-            }
-        }
-        else if (active_alg=='unifying_framework_spars'){
-            // changes active highlighting
-            let kids = $('#datasetDrop').find('a')
-            kids.removeClass( "active" );
-            $(`#${target}`).addClass("active")
+        //     if(target =='lesmis'){
+        //         $(`#spars`).removeClass("disabled")
+        //         renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
+        //     }
+        // }
+        // else if (active_alg=='unifying_framework_spars'){
+        //     // changes active highlighting
+        //     let kids = $('#datasetDrop').find('a')
+        //     kids.removeClass( "active" );
+        //     $(`#${target}`).addClass("active")
 
-            if(target =='lesmis'){
-                $(`#spars`).removeClass("disabled")
-                renderUnifSpars('lesmis_77','unifying_framework_sparsify')
-            }
-            else if(target =='rectangle'){
-                $(`#spars`).addClass("disabled")
-                $(`#unifying_framework_coarsen`).addClass("disabled")
-                renderUnifSpars('rec_100','unifying_framework_sparsify')
-            }
-        }
+        //     if(target =='lesmis'){
+        //         $(`#spars`).removeClass("disabled")
+        //         renderUnifSpars('lesmis_77','unifying_framework_sparsify')
+        //     }
+        //     else if(target =='rectangle'){
+        //         $(`#spars`).addClass("disabled")
+        //         $(`#unifying_framework_coarsen`).addClass("disabled")
+        //         renderUnifSpars('rec_100','unifying_framework_sparsify')
+        //     }
+        // }
         
     }
 
