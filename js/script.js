@@ -1828,7 +1828,7 @@ njw_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> NJW is.... </p>`); 
+        d3.select("#info-tooltip").html(`<p> Spectral clustering algorithms group clusters of vertices into super-vertices, reducing the size of a graph. The NJW algorithm uses the k largest eigenvalues of the normalized adjacency matrix and k-means clustering to produce a reduced graph. </p>`); 
     })
     .on("mouseout",function(){
         d3.select("#info-tooltip")
@@ -1844,7 +1844,7 @@ spec_spars_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Spectral sparsification is.... </p>`); 
+        d3.select("#info-tooltip").html(`<p> Spectral Sparsification aims to reduce the size of a graph while preserving its spectral properties. It uses the notion of effective resistance to produce a reduced graph with the same number of vertices but a smaller number of edges.</p>`); 
     })
     .on("mouseout",function(){
         d3.select("#info-tooltip")
@@ -1859,7 +1859,7 @@ spec_coarse_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Spectral coarsening is.... </p>`); 
+        d3.select("#info-tooltip").html(`<p> Spectral clustering algorithms group clusters of vertices into super-vertices, reducing the size of a graph. The JLJ algorithm uses both the largest and smallest eigenvalues of the normalized graph Laplacian and k-means clustering to produce a reduced graph. </p>`); 
     })
     .on("mouseout",function(){
         d3.select("#info-tooltip")
@@ -1875,7 +1875,7 @@ unif_coarse_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Unifying framework coarsening is.... </p>`); 
+        d3.select("#info-tooltip").html(`<p> This unifying framework for spectrum-preserving graph reduction allows users to simultaneously sparsify and coarsen a graph while preserving its large-scale structure. Both sparsification and coarsening are unified as edge actions, where edge deletion achieves sparsification and edge contraction supports coarsening. </p>`); 
     })
     .on("mouseout",function(){
         d3.select("#info-tooltip")
@@ -1891,7 +1891,7 @@ unif_spars_description
             .transition()
             .duration(200)
             .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Unifying framework sparsification is.... </p>`); 
+        d3.select("#info-tooltip").html(`<p> This unifying framework for spectrum-preserving graph reduction allows users to simultaneously sparsify and coarsen a graph while preserving its large-scale structure. Both sparsification and coarsening are unified as edge actions, where edge deletion achieves sparsification and edge contraction supports coarsening. </p>`); 
     })
     .on("mouseout",function(){
         d3.select("#info-tooltip")
