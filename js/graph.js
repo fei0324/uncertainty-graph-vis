@@ -2,24 +2,25 @@
  * 
  * GRAPH methods
  * prepGraph: creates the scales needed for the mean and edge encodings. Also creates legends.
- * drawGraph: 
+ * drawGraph: creates the graphs themselves, using library from: https://github.com/vasturiano/force-graph
  * 
  * Legend methods
- * legend:
- * ramp:
+ * legend: creates legends using code from: https://observablehq.com/@mbostock/population-change-2017-2018
+ * ramp: helper function used in legend() which helps with color gradients
  * 
  * Node encoding methods
- * mstdev:
- * nodeMean:
+ * mstdev: helper function which creates the canvas objects for mean + stdev 
+ * nodeMean: helper function which creates the canvas objects for just the mean without the stdev halo
  * 
  * Edge encoding methods
- * spline:
- * splineOD:
- * square:
+ * spline: helper function which creates the canvas objects used for the spline edge encoding
+ * splineOD: helper function which creates the canvas objects used for the spline on demand edge encoding
+ * square: helper function which creates the canvas objects used for the square edge encoding
  * 
  * Infobox methods
- * infoboxRender:
- * 
+ * infoboxRender: an infobox which shows node information when highlighted in the reduced graph
+ * infoboxRenderLink: an infobox which shows link information when highlighted in the reduced graph
+ * infoboxRenderOrig: an infobox which shows node information when highlighted in the full graph
 */
 
 
@@ -59,10 +60,7 @@ class Graph{
             .append("div")
             .attr("id", `infobox-${this.location}`)
             .style("opacity", 0);
-            // .style("left","995px") 
-            // .style("top", "580px");
         
-        // this.prepGraph();
     }
 
     prepGraph(){
