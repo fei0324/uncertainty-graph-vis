@@ -1,4 +1,27 @@
-/** Class for rendering a graph  */
+/** CLASS FOR RENDERING A GRAPH  
+ * 
+ * GRAPH methods
+ * prepGraph: creates the scales needed for the mean and edge encodings. Also creates legends.
+ * drawGraph: 
+ * 
+ * Legend methods
+ * legend:
+ * ramp:
+ * 
+ * Node encoding methods
+ * mstdev:
+ * nodeMean:
+ * 
+ * Edge encoding methods
+ * spline:
+ * splineOD:
+ * square:
+ * 
+ * Infobox methods
+ * infoboxRender:
+ * 
+*/
+
 
 class Graph{
     /**
@@ -276,40 +299,21 @@ class Graph{
 
         // Reference to other graph object
         this.reference = reference
-        console.log("my ref",this.reference)
-
+        // console.log("my ref",this.reference)
 
         // let myGraph = ForceGraph();
         let data = this.data;
-
-        // TODO: See if I can incorporate gaussian blurring
-        // TODO: Clear on background click for node or link selectiin
-        // TODO: Node selection on click
-        // TODO: Add animations
-        // TODO: implement zooming on node (or edge) 
-            // Could be cool idea that when we click on a node, only the nodes neighbors are rendered
-            // Same with links - look into if I can do this....
-            // https://github.com/vasturiano/force-graph/blob/master/example/dynamic/index.html
-        // TODO: implement drag and stay 
-        // TODO: better color scheme + legend
-        // TODO: Adjust the way I've built this class to contain a 'draw graph' and an 'update graph'
-            // Then I can just pass in new data and have 1 graph class per dataset
-        // TODO: Think of a way that I don't have to redraw the graph every time, maybe 
-            // Just make a canvas object and class it uniquely, then class as hidden when it's off screen
-            // This way won't force computer to redraw everything
-        // TODO: add std dev scaling bar?
 
         // For link highlighting
         let highlightLink = null;
         let clickedLink = [];
         let highlightNodes = [];
 
-        
         let location = this.LOCATION;
         let WIDTH = this.WIDTH;
         let HEIGHT = this.HEIGHT;
 
-        // Graph for SPARSIFICATION
+        // Graph for SPARSIFICATION algorithms
         if (this.type == 'spars'){
             console.log("IN SPARS IN DRAW GRAPH")
 
@@ -333,10 +337,6 @@ class Graph{
                             .style("opacity", 1);
                         d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,null));
 
-                        // //Row highlighting
-                        // d3.select(`#row-${node.id}`).transition()
-                        //     .duration(100)
-                        //     .style('opacity',1);
                     }
                     else{
                        
@@ -344,14 +344,9 @@ class Graph{
                             .duration(200)
                             .style("opacity", 0);
 
-                        // //Row de-highlighting
-                        // d3.selectAll(`.row-back`).transition()
-                        //     .duration(100)
-                        //     .style('opacity',0);
                     }
 
                 })
-                // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
                 .nodeCanvasObjectMode(()=> 'before')
                 .nodeCanvasObject((node, ctx) => {
                     // Calculate radius for std
@@ -375,11 +370,16 @@ class Graph{
                 that.splineOD(thatNode.myGraph,that)
                 
             }
-            // else if( edge_active == 'spline'){
+            else if( edge_active == 'spline'){
 
-            //     that.spline(thatNode.myGraph,that)
+                that.spline(thatNode.myGraph,that)
 
-            // }
+            }
+            else if( edge_active == 'square'){
+
+                that.square(thatNode.myGraph,that)
+
+            }
                 
             // Link Menu selections
 
@@ -404,7 +404,6 @@ class Graph{
                     
                 }
 
-
                 if (drop_edge == 'splineOD'){
                     // console.log('spline on demand')
                     that.splineOD(thatNode.myGraph,that);
@@ -423,14 +422,6 @@ class Graph{
                     that.legend(that.link_legend,that,that.linkColor,'link');
                     
                 }
-                else if (drop_edge == 'stdevO'){
-                    // console.log('stdevO')
-                    that.stdevO(thatNode.myGraph,that)
-                    that.legend(that.link_legend,that,that.linkColorStd,'link-std');
-                    
-                }
-
-
 
             });
 
@@ -438,15 +429,11 @@ class Graph{
 
         }
 
-        //graph for NODE COARSENING
+        //graph for NODE COARSENING algorithms, or essentially any algorithm that isn't sparsification
         else if (this.type == 'clust'){
             console.log("node clustering")
             // allows me to access this scope inside of drop down functions
             let thatNode = this;
-            
-            // //calls legend
-            // this.legend(this.clust_legend,this,this.color,'clust');
-            // this.legend(le_legend,this,this.color_le,"le");
 
             let node_rel_size = 4;
             this.myGraph
@@ -463,11 +450,11 @@ class Graph{
                     that.mstdev(thatNode.myGraph,that,node_rel_size)
                   
                 }
-                // else if( node_active == 'spline'){
+                else if( node_active == 'mean'){
 
-                //     that.spline(thatNode.myGraph,that)
+                    that.nodeMean(thatNode.myGraph,that)
 
-                // }
+                }
 
                 // NODE MENU OPTIONS
                 // Detect which edge vis type is active and executes appropriate code
@@ -513,9 +500,6 @@ class Graph{
                     }
 
 
-
-
-
                 });
 
 
@@ -530,11 +514,16 @@ class Graph{
                     that.splineOD(thatNode.myGraph,that)
                   
                 }
-                // else if( edge_active == 'spline'){
+                else if( edge_active == 'spline'){
 
-                //     that.spline(thatNode.myGraph,that)
-
-                // }
+                    that.spline(thatNode.myGraph,that)
+    
+                }
+                else if( edge_active == 'square'){
+    
+                    that.square(thatNode.myGraph,that)
+    
+                }
 
                 
             // Link Menu selections
@@ -589,18 +578,13 @@ class Graph{
                     
                 }
 
-
-
             });
             
-
-
         }
 
-        // This is the original, full, un-annotated graph
+        // This is the original, full, non-reduced graph
         else if (this.type == 'orig'){
 
-            //TODO: when I highlight node here, it highlights corresoinding supercluster
             const NODE_R = 8;
 
             // Detects if sparsification is active algo and sets is_sparse accordingly
@@ -659,8 +643,6 @@ class Graph{
                         if (this.reference != null){
                             this.reference.myGraph
                                 .nodeColor( ref_node => this.reference.color(ref_node.uncertainty_mean));
-
-                            
 
                             //Row de-highlighting
                             d3.selectAll(`.row-back`).transition()

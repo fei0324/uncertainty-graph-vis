@@ -566,6 +566,12 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
 
             $(`#spars`).addClass('disabled')
             $(`#unifying_framework_coarse`).addClass('disabled')
@@ -588,6 +594,12 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
             $(`#spars`).removeClass("disabled")
             $(`#unifying_framework_coarse`).removeClass('disabled')
             $(`#spec_coarse`).removeClass('disabled')
@@ -608,6 +620,12 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
 
             $(`#spars`).addClass('disabled')
             $(`#unifying_framework_coarse`).addClass('disabled')
@@ -631,6 +649,12 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
             $(`#spars`).addClass('disabled')
             $(`#unifying_framework_coarse`).addClass('disabled')
             $(`#spec_coarse`).addClass('disabled')
@@ -652,6 +676,12 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
             //node vis button
             $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
 
             $(`#spars`).addClass('disabled')
             $(`#unifying_framework_coarse`).addClass('disabled')
