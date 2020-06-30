@@ -1,42 +1,62 @@
+////////////////////////////// HIGH-LEVEL DESCRIPTION: /////////////////////////////////////
+// script.js contains all of the logic and event listeners for the toolbar buttons.
+// When toolbar buttons are clicked and the various logic paths are traveresed, there
+// are a series of helper functions which load the appropriate data into the 'Graph' and  
+// 'Table' classes. 
+// Additionally, there is code which populates descriptions of the various features of the vis 
+// as the user hovers over them.
 
-//Instantiates graph objects with data
+// The general structure is:
 
-//This script loads data on demand instead of just all at once
+// 1) INITIALIZING CLASSES + HANDLING WINDOW RESIZING
 
-// Makes graph objects once, passing in no data to begin with
+// 2) TOOLBAR LOGIC AND CALLS TO RENDERING FUNCTIONS
+
+// 3) RENDERING FUNCTIONS
+
+// 4) DESCRIPTION CODE
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////  INITIALIZING CLASSES + HANDLING WINDOW RESIZING /////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+// Initializes graph objects, passing in no data to begin with
+// full_rect is the graph object for the full, un-processed graph. This will be referenced in the 
+// rendering functions.
 let full_rect = new Graph(null,'graph-orig','orig');
+// proc_rect is the graph object for the reduced graph. This will be referenced in the rendering functions.
 let proc_rect = new Graph(null,'graph-processed','clust');
 
-// Makes heatmap
+// Initializes table object. This is the heatmap. This will be referenced in the rendering functions.
 let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 
-
-// Populates default view
+// Populates default view 
 renderCoarseLesmis('local_adjusted_rand_index','njw_spectral_clustering');
 $(`#gemsec`).addClass('disabled')
-
 
 // Handling resizing stuff
 window.addEventListener("resize", resize);
 var redraw = document.getElementById("redraw");
 function resize (event) {
     // Gets new sizes and sets new canvas dimensions
+
     let orig_loc = document.getElementById('graph-orig');
     let proc_loc = document.getElementById('graph-processed');
     let mini_loc = document.getElementById('graph-mini');
 
+    // retrieves new size
     let boundingRect_orig = orig_loc.getBoundingClientRect();
     let boundingRect_proc = proc_loc.getBoundingClientRect();
     let boundingRect_mini = mini_loc.getBoundingClientRect();
-
+    // stores new size width
     let orig_width = boundingRect_orig.width;
     let orig_height = boundingRect_orig.height;
     let proc_width = boundingRect_proc.width;
-
+    // stores new size height
     let proc_height = boundingRect_proc.height;
     let mini_width = boundingRect_mini.width;
     let mini_height = boundingRect_mini.height;
-
+    // re-adjusts the width and height of the graph using new, stored width and height
     full_rect.myGraph.width(orig_width);
     full_rect.myGraph.height(orig_height);
     proc_rect.myGraph.width(proc_width);
@@ -51,14 +71,17 @@ function resize (event) {
         heatMap.createHeatMap()
     }
 
-    // Resize legend.... this is tricky
+    // Resize legend
     proc_rect.legend(proc_rect.link_legend,proc_rect,proc_rect.linkColor,'link');
     proc_rect.legend(proc_rect.node_legend,proc_rect,proc_rect.color,'node');
     
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////// TOOLBAR LOGIC AND CALLS TO RENDERING FUNCTIONS ///////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-//Uncertainty dropdown
+//Uncertainty dropdown logic
 $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
     let targetClass = null;
     if (e.clickEvent){
@@ -80,18 +103,12 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
         let active_alg = $('#algDrop').find('.active')[0].id;
         console.log("active algorithm",active_alg);
 
-        // // changes active highlighting if it's a valid move
-        // let start_active = $('#algDrop').find('active');
-        // console.log("active start",start_active)
-        // let kids = $('#algDrop').find('a')
-        // kids.removeClass( "active" );
-        // $(`#${target}`).addClass("active")
-
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
 
-
+        // makes the most recently selected target the 'active' option and removes
+        // active class from previously active option
         let start_active = $('#uncertaintyDrop').find('active');
         let kids = $('#uncertaintyDrop').find('a')
         kids.removeClass( "active" );
@@ -114,16 +131,10 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
 
             }
             else if(active_data == 'email'){
-                //Render coarse graph for cele
+                //Render coarse graph for email
                 renderCoarseEmail(target,'njw_spectral_clustering')
 
             }
-        }
-        else if (active_alg == 'sparse'){
-
-            //TODO print message
-            console.log("can't do nothin")
-
         }
         else if (active_alg == 'spec_coarse'){
             if (active_data == 'rectangle'){
@@ -153,7 +164,7 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
         }
         else if (active_alg == 'gemsec'){
             if(active_data =='tv'){
-                //Render coarse graph for lesmis
+                //Render gemsec graph for tv 
                 renderGemsecTv(target,'gemsec')
 
             }
@@ -163,7 +174,9 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
 
 });
 
-//Algorithm dropdown
+// Algorithm dropdown logic
+// Deals with detecting which algorithm was selected in combination with which dataset and loading the 
+// appropriate data into the vis.
 $('#algDrop').on('hide.bs.dropdown', function (e) {
     let targetClass = null;
     if (e.clickEvent){
@@ -185,20 +198,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         let active_uncertainty = $('#uncertaintyDrop').find('.active')[0].id;
         console.log("active uncertainty",active_uncertainty);
 
-        // // changes active highlighting if it's a valid move
-        // let start_active = $('#algDrop').find('active');
-        // console.log("active start",start_active)
-        // let kids = $('#algDrop').find('a')
-        // kids.removeClass( "active" );
-        // $(`#${target}`).addClass("active")
-
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
         
 
         if (target == 'coarse'){
-            //TODO: Hide buttons that don't apply/ make buttons that do reappear
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
@@ -243,7 +248,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             }
 
-            // Need to load these when they exist on alg drop
+            // Descriotion code for the cluster text. These needs to be called here in order for 
+            // the description to pop up when the user switches datasets or algorithms. 
             let k_description = d3.select("#cluster-text");
 
             k_description
@@ -252,9 +258,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                         .transition()
                         .duration(200)
                         .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
-                        // .style("left",(d3.event.pageX+15) + "px") 
-                        // .style("top", (d3.event.pageY+15) + "px");     
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");  
                 })
                 .on("mouseout",function(){
                     d3.select("#info-tooltip")
@@ -266,20 +270,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
         }
         else if (target == 'spars'){
-            //TODO: Hide buttons that don't apply/ make buttons that do reappear
-            if (active_data == 'rectangle'){
-                // TODO: Display message on screen 
-                console.log('sparsification data not available')
-
-            }
-            else if(active_data =='lesmis'){
+            if(active_data =='lesmis'){
                 // changes active highlighting if it's a valid move
                 let start_active = $('#algDrop').find('active');
                 console.log("active start",start_active)
                 let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
-                // kids.addClass('disabled')
-                // $(`#${target}`).removeClass("disabled")
                 $(`#${target}`).addClass("active")
 
                 // disables datasets without sparsification data
@@ -293,7 +289,6 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 //node vis button
                 $(`#dropdownMenuButtonNode`).addClass('disabled')
 
-
                 // Hides minigraph and labels div
                 d3.select('#graph-mini').style('visibility','hidden')
                 d3.select('#heatmap-label').style('visibility','hidden')
@@ -303,8 +298,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 //Render sparse graph for lesmis
                 renderSparsLesmis()
 
-
-                // Need to load these when they exist on alg drop
+                // Need to insert this particular description code on alg drop, otherwise
+                // it gets overwritten when there is just a k-clusters bar present.
                 let filter_description = d3.select("#filter-text");
                 let reduction_description = d3.select("#reduction-text");
 
@@ -314,9 +309,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                             .transition()
                             .duration(200)
                             .style("opacity", 1);
-                        d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>");
-                            // .style("left",(d3.event.pageX+15) + "px") 
-                            // .style("top", (d3.event.pageY+15) + "px");     
+                        d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>"); 
                     })
                     .on("mouseout",function(){
                         d3.select("#info-tooltip")
@@ -331,9 +324,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                             .transition()
                             .duration(200)
                             .style("opacity", 1);
-                        d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios... (needs more explanation) </p>");
-                            // .style("left",(d3.event.pageX+15) + "px") 
-                            // .style("top", (d3.event.pageY+15) + "px");     
+                        d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios.</p>");
                     })
                     .on("mouseout",function(){
                         d3.select("#info-tooltip")
@@ -344,14 +335,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
 
             }
-            else if(active_data == 'cele'){
-                console.log('sparsification data not available')
-
-
-            }
         }
         else if (target == 'spec_coarse'){
-            //TODO: Hide buttons that don't apply/ make buttons that do reappear
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
@@ -389,7 +374,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseCele(active_uncertainty,'spectral_coarsening')
             }
 
-            // Need to load these when they exist on alg drop
+            // Description code for the cluster text. These needs to be called here in order for 
+            // the description to pop up when the user switches datasets or algorithms. 
             let k_description = d3.select("#cluster-text");
 
             k_description
@@ -399,8 +385,6 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                         .duration(200)
                         .style("opacity", 1);
                     d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
-                        // .style("left",(d3.event.pageX+15) + "px") 
-                        // .style("top", (d3.event.pageY+15) + "px");     
                 })
                 .on("mouseout",function(){
                     d3.select("#info-tooltip")
@@ -411,7 +395,6 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
         }
         else if (target == 'unifying_framework_coarse'){
-            //TODO: Hide buttons that don't apply/ make buttons that do reappear
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
@@ -446,7 +429,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
             }
 
-            // Need to load these when they exist on alg drop
+            // Description code for the cluster text. These needs to be called here in order for 
+            // the description to pop up when the user switches datasets or algorithms. 
             let k_description = d3.select("#cluster-text");
 
             k_description
@@ -455,9 +439,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                         .transition()
                         .duration(200)
                         .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
-                        // .style("left",(d3.event.pageX+15) + "px") 
-                        // .style("top", (d3.event.pageY+15) + "px");     
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>"); 
                 })
                 .on("mouseout",function(){
                     d3.select("#info-tooltip")
@@ -469,7 +451,6 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         }
 
         else if (target == 'unifying_framework_spars'){
-            //TODO: Hide buttons that don't apply/ make buttons that do reappear
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             console.log("active start",start_active)
@@ -506,7 +487,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                 renderUnifSpars('rec_100','unifying_framework_sparsify')
             }
 
-            // Need to load these when they exist on alg drop
+            // Description code for the cluster text. These needs to be called here in order for 
+            // the description to pop up when the user switches datasets or algorithms. 
             let k_description = d3.select("#cluster-text");
 
             k_description
@@ -515,9 +497,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
                         .transition()
                         .duration(200)
                         .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
-                        // .style("left",(d3.event.pageX+15) + "px") 
-                        // .style("top", (d3.event.pageY+15) + "px");     
+                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");   
                 })
                 .on("mouseout",function(){
                     d3.select("#info-tooltip")
@@ -537,7 +517,8 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 });
 
 
-// Data dropdown
+// Data dropdown logic
+// Deals with detecting which option was selected and loading appropriate data into the vis.
 $('#datasetDrop').on('hide.bs.dropdown', function (e) {
     // Finds active thing in the data drop down 
     let targetClass = null;
@@ -557,7 +538,6 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
 
-
         // Finds which algorithm is active 
         let active_alg = $('#algDrop').find('.active')[0].id;
         console.log("active algorithm",active_alg);
@@ -566,201 +546,128 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         let active_uncertainty = $('#uncertaintyDrop').find('.active')[0].id;
         console.log("active uncertainty",active_uncertainty);
         
+        // changes active highlighting
+        let kids = $('#datasetDrop').find('a')
+        kids.removeClass( "active" );
+        $(`#${target}`).addClass("active")
 
-        // if (active_alg=='coarse'){
-            // changes active highlighting
-            let kids = $('#datasetDrop').find('a')
+        if (target == 'rectangle'){
+
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
-            $(`#${target}`).addClass("active")
+            $(`#coarse`).addClass("active")
+            $(`#coarse`).removeClass('disabled')
 
-            if (target == 'rectangle'){
-
-                // highlights coarse algorithm
-                let kids = $('#algDrop').find('div')
-                kids.removeClass( "active" );
-                $(`#coarse`).addClass("active")
-                $(`#coarse`).removeClass('disabled')
-
-                //Reenables uncertainty buttons
-                //re-enables buttons that didn't work with sparsification algo
-                //uncertainty button
-                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
-                //node vis button
-                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
 
-                $(`#spars`).addClass('disabled')
-                $(`#unifying_framework_coarse`).addClass('disabled')
-                $(`#spec_coarse`).removeClass('disabled')
-                $(`#unifying_framework_spars`).removeClass('disabled')
-                $(`#gemsec`).addClass('disabled')
-                renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
-            }
-            else if(target =='lesmis'){
-                // highlights coarse algorithm
-                let kids = $('#algDrop').find('div')
-                kids.removeClass( "active" );
-                $(`#coarse`).addClass("active")
-                $(`#coarse`).removeClass('disabled')
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).removeClass('disabled')
+            $(`#unifying_framework_spars`).removeClass('disabled')
+            $(`#gemsec`).addClass('disabled')
+            renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
+        }
+        else if(target =='lesmis'){
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            $(`#coarse`).addClass("active")
+            $(`#coarse`).removeClass('disabled')
 
-                //Reenables uncertainty buttons
-                //re-enables buttons that didn't work with sparsification algo
-                //uncertainty button
-                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
-                //node vis button
-                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
-                $(`#spars`).removeClass("disabled")
-                $(`#unifying_framework_coarse`).removeClass('disabled')
-                $(`#spec_coarse`).removeClass('disabled')
-                $(`#unifying_framework_spars`).removeClass('disabled')
-                $(`#gemsec`).addClass('disabled')
-                renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
-            }
-            else if(target =='cele'){
-                // highlights coarse algorithm
-                let kids = $('#algDrop').find('div')
-                kids.removeClass( "active" );
-                $(`#coarse`).addClass("active")
-                $(`#coarse`).removeClass('disabled')
+            $(`#spars`).removeClass("disabled")
+            $(`#unifying_framework_coarse`).removeClass('disabled')
+            $(`#spec_coarse`).removeClass('disabled')
+            $(`#unifying_framework_spars`).removeClass('disabled')
+            $(`#gemsec`).addClass('disabled')
+            renderCoarseLesmis(active_uncertainty,'njw_spectral_clustering')
+        }
+        else if(target =='cele'){
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            $(`#coarse`).addClass("active")
+            $(`#coarse`).removeClass('disabled')
 
-                //Reenables uncertainty buttons
-                //re-enables buttons that didn't work with sparsification algo
-                //uncertainty button
-                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
-                //node vis button
-                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
-                $(`#spars`).addClass('disabled')
-                $(`#unifying_framework_coarse`).addClass('disabled')
-                $(`#spec_coarse`).removeClass('disabled')
-                $(`#unifying_framework_spars`).addClass('disabled')
-                $(`#gemsec`).addClass('disabled')
-                renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).removeClass('disabled')
+            $(`#unifying_framework_spars`).addClass('disabled')
+            $(`#gemsec`).addClass('disabled')
+            renderCoarseCele(active_uncertainty,'njw_spectral_clustering')
 
-            }
-            else if(target =='email'){
-                // highlights coarse algorithm
-                let kids = $('#algDrop').find('div')
-                kids.removeClass( "active" );
-                $(`#coarse`).addClass("active")
-                $(`#coarse`).removeClass('disabled')
+        }
+        else if(target =='email'){
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            $(`#coarse`).addClass("active")
+            $(`#coarse`).removeClass('disabled')
 
-                //Reenables uncertainty buttons
-                //re-enables buttons that didn't work with sparsification algo
-                //uncertainty button
-                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
-                //node vis button
-                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
-                $(`#spars`).addClass('disabled')
-                $(`#unifying_framework_coarse`).addClass('disabled')
-                $(`#spec_coarse`).addClass('disabled')
-                $(`#unifying_framework_spars`).addClass('disabled')
-                $(`#gemsec`).addClass('disabled')
-                renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).addClass('disabled')
+            $(`#unifying_framework_spars`).addClass('disabled')
+            $(`#gemsec`).addClass('disabled')
+            renderCoarseEmail(active_uncertainty,'njw_spectral_clustering')
 
-            }
-            else if(target =='tv'){
-                // highlights coarse algorithm
-                let kids = $('#algDrop').find('div')
-                kids.removeClass( "active" );
-                $(`#gemsec`).addClass("active")
-                $(`#gemsec`).removeClass('disabled')
+        }
+        else if(target =='tv'){
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            $(`#gemsec`).addClass("active")
+            $(`#gemsec`).removeClass('disabled')
 
-                //Reenables uncertainty buttons
-                //re-enables buttons that didn't work with sparsification algo
-                //uncertainty button
-                $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
-                //node vis button
-                $(`#dropdownMenuButtonNode`).removeClass('disabled')
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
 
-                $(`#spars`).addClass('disabled')
-                $(`#unifying_framework_coarse`).addClass('disabled')
-                $(`#spec_coarse`).addClass('disabled')
-                $(`#unifying_framework_spars`).addClass('disabled')
-                $(`#coarse`).addClass('disabled')
-                renderGemsecTv(active_uncertainty,'gemsec')
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).addClass('disabled')
+            $(`#unifying_framework_spars`).addClass('disabled')
+            $(`#coarse`).addClass('disabled')
+            renderGemsecTv(active_uncertainty,'gemsec')
 
-            }
-        // }
-        // else if (active_alg=='spars'){
-        //     if (target == 'rectangle'){
-        //         // TODO: Display message on screen 
-        //         console.log('sparsification data not available')
-
-        //     }
-        //     else if(target =='lesmis'){
-        //         // changes active highlighting
-        //         let kids = $('#datasetDrop').find('a')
-        //         kids.removeClass( "active" );
-        //         $(`#${target}`).addClass("active")
-        //         //Render sparse graph for lesmis
-        //         renderSparsLesmis()
-
-        //     }
-        //     else if(target == 'cele'){
-        //         console.log('sparsification data not available')
-
-        //     }
-
-        // }
-        // else if (active_alg=='spec_coarse'){
-        //     // changes active highlighting
-        //     let kids = $('#datasetDrop').find('a')
-        //     kids.removeClass( "active" );
-        //     $(`#${target}`).addClass("active")
-
-        //     if (target == 'rectangle'){
-
-        //         $(`#spars`).addClass('disabled')
-        //         renderCoarseRect(active_uncertainty,'spectral_coarsening')
-        //     }
-        //     else if(target =='lesmis'){
-        //         $(`#spars`).removeClass("disabled")
-        //         renderCoarseLesmis(active_uncertainty,'spectral_coarsening')
-        //     }
-        //     else if(target =='cele'){
-        //         $(`#spars`).addClass('disabled')
-        //         renderCoarseCele(active_uncertainty,'spectral_coarsening')
-
-        //     }
-        // }
-        // else if (active_alg=='unifying_framework_coarse'){
-        //     // changes active highlighting
-        //     let kids = $('#datasetDrop').find('a')
-        //     kids.removeClass( "active" );
-        //     $(`#${target}`).addClass("active")
-
-        //     if(target =='lesmis'){
-        //         $(`#spars`).removeClass("disabled")
-        //         renderCoarseLesmis(active_uncertainty,'unifying_framework_coarsen')
-        //     }
-        // }
-        // else if (active_alg=='unifying_framework_spars'){
-        //     // changes active highlighting
-        //     let kids = $('#datasetDrop').find('a')
-        //     kids.removeClass( "active" );
-        //     $(`#${target}`).addClass("active")
-
-        //     if(target =='lesmis'){
-        //         $(`#spars`).removeClass("disabled")
-        //         renderUnifSpars('lesmis_77','unifying_framework_sparsify')
-        //     }
-        //     else if(target =='rectangle'){
-        //         $(`#spars`).addClass("disabled")
-        //         $(`#unifying_framework_coarsen`).addClass("disabled")
-        //         renderUnifSpars('rec_100','unifying_framework_sparsify')
-        //     }
-        // }
-        
+        }
     }
 
-    })
+})
 
 
-    // Button inversion dropdown - simply changes active class then calls prep graph?
-    $('#invertDrop').on('hide.bs.dropdown', function (e) {
+// Invert button dropdown logic
+$('#invertDrop').on('hide.bs.dropdown', function (e) {
     // console.log(e)
     let drop_invert = null;
     let targetClass = null;
@@ -777,7 +684,8 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         kids.removeClass( "active" );
         $(`#${target}`).addClass("active")
 
-        //Redraws
+        //Redraws. prepGraph contains logic which detects which invert option is active then 
+        // scales the data appropriately. 
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -785,12 +693,13 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         full_rect.myGraph.graphData(full_rect.data)
         proc_rect.myGraph.graphData(proc_rect.data)
     }
-    // console.log('drop_edge',drop_invert)
-
-    
-
 
 })
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////   RENDERING FUNCTIONS   //////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////// NJW SPECTRAL CLUSTERING RENDERING FUNCTIONS //////////////////////////////////////
@@ -799,16 +708,16 @@ function renderCoarseRect(uncert,file){
 
     // Type of uncertainty
     this.uncert = uncert;
-    console.log("my file",file)
 
-    console.log("type of uncertainty",this.uncert)
+    // console.log("my file",file)
+    // console.log("type of uncertainty",this.uncert)
 
     //Sets default k
     this.k = 2
     let range = [2,12]
     let that = this;
 
-        // deletes k bar if one exists  
+    // deletes k bar if one exists  
     d3.select(".active-kBar").remove();
 
     // deletes f bar if one exists  
@@ -817,8 +726,7 @@ function renderCoarseRect(uncert,file){
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-rect');
 
-    // Initial k is 2, so draws this
-
+    // Loads data - this is the default view upon loading, which I've chosen to be 2 clusters
     Promise.all([
         //reduced
         d3.json(`data/${file}/rec_100/cluster_${2}/${uncert}/uncertainty_graph.json`),
@@ -837,18 +745,21 @@ function renderCoarseRect(uncert,file){
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
+        // Handles appropriate zooming on loading
         proc_rect.myGraph
             .zoom(2.8);
         full_rect.myGraph
             .zoom(0.8);
         
+        // Ensures links are visibile.
         full_rect.myGraph
             .linkVisibility(true);
 
+        // Draws the graphs
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
-        // heatmap initial data
+        // heatmap initial data and initialization
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
 
@@ -867,7 +778,7 @@ function renderCoarseRect(uncert,file){
 
     })
 
-    // detects change on bar and updates data shown accordingly
+    // detects change on k-bar and updates data shown accordingly
     d3.select('#coarse-rect').on('input', function(d){
         let k = k_Bar.activeK;
         //  console.log('in script',that.k)
@@ -885,14 +796,17 @@ function renderCoarseRect(uncert,file){
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
+            // Handles appropriate zooming on loading
             proc_rect.myGraph
                 .zoom(2.8);
             full_rect.myGraph
                 .zoom(0.8);
 
+            // Hides the minigraph because new data has been loaded
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
 
+            // Updates heatmap class details
             heatMap.removeHeatMap()
             heatMap.data = files[2];
             heatMap.unif_spars = false;
@@ -906,7 +820,7 @@ function renderCoarseRect(uncert,file){
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
             
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            // Recalculates scales and such for new data passed in
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
@@ -938,8 +852,8 @@ function renderCoarseLesmis(uncert,file){
 
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-mis');
-    
 
+    // Loads the data - I chose the default view here to have 9 clusters
     Promise.all([
         //reduced
         d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertainty_graph.json`),
@@ -950,27 +864,28 @@ function renderCoarseLesmis(uncert,file){
 
     ]).then(function(files){
         
+        // Loads the data into the graph class
         proc_rect.data = files[0];
         full_rect.data = files[1];
 
-        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        // Handling this graph's parameters
         proc_rect.type = 'clust'
         full_rect.myGraph
             .linkVisibility(true);
-
         proc_rect.myGraph
             .zoom(2.7);
         full_rect.myGraph
             .zoom(0.8);
 
+        // Recalculates scales and such for new data passed in
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
-    
+        // Draws the graph
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
-        // heatmap initial data
+        // heatmap initializing data
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
 
@@ -1004,9 +919,11 @@ function renderCoarseLesmis(uncert,file){
             d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
+            // Loads the data
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
+            // handling the zooming of this new data 
             proc_rect.myGraph
                 .zoom(2.7);
             full_rect.myGraph
@@ -1042,11 +959,11 @@ function renderCoarseLesmis(uncert,file){
 }
 
 function renderCoarseCele(uncert,file){
+    // Loads c-elegans data set
 
     // Type of uncertainty
     this.uncert = uncert;
 
-    // Loads c-elegans data set
     //Sets default k
     this.k = 10
     let range = [10,14]
@@ -1074,7 +991,7 @@ function renderCoarseCele(uncert,file){
         proc_rect.data = files[0];
         full_rect.data = files[1];
 
-        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        // Recalculates scales and such for new data passed in and handles graph parameters
         proc_rect.type = 'clust';
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
@@ -1090,7 +1007,7 @@ function renderCoarseCele(uncert,file){
         full_rect.drawGraph(proc_rect);
         proc_rect.drawGraph(full_rect);
 
-        // heatmap initial data
+        // heatmap initializing data
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
 
@@ -1145,7 +1062,7 @@ function renderCoarseCele(uncert,file){
             heatMap.k = k;
             heatMap.createHeatMap()
             
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            // Recalculates scales and such for new data passed in
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
@@ -1177,7 +1094,7 @@ function renderCoarseEmail(uncert,file){
     let range = [20,50]
     let that = this;
 
-        // deletes k bar if one exists  
+    // deletes k bar if one exists  
     d3.select(".active-kBar").remove();
 
     // deletes f bar if one exists  
@@ -1186,8 +1103,7 @@ function renderCoarseEmail(uncert,file){
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-email');
 
-    // Initial k is 2, so draws this
-
+    // Initial k is 20
     Promise.all([
         //reduced
         d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertainty_graph.json`),
@@ -1209,6 +1125,7 @@ function renderCoarseEmail(uncert,file){
         proc_rect.myGraph
             .zoom(2.5);
 
+        // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
         full_rect.myGraph
             // .d3AlphaDecay(0)
             // .d3VelocityDecay(0.08)
@@ -1216,6 +1133,7 @@ function renderCoarseEmail(uncert,file){
             .cooldownTime(6000)
             // .linkColor(() => 'rgba(0,0,0,0.05)')
             .linkVisibility(false)
+            // This only renders the links after the physics engine stops.
             .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
             // .onNodeHover( (d,i) => console.log(d) )
             .zoom(0.1);
@@ -1249,6 +1167,9 @@ function renderCoarseEmail(uncert,file){
         let k = k_Bar.activeK;
         //  console.log('in script',that.k)
 
+        // There are oddly spaced values in this dataset, so a continues slider bar doesn't work.
+        // My solutions involves creating this array of the actual data values, and only calling the 
+        // code if these values are touched on in the slider bar. 
         let email_vals = [20,30,40,41,42,43,44,50];
         if (email_vals.includes(parseInt(k))){
                 
@@ -1270,6 +1191,7 @@ function renderCoarseEmail(uncert,file){
             full_rect.myGraph
                 .zoom(0.1);
 
+            // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
             full_rect.myGraph
                 // .d3AlphaDecay(0)
                 // .d3VelocityDecay(0.08)
@@ -1314,11 +1236,6 @@ function renderCoarseEmail(uncert,file){
 }
 
 
-
-
-
-
-
 ////////////////////////////// SPARSIFICATION RENDERING FUNCTIONS ////////////////////////////////////////
 function renderSparsLesmis(){
 
@@ -1358,7 +1275,7 @@ function renderSparsLesmis(){
         proc_rect.data = files[0];
         full_rect.data = files[1];
         
-        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        // Recalculates scales and such for new data passed in
         proc_rect.type = 'spars';
 
         full_rect.myGraph
@@ -1435,17 +1352,16 @@ function renderUnifSpars(data_name,file){
     this.data_name = data_name;
     this.file = file;
 
-    
-
     //Sets default k
     let range = null;
+    // The lesmis and the rect datasets have different ranges.
     if (data_name == 'lesmis_77'){
         range = [0.7,0.9]
     }
     else{
         range = [0.6,0.9]
     }
-    console.log(range)
+    // console.log(range)
     let that = this;
     this.k = range[0];
 
@@ -1480,7 +1396,7 @@ function renderUnifSpars(data_name,file){
         proc_rect.data = files[0];
         full_rect.data = files[1];
         
-        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+        // Recalculates scales and such for new data passed in
         // For some reason completely bewildering to me, this prepgraph needs to be here or things break??
         proc_rect.prepGraph();
         proc_rect.type = 'spars';
@@ -1624,6 +1540,7 @@ function renderGemsecTv(uncert,file){
         proc_rect.myGraph
             .zoom(3);
 
+        // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
         full_rect.myGraph
             // .d3AlphaDecay(0)
             // .d3VelocityDecay(0.08)
@@ -1710,10 +1627,10 @@ function renderGemsecTv(uncert,file){
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////   DESCRIPTION CODE   /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-///////////// TUTORIAL RENDERING  /////////////////
 //make tooltip div for descriptions
 d3.select("#data-panel")
     .append("div")
