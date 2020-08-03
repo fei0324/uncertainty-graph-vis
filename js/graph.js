@@ -1278,7 +1278,10 @@ class Graph{
                     let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
                     //console.log(std_radius)
                     NODE_R = std_radius;
-                    halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                    // Adjust this to be completely different color for node visibility purposes
+                    // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                    halo_color = '#ff7118';
+
                 }
                 // add a halo for stdev
                 ctx.beginPath();
