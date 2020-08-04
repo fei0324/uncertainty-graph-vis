@@ -81,6 +81,7 @@ class Graph{
              let orange = d3.interpolateOranges
              let grey = d3.interpolateGreys
              let blue = d3.interpolateBlues
+             
  
              let link_color = cool;
              let node_color = orange;
@@ -187,12 +188,13 @@ class Graph{
             let orange = d3.interpolateOranges
             let grey = d3.interpolateGreys
             let blue = d3.interpolateBlues
+            let prgr = d3.interpolatePRGn
 
             let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
             let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
 
             let link_color = cool;
-            let node_color = blue;
+            let node_color = viridis;
 
             //Node range 
             // let node_range = [1,4];
@@ -1280,7 +1282,7 @@ class Graph{
                     NODE_R = std_radius;
                     // Adjust this to be completely different color for node visibility purposes
                     // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
-                    halo_color = '#ff7118';
+                    halo_color = '#ff920c';
 
                 }
                 // add a halo for stdev

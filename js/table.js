@@ -113,7 +113,7 @@ class Table {
             color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
         }
         else{
-            color = d3.scaleSequential(blue).domain(d3.extent(mat_values));
+            color = d3.scaleSequential(viridis).domain(d3.extent(mat_values)); //usually blue
         }
         
         // Make rows
@@ -324,7 +324,7 @@ class Table {
                     let linkRange = d3.extent(avg_arrayLW)
 
                     let link_color = cool;
-                    let node_color = blue;
+                    let node_color = viridis; //blue
 
                     // Color scales
                     let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
@@ -359,7 +359,7 @@ class Table {
                     let linkRange = d3.extent(avg_arrayLW)
 
                     let link_color = cool;
-                    let node_color = blue;
+                    let node_color = viridis; //blue
 
                     // Color scales
                     let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
