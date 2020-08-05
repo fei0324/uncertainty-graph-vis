@@ -1,6 +1,5 @@
 # Uncertainty Visualization for Graph Reduction
 
----
 
 This is the web-demo accompanying the paper *Uncertainty Visualization for Graph Reduction*. This demo is intended to allow the user to explore the algorithms discussed in the paper across a range of datasets. Here's the abstract from the paper: 
 
