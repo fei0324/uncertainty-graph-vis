@@ -39,6 +39,16 @@ class Graph{
         // Indicates what type of graph: orig (original) or clust (clustered) or spars (sparsified)
         this.type = type;
 
+        // // Need to make variable to record the current max and min seen.... this is to handle the scaling
+        // this.max = -100000000000;
+        // this.min = 1000000000;
+        // this.maxL = -10000000000;
+        // this.minL = 1000000000;
+
+        //This is the varible for the node and link scaling
+        this.nodeScale = null;
+        this.linkScale = null;
+
         // console.log("Graph data:",this.data);
         //Creating forcegraph object
         this.myGraph = ForceGraph();
@@ -112,19 +122,26 @@ class Graph{
             let std_arrayL = this.data.links.map( d => d.std );
 
             this.linkRange = d3.extent(avg_arrayLM)
-
+            //  console.log("SPARS EXTENT:",this.linkRange)
 
             // Color scale for links
-            this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
+            // this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
+            this.linkColor = d3.scaleSequential(link_color).domain(this.linkScale);
             this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
 
 
             // Link scales
             this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range(stdRange);
-            this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(meanRange);
-            this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(squareRange);
+            // this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(meanRange);
+            this.linkMeanScale = d3.scaleLinear().domain(this.linkScale).range(meanRange);
+
+            // this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(squareRange);
+            this.linkSquareScale = d3.scaleLinear().domain(this.linkScale).range(squareRange);
+
             this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range(stdRange);
-            this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(splineRange);
+            // this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(splineRange);
+            this.meanScaleSpline = d3.scaleLinear().domain(this.linkScale).range(splineRange);
+
 
             let edge_active = $('#edgeDrop').find('a.active').attr('id');
             
@@ -152,6 +169,8 @@ class Graph{
         //Scales for clustering
         else if (this.type == 'clust'){
 
+            console.log("In prep graph - scaling stuff",this.nodeScale,this.linkScale)
+
             // Creating legend selection
             let legendSVG = d3.select("#legend-SVG");
 
@@ -173,6 +192,34 @@ class Graph{
             //finding max and min of mean for nodes
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
             let std_array = this.data.nodes.map( d => d.uncertainty_std );
+
+            // // Logic for max and min, this is being used to come up with scaling for an entire dataset
+            // let current_max = d3.max(avg_array);
+            // let current_min = d3.min(avg_array);
+
+            // let link_extent = d3.extent(this.data.links.map( d => d.mean ));
+            // let current_minL = link_extent[0];
+            // let current_maxL = link_extent[1];
+
+
+            // console.log('CURRENT NODE MAX AND MIN',current_max,current_min)
+            // console.log('CURRENT LINK MAX AND MIN',current_maxL,current_minL)
+            // if(current_max > this.max){
+            //     this.max=current_max
+            // }
+            // if(current_min < this.min){
+            //     this.min=current_min
+            // }
+            // if(current_maxL > this.maxL){
+            //     this.maxL=current_maxL
+            // }
+            // if(current_minL < this.minL){
+            //     this.minL=current_minL
+            // }
+
+            // console.log("RUNNING NODE MAX AND MIN",this.max,this.min)
+            // console.log("RUNNING LINK MAX AND MIN",this.maxL,this.minL)
+
 
             let sum_array = this.data.nodes.map(d => d.uncertainty_mean + d.uncertainty_std*8)
  
@@ -226,11 +273,13 @@ class Graph{
             //Color scale for means of node
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
-            this.color = d3.scaleSequential(node_color).domain(d3.extent(avg_array));
+            // this.color = d3.scaleSequential(node_color).domain(d3.extent(avg_array));
+            this.color = d3.scaleSequential(node_color).domain(this.nodeScale);
             this.stdColor = d3.scaleSequential(node_color).domain(d3.extent(std_array));
 
             // linear scale for mean of node
-            this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range(node_range)
+            // this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range(node_range)
+            this.meanScale = d3.scaleLinear().domain(this.nodeScale).range(node_range)
             this.nodeStdScale = d3.scaleLinear().domain(d3.extent(std_array)).range(node_range)
 
             this.sumScale = d3.scaleLinear().domain([d3.min(avg_array), d3.max(sum_array)]).range(node_range);
@@ -243,16 +292,22 @@ class Graph{
             let std_arrayL = this.data.links.map( d => d.std );
 
             // Color scale for links
-            this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
+            // this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
+            this.linkColor = d3.scaleSequential(link_color).domain(this.linkScale);
+
             this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
 
 
             // Link scales
             this.linkweightScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range(stdRange);
-            this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(meanRange);
-            this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(squareRange);
+            // this.linkMeanScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(meanRange);
+            this.linkMeanScale = d3.scaleLinear().domain(this.linkScale).range(meanRange);
+            // this.linkSquareScale = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(squareRange);
+            this.linkSquareScale = d3.scaleLinear().domain(this.linkScale).range(squareRange);
             this.linkStdScale = d3.scaleLinear().domain(d3.extent(std_arrayL)).range(stdRange);
-            this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(splineRange);
+            // this.meanScaleSpline = d3.scaleLinear().domain(d3.extent(avg_arrayLM)).range(splineRange);
+            this.meanScaleSpline = d3.scaleLinear().domain(this.linkScale).range(splineRange);
+
 
             // // Creating legend selection
             // let legendSVG = d3.select("#legend-SVG");

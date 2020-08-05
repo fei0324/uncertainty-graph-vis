@@ -12,6 +12,9 @@ class Table {
         this.active_alg = active_alg;
         this.unif_spars = unif_spars;
 
+        // Setting scaling variable
+        this.scale = null;
+
         //Setting references
         this.full_ref = full_ref;
         this.proc_ref = proc_ref;

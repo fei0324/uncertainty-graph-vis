@@ -772,6 +772,8 @@ function renderCoarseRect(uncert,file){
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
         proc_rect.type = 'clust'
+        proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+        proc_rect.linkScale = [0.3411491395477371, 100]
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -900,6 +902,9 @@ function renderCoarseLesmis(uncert,file){
 
         // Handling this graph's parameters
         proc_rect.type = 'clust'
+        proc_rect.nodeScale = [-0.009660296956141888, 0.5345581749927919];
+        proc_rect.linkScale = [0.010101010101010102, 73.0909090909091];
+
         full_rect.myGraph
             .linkVisibility(true);
         proc_rect.myGraph
@@ -1023,6 +1028,8 @@ function renderCoarseCele(uncert,file){
 
         // Recalculates scales and such for new data passed in and handles graph parameters
         proc_rect.type = 'clust';
+        proc_rect.nodeScale = [-0.001195036474254751, 0.3845227170550737];
+        proc_rect.linkScale = [0.43434343434343436, 347.45454545454544];
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -1149,6 +1156,8 @@ function renderCoarseEmail(uncert,file){
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
         proc_rect.type = 'clust';
+        proc_rect.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
+        proc_rect.linkScale = [0.09090909090909091, 375.8484848484849];
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
@@ -1307,6 +1316,7 @@ function renderSparsLesmis(){
         
         // Recalculates scales and such for new data passed in
         proc_rect.type = 'spars';
+        proc_rect.linkScale = [0,33];
 
         full_rect.myGraph
             .linkVisibility(true);
@@ -1430,6 +1440,8 @@ function renderUnifSpars(data_name,file){
         // For some reason completely bewildering to me, this prepgraph needs to be here or things break??
         proc_rect.prepGraph();
         proc_rect.type = 'spars';
+        // Link scale for rect 
+        proc_rect.linkScale = [0.3411491395477371, 2.6663668831664267]
 
         full_rect.prepGraph();
         proc_rect.prepGraph();
@@ -1564,6 +1576,8 @@ function renderGemsecTv(uncert,file){
 
         // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
         proc_rect.type = 'clust';
+        proc_rect.nodeScale = [0.0013348737353079964, 0.03940252992083273];
+        proc_rect.linkScale = [2.3157894736842106, 19.63157894736842];
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
 
