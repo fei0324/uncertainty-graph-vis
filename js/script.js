@@ -797,6 +797,7 @@ function renderCoarseRect(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.nodeScale = [-0.005664816285412998, 0.5]
         heatMap.unif_spars = false;
         heatMap.active_alg = file;
         heatMap.data_name = 'rec_100';
@@ -925,6 +926,7 @@ function renderCoarseLesmis(uncert,file){
         heatMap.myGraph.linkVisibility(false)
 
         heatMap.data = files[2];
+        heatMap.nodeScale = [-0.009660296956141888, 0.5345581749927919];
         heatMap.unif_spars = false;
         heatMap.data_name = 'lesmis_77';
         heatMap.active_alg = file;
@@ -1050,6 +1052,7 @@ function renderCoarseCele(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.nodeScale = [-0.001195036474254751, 0.3845227170550737];
         heatMap.unif_spars = false;
         heatMap.active_alg = file;
         heatMap.data_name = 'celegans_453';
@@ -1187,6 +1190,7 @@ function renderCoarseEmail(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
         heatMap.unif_spars = false;
         heatMap.data_name = 'email_1005';
         heatMap.active_alg = file;
@@ -1609,6 +1613,7 @@ function renderGemsecTv(uncert,file){
 
         heatMap.removeHeatMap()
         heatMap.data = files[2];
+        heatMap.nodeScale = [0.0013348737353079964, 0.03940252992083273];
         heatMap.unif_spars = false;
         heatMap.active_alg = file;
         heatMap.data_name = 'tvshow_3892';

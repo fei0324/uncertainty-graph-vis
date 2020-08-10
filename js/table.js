@@ -15,6 +15,9 @@ class Table {
         // Setting scaling variable
         this.scale = null;
 
+        //This is the varible for the node and link scaling
+        this.nodeScale = null;
+
         //Setting references
         this.full_ref = full_ref;
         this.proc_ref = proc_ref;
@@ -113,10 +116,12 @@ class Table {
 
         let color = null;
         if (this.unif_spars==true){
-            color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
+            // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
+            color = d3.scaleSequential(viridis).domain(this.nodeScale);
         }
         else{
-            color = d3.scaleSequential(viridis).domain(d3.extent(mat_values)); //usually blue
+            // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values)); //usually blue
+            color = d3.scaleSequential(viridis).domain(this.nodeScale); //usually blue
         }
         
         // Make rows
