@@ -39,6 +39,11 @@ class Graph{
         // Indicates what type of graph: orig (original) or clust (clustered) or spars (sparsified)
         this.type = type;
 
+        //Global variable for node and link and std color
+        this.link_Color = d3.interpolateCool;
+        this.node_Color = d3.interpolateViridis;
+        this.std_Color = '#ff920c';
+
         // // Need to make variable to record the current max and min seen.... this is to handle the scaling
         // this.max = -100000000000;
         // this.min = 1000000000;
@@ -93,7 +98,7 @@ class Graph{
              let blue = d3.interpolateBlues
              
  
-             let link_color = cool;
+            //  this.link_Color = cool;
              let node_color = orange;
  
              // Link ranges
@@ -126,8 +131,8 @@ class Graph{
 
             // Color scale for links
             // this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
-            this.linkColor = d3.scaleSequential(link_color).domain(this.linkScale);
-            this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
+            this.linkColor = d3.scaleSequential(this.link_Color).domain(this.linkScale);
+            this.linkColorStd = d3.scaleSequential(this.link_Color).domain(d3.extent(std_arrayL));
 
 
             // Link scales
@@ -240,8 +245,8 @@ class Graph{
             let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
             let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
 
-            let link_color = cool;
-            let node_color = viridis;
+            // this.link_Color = d3.interpolateCool;
+            // this.node_Color = d3.interpolateViridis;
 
             //Node range 
             // let node_range = [1,4];
@@ -274,8 +279,8 @@ class Graph{
             //Experimenting by making the median the diverging point, if this doesn't work, could change to mean
             //this.color = d3.scaleDiverging([minMean, medMean, maxMean], d3.interpolateRdBu);
             // this.color = d3.scaleSequential(node_color).domain(d3.extent(avg_array));
-            this.color = d3.scaleSequential(node_color).domain(this.nodeScale);
-            this.stdColor = d3.scaleSequential(node_color).domain(d3.extent(std_array));
+            this.color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
+            this.stdColor = d3.scaleSequential(this.node_Color).domain(d3.extent(std_array));
 
             // linear scale for mean of node
             // this.meanScale = d3.scaleLinear().domain(d3.extent(avg_array)).range(node_range)
@@ -293,9 +298,9 @@ class Graph{
 
             // Color scale for links
             // this.linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLM));
-            this.linkColor = d3.scaleSequential(link_color).domain(this.linkScale);
+            this.linkColor = d3.scaleSequential(this.link_Color).domain(this.linkScale);
 
-            this.linkColorStd = d3.scaleSequential(link_color).domain(d3.extent(std_arrayL));
+            this.linkColorStd = d3.scaleSequential(this.link_Color).domain(d3.extent(std_arrayL));
 
 
             // Link scales
@@ -1337,7 +1342,7 @@ class Graph{
                     NODE_R = std_radius;
                     // Adjust this to be completely different color for node visibility purposes
                     // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
-                    halo_color = '#ff920c';
+                    halo_color = this.std_Color;
 
                 }
                 // add a halo for stdev

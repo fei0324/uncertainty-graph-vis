@@ -727,6 +727,200 @@ $('#invertDrop').on('hide.bs.dropdown', function (e) {
 })
 
 
+// Color schemes
+// let viridis = d3.interpolateViridis
+// let inferno = d3.interpolateInferno
+// let plasma =  d3.interpolatePlasma
+// let cool = d3.interpolateCool
+// let warm = d3.interpolateWarm
+
+// let green =  d3.interpolateGreens
+// let purple = d3.interpolatePurples
+// let orange = d3.interpolateOranges
+// let grey = d3.interpolateGreys
+// let blue = d3.interpolateBlues
+// let prgr = d3.interpolatePRGn
+
+// let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
+// let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
+
+// Color button dropdown logic
+$('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
+    // console.log(e)
+    let drop_color = null;
+    let targetClass = null;
+    if (e.clickEvent){
+        targetClass = $(e.clickEvent.target).attr('class')
+    }
+    if (targetClass == 'dropdown-item'){
+        let target = e.clickEvent.target.id;
+        console.log('target',target)
+        drop_color = target;
+
+        // changes active highlighting
+        let kids = $('#nodeColorDrop').find('a')
+        kids.removeClass( "active" );
+        $(`#${target}`).addClass("active")
+
+        // Sets color to selected
+        if (target == 'cool'){
+            proc_rect.node_Color = d3.interpolateCool;
+            heatMap.node_Color = d3.interpolateCool;
+        }
+        else if (target == 'viridis'){
+            proc_rect.node_Color = d3.interpolateViridis;
+            heatMap.node_Color = d3.interpolateViridis;
+        }
+        else if (target == 'plasma'){
+            proc_rect.node_Color = d3.interpolatePlasma;
+            heatMap.node_Color = d3.interpolatePlasma;
+        }
+        else if (target == 'warm'){
+            proc_rect.node_Color = d3.interpolateWarm;
+            heatMap.node_Color = d3.interpolateWarm;
+        }
+        else if (target == 'inferno'){
+            proc_rect.node_Color = d3.interpolateInferno;
+            heatMap.node_Color = d3.interpolateInferno;
+        }
+        else if (target == 'purple-green'){
+            proc_rect.node_Color = d3.interpolatePRGn;
+            heatMap.node_Color = d3.interpolatePRGn;
+        }
+        else if (target == 'pink-blue'){
+            proc_rect.node_Color = d3.interpolate("#ff3aa6", "#30ffe3");
+            heatMap.node_Color = d3.interpolate("#ff3aa6", "#30ffe3");
+        }
+        else if (target == 'green-orange'){
+            proc_rect.node_Color = d3.interpolate('#a6ff3a','#ff5d30');
+            heatMap.node_Color = d3.interpolate('#a6ff3a','#ff5d30');
+        }
+        
+        
+
+        //Redraws. prepGraph contains logic which detects which invert option is active then 
+        // scales the data appropriately. 
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+        heatMap.removeHeatMap()
+        heatMap.createHeatMap()
+
+        // Feeding in graph data like this speeds things up really well!
+        full_rect.myGraph.graphData(full_rect.data)
+        proc_rect.myGraph.graphData(proc_rect.data)
+    }
+
+})
+
+$('#edgeColorDrop').on('hide.bs.dropdown', function (e) {
+    // console.log(e)
+    let drop_color = null;
+    let targetClass = null;
+    if (e.clickEvent){
+        targetClass = $(e.clickEvent.target).attr('class')
+    }
+    if (targetClass == 'dropdown-item'){
+        let target = e.clickEvent.target.id;
+        // console.log('target',target)
+        drop_color = target;
+
+        // changes active highlighting
+        let kids = $('#edgeColorDrop').find('a')
+        kids.removeClass( "active" );
+        $(`#${target}`).addClass("active")
+
+        if (target == 'cool_'){
+            proc_rect.link_Color = d3.interpolateCool;
+        }
+        else if (target == 'viridis_'){
+            proc_rect.link_Color = d3.interpolateViridis;
+        }
+        else if (target == 'plasma_'){
+            proc_rect.link_Color = d3.interpolatePlasma;
+        }
+        else if (target == 'warm_'){
+            proc_rect.link_Color = d3.interpolateWarm;
+        }
+        else if (target == 'inferno_'){
+            proc_rect.link_Color = d3.interpolateInferno;
+        }
+        else if (target == 'purple-green_'){
+            proc_rect.link_Color = d3.interpolatePRGn;
+        }
+        else if (target == 'pink-blue_'){
+            proc_rect.link_Color = d3.interpolate("#ff3aa6", "#30ffe3")
+        }
+        else if (target == 'green-orange_'){
+            proc_rect.link_Color = d3.interpolate('#a6ff3a','#ff5d30')
+        }
+
+        //Redraws. prepGraph contains logic which detects which invert option is active then 
+        // scales the data appropriately. 
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+
+        // Feeding in graph data like this speeds things up really well!
+        full_rect.myGraph.graphData(full_rect.data)
+        proc_rect.myGraph.graphData(proc_rect.data)
+    }
+
+})
+
+$('#stdColorDrop').on('hide.bs.dropdown', function (e) {
+    // console.log(e)
+    let drop_color = null;
+    let targetClass = null;
+    if (e.clickEvent){
+        targetClass = $(e.clickEvent.target).attr('class')
+    }
+    if (targetClass == 'dropdown-item'){
+        let target = e.clickEvent.target.id;
+        // console.log('target',target)
+        drop_color = target;
+
+        // changes active highlighting
+        let kids = $('#stdColorDrop').find('a')
+        kids.removeClass( "active" );
+        $(`#${target}`).addClass("active")
+
+        if (target == 'orange'){
+            proc_rect.std_Color = '#ff920c';
+        }
+        else if (target == 'red'){
+            proc_rect.std_Color = 'red';
+        }
+        else if (target == 'blue'){
+            proc_rect.std_Color = '#5350ff'
+        }
+        else if (target == 'green'){
+            proc_rect.std_Color = '#219117'
+        }
+        else if (target == 'purple'){
+            proc_rect.std_Color = '#8055a1'
+        }
+        else if (target == 'pink'){
+            proc_rect.std_Color = '#e34bde'
+        }
+        else if (target == 'gold'){
+            proc_rect.std_Color = '#e6ce18'
+        }
+        else if (target == 'black'){
+            proc_rect.std_Color = 'black'
+        }
+
+        //Redraws. prepGraph contains logic which detects which invert option is active then 
+        // scales the data appropriately. 
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+
+        // Feeding in graph data like this speeds things up really well!
+        full_rect.myGraph.graphData(full_rect.data)
+        proc_rect.myGraph.graphData(proc_rect.data)
+    }
+
+})
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////   RENDERING FUNCTIONS   //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////

@@ -15,6 +15,10 @@ class Table {
         // Setting scaling variable
         this.scale = null;
 
+        // Making a universal color for mini-graph and heatmap
+        this.node_Color = d3.interpolateViridis;
+        this.link_Color = d3.interpolateCool;
+
         //This is the varible for the node and link scaling
         this.nodeScale = null;
 
@@ -57,17 +61,17 @@ class Table {
         
 
         // // Different color schemes
-        let viridis = d3.interpolateViridis
+        // let viridis = d3.interpolateViridis
         // let inferno = d3.interpolateInferno
         // let plasma =  d3.interpolatePlasma
-        let cool = d3.interpolateCool
+        // let cool = d3.interpolateCool
         // let warm = d3.interpolateWarm
 
         // let green =  d3.interpolateGreens
         // let purple = d3.interpolatePurples
         // let orange = d3.interpolateOranges
         // let grey = d3.interpolateGreys
-        let blue = d3.interpolateBlues
+        // let blue = d3.interpolateBlues
 
 
         //Setting width and height of canvas object
@@ -117,11 +121,11 @@ class Table {
         let color = null;
         if (this.unif_spars==true){
             // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
-            color = d3.scaleSequential(viridis).domain(this.nodeScale);
+            color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
         }
         else{
             // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values)); //usually blue
-            color = d3.scaleSequential(viridis).domain(this.nodeScale); //usually blue
+            color = d3.scaleSequential(this.node_Color).domain(this.nodeScale); //usually blue
         }
         
         // Make rows
@@ -331,12 +335,13 @@ class Table {
                     let avg_arrayLW = my_data.links.map( d => d.weight );
                     let linkRange = d3.extent(avg_arrayLW)
 
-                    let link_color = cool;
-                    let node_color = viridis; //blue
+                    // let link_color = cool;
+                    // let node_color = viridis; //blue
+                    // console.log(this.proc_ref.node_Color)
 
                     // Color scales
-                    let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
-                    let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
+                    let linkColor = d3.scaleSequential(this.proc_ref.link_Color).domain(d3.extent(avg_arrayLW));
+                    let nodeColor = d3.scaleSequential(this.proc_ref.node_Color).domain(d3.extent(avg_arrayNW));
 
                     // Width and size scales
                     let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,8]);
@@ -366,12 +371,12 @@ class Table {
                     let avg_arrayLW = my_data.links.map( d => d.weight );
                     let linkRange = d3.extent(avg_arrayLW)
 
-                    let link_color = cool;
-                    let node_color = viridis; //blue
+                    // let link_color = cool;
+                    // let node_color = viridis; //blue
 
                     // Color scales
-                    let linkColor = d3.scaleSequential(link_color).domain(d3.extent(avg_arrayLW));
-                    let nodeColor = d3.scaleSequential(node_color).domain(d3.extent(avg_arrayNW));
+                    let linkColor = d3.scaleSequential(that.proc_ref.link_Color).domain(d3.extent(avg_arrayLW));
+                    let nodeColor = d3.scaleSequential(that.proc_ref.node_Color).domain(d3.extent(avg_arrayNW));
 
                     // Width and size scales
                     let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,8]);
