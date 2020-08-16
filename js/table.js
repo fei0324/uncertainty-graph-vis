@@ -35,8 +35,8 @@ class Table {
         // Canvas width and height
         let boundingRect = this.LOCATION.getBoundingClientRect()
         console.log('graph mini rect',boundingRect)
-        this.WIDTH = boundingRect.width;
-        this.HEIGHT = boundingRect.height;
+        this.WIDTH = boundingRect.width - 7;
+        this.HEIGHT = boundingRect.height - 8;
         console.log('graph mini dims',this.WIDTH,this.HEIGHT)
         
         this.myGraph(this.LOCATION)

@@ -63,8 +63,8 @@ class Graph{
 
         // Canvas width and height
         let boundingRect = this.LOCATION.getBoundingClientRect()
-        this.WIDTH = boundingRect.width;
-        this.HEIGHT = boundingRect.height;
+        this.WIDTH = boundingRect.width-6;
+        this.HEIGHT = boundingRect.height-8;
 
         this.myGraph(this.LOCATION)
             .width(this.WIDTH)

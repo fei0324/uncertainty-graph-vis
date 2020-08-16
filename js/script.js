@@ -49,13 +49,13 @@ function resize (event) {
     let boundingRect_proc = proc_loc.getBoundingClientRect();
     let boundingRect_mini = mini_loc.getBoundingClientRect();
     // stores new size width
-    let orig_width = boundingRect_orig.width;
-    let orig_height = boundingRect_orig.height;
-    let proc_width = boundingRect_proc.width;
+    let orig_width = boundingRect_orig.width - 6;
+    let orig_height = boundingRect_orig.height - 8;
+    let proc_width = boundingRect_proc.width - 6;
     // stores new size height
-    let proc_height = boundingRect_proc.height;
-    let mini_width = boundingRect_mini.width;
-    let mini_height = boundingRect_mini.height;
+    let proc_height = boundingRect_proc.height - 8;
+    let mini_width = boundingRect_mini.width - 7;
+    let mini_height = boundingRect_mini.height - 8;
     // re-adjusts the width and height of the graph using new, stored width and height
     full_rect.myGraph.width(orig_width);
     full_rect.myGraph.height(orig_height);

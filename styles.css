@@ -29,14 +29,15 @@
 /* Setting variables */
 :root{
     /* graph borders */
-    --border-color: rgb(243, 243, 243);
-    --border-width: thin;
+    --border-color: rgb(128, 128, 128);
+    --border-width: 4px;
     /* dropdown alignment */
     --button-top: 0px;
     --slider-top: 25%;
     --slider-left: 0%;
     /* canvas background */
-    --canvas-color: #e3e3e3
+    /* --canvas-color: #e3e3e3 */
+    --canvas-color: white;
 
 }
 
@@ -159,6 +160,7 @@
     position: relative;
     grid-area: orig;
     border: var(--border-width) solid var(--border-color);
+    border-right-width: 2px;
     border-bottom-left-radius: 10px 10px;
     border-top-left-radius: 10px 10px;
     background-color: var(--canvas-color);
@@ -168,6 +170,7 @@
     position: relative;
     grid-area: processed;
     border: var(--border-width)  solid var(--border-color);
+    border-left-width: 2px;
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px;
     background-color: var(--canvas-color);
