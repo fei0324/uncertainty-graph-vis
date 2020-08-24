@@ -24,9 +24,10 @@
             "heatmap heatmap heatmap heatmap heatmap heatmap mini mini"; */
     
     grid-template-columns: repeat(9,minmax(0,1fr));
-    grid-template-rows: auto  40px minmax(325px,2fr) 95px 30px minmax(200px,0.75fr);
+    grid-template-rows: auto auto  40px minmax(325px,2fr) 95px 30px minmax(200px,0.75fr);
     grid-template-areas: 
-            "title title title selections selections selections selections bars bars"
+            "title title title title selections selections selections selections selections"
+            "title title title title bars bars bars bars bars"
             "info-1 info-1 info-1 info-2 info-2 info-2 info-3 info-3 info-3"
             "orig orig orig processed processed processed mini mini mini"
             "orig orig orig legend legend legend mini mini mini"
@@ -55,7 +56,7 @@
 .title{
     grid-area: title;
     text-align: left;
-    font-size: 30px;
+    font-size: 40px;
     padding-top: 10px;
     padding-left: 10px;
     font-weight: 600;
@@ -74,7 +75,7 @@
 /* selections div styling */
 .selections{
     grid-area: selections;
-    padding-left: 0px;
+    padding-left: 20px;
     padding-top: 20px;
     overflow: visible;
     /* border-bottom: var(--border-width) solid var(--border-color); */
@@ -145,7 +146,7 @@
     grid-area: bars;
     padding-left: 10%;
     margin-top: 5px;
-    border-left: var(--border-width) solid var(--border-color);
+    /* border-left: var(--border-width) solid var(--border-color); */
     /* border-bottom: var(--border-width) solid var(--border-color); */
     margin-right: 5px;
     /* border-radius: 10px 10px;
@@ -575,7 +576,7 @@
 } */
 
 .kBar{
-    display: block;
+    display: inline-block;
     position: relative;
     top: 5px;
     /* left: 25%; */
@@ -584,10 +585,11 @@
 }
 
 .fBar{
-    display: block;
+    display: inline-block;
     position: relative;
-    top: 0px;
+    top: 5px;
     /* left: 25%; */
+    padding-left: 20px;
     font-size: 15px;
     fill: gray;
 }
