@@ -71,10 +71,10 @@ class Graph{
             .height(this.HEIGHT);
 
         //make tooltip div - more detailed info to the side -state in selected view
-        let infobox = d3.select("#data-panel")
-            .append("div")
-            .attr("id", `infobox-${this.location}`)
-            .style("opacity", 0);
+        // let infobox = d3.select("#data-panel")
+        //     .append("div")
+        //     .attr("id", `infobox-${this.location}`)
+        //     .style("opacity", 0);
         
     }
 

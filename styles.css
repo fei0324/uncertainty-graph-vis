@@ -138,8 +138,34 @@
     grid-area: label;
     font-size: 25px;
     font-weight: 100;
+    display:grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: minmax(0,1fr);
+    grid-template-areas:
+        "heatmap-label heatmap-info";
+
+    overflow: visible;
     
 }
+
+#infobox-graph-orig{
+    grid-area: heatmap-info;
+    position: relative;
+    text-align: center;
+    /* left: 0px;
+    top: 0px; */
+    top: 10px;
+    width: 100%;
+    height: auto;
+    padding: 0px;
+    background: rgba(221, 109, 109, 0);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+
+
+}
+
 
 /* bars styling */
 .bars{
@@ -294,10 +320,9 @@
 
     display:grid;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0,4fr) minmax(0,2fr);
+    grid-template-rows: minmax(0,1fr);
     grid-template-areas:
-        "graph-info"
-        "heatmap-info";
+        "graph-info";
 
     overflow: visible;
 }
@@ -319,23 +344,7 @@
 
 }
 
-#infobox-graph-orig{
-    grid-area: heatmap-info;
-    position: absolute;
-    text-align: center;
-    /* left: 0px;
-    top: 0px; */
-    width: 100%;
-    height: auto;
-    padding: 0px;
-    background: rgba(221, 109, 109, 0);
-    stroke: rgb(180, 180, 180);
-    border-radius: 10px;
-    pointer-events: none;
 
-
-
-}
 
 
 /* #infobox-graph-orig {
@@ -397,7 +406,7 @@
     padding: 0px;
     font-size: 25px;
     line-height: 20px;
-    font-weight: lighter;
+    /* font-weight: lighter; */
     color: #81849a;
 }
 

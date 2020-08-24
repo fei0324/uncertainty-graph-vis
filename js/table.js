@@ -546,8 +546,8 @@ class Table {
     infoboxRender(value,i){
         let that = this;
         let text = null;
-        text = "<h3> run number: " + i + "</h3>";
-        text = text + "<p> node uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
+        text = "<p> <b> run number: </b>" + i + " &emsp; <b> node uncertainty value: </b>" + parseFloat(value).toFixed(4) + "</p>";
+        // text = text + "<p> node uncertainty value: " + parseFloat(value).toFixed(4) + "</p>";
         return text;
 
     }
