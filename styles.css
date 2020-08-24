@@ -26,8 +26,8 @@
     grid-template-columns: repeat(9,minmax(0,1fr));
     grid-template-rows: auto auto  40px minmax(325px,2fr) 95px 30px minmax(200px,0.75fr);
     grid-template-areas: 
-            "title title title title selections selections selections selections selections"
-            "title title title title bars bars bars bars bars"
+            "title title title selections selections selections selections selections selections"
+            "title title title bars bars bars bars bars bars"
             "info-1 info-1 info-1 info-2 info-2 info-2 info-3 info-3 info-3"
             "orig orig orig processed processed processed mini mini mini"
             "orig orig orig legend legend legend mini mini mini"
@@ -56,14 +56,14 @@
 .title{
     grid-area: title;
     text-align: left;
-    font-size: 40px;
-    padding-top: 10px;
+    font-size: 35px;
+    padding-top: 5px;
     padding-left: 10px;
     font-weight: 600;
     margin-top:5px;
     margin-left:5px;
     border-right: var(--border-width) solid var(--border-color);
-    /* border-bottom: var(--border-width) solid var(--border-color); */
+    border-bottom: var(--border-width) solid var(--border-color);
     /* border: 1px solid rgb(165, 165, 165);
     border-right: white;
     border-bottom-left-radius: 10px 10px;
@@ -75,7 +75,7 @@
 /* selections div styling */
 .selections{
     grid-area: selections;
-    padding-left: 20px;
+    padding-left: 80px;
     padding-top: 20px;
     overflow: visible;
     /* border-bottom: var(--border-width) solid var(--border-color); */
@@ -147,7 +147,7 @@
     padding-left: 10%;
     margin-top: 5px;
     /* border-left: var(--border-width) solid var(--border-color); */
-    /* border-bottom: var(--border-width) solid var(--border-color); */
+    border-bottom: var(--border-width) solid var(--border-color);
     margin-right: 5px;
     /* border-radius: 10px 10px;
     background-color: var(--canvas-color); */
