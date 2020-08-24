@@ -14,14 +14,24 @@
     padding-left:  10px; */
     
     display: grid;
-    grid-template-columns: repeat(6,1fr) repeat(2,1fr);
+    /* grid-template-columns: repeat(6,1fr) repeat(2,1fr);
     grid-template-rows: auto minmax(50px,auto) minmax(400px,2fr) minmax(25px,auto) minmax(200px,1fr);
     grid-template-areas: 
             "title title title selections selections selections bars bars"
             "info info info info info info bars bars"
             "orig orig orig processed processed processed panel panel"
             "label label label label label label label label"
-            "heatmap heatmap heatmap heatmap heatmap heatmap mini mini";
+            "heatmap heatmap heatmap heatmap heatmap heatmap mini mini"; */
+    
+    grid-template-columns: repeat(9,minmax(0,1fr));
+    grid-template-rows: auto  40px minmax(325px,2fr) 95px 30px minmax(200px,0.75fr);
+    grid-template-areas: 
+            "title title title selections selections selections selections bars bars"
+            "info-1 info-1 info-1 info-2 info-2 info-2 info-3 info-3 info-3"
+            "orig orig orig processed processed processed mini mini mini"
+            "orig orig orig legend legend legend mini mini mini"
+            "label label label label label label label panel panel"
+            "heatmap heatmap heatmap heatmap heatmap heatmap heatmap panel panel";
     width: 100vw;
     height: 99vh;
 }
@@ -29,8 +39,8 @@
 /* Setting variables */
 :root{
     /* graph borders */
-    --border-color: rgb(128, 128, 128);
-    --border-width: 4px;
+    --border-color: rgba(128, 128, 128, 0.425);
+    --border-width: 2px;
     /* dropdown alignment */
     --button-top: 0px;
     --slider-top: 25%;
@@ -49,6 +59,10 @@
     padding-top: 10px;
     padding-left: 10px;
     font-weight: 600;
+    margin-top:5px;
+    margin-left:5px;
+    border-right: var(--border-width) solid var(--border-color);
+    /* border-bottom: var(--border-width) solid var(--border-color); */
     /* border: 1px solid rgb(165, 165, 165);
     border-right: white;
     border-bottom-left-radius: 10px 10px;
@@ -63,18 +77,59 @@
     padding-left: 0px;
     padding-top: 20px;
     overflow: visible;
+    /* border-bottom: var(--border-width) solid var(--border-color); */
     /* border: 1px solid rgb(165, 165, 165);
     border-left: white;
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px; */
+    /* display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:
+        "alg-bar"
+        "encoding-bar";
+
+    overflow: visible; */
+}
+
+#alg-bar{
+    grid-area: alg-bar;
+}
+
+#encoding-bar{
+    grid-area: encoding-bar;
+}
+
+
+
+
+/* Legend */
+.legend{
+    grid-area:legend;
+    border: var(--border-width) solid var(--border-color);
+    background-color: var(--canvas-color);
+    border-top: 0px;
+
 }
 
 /* INFO div styling */
-.info{
-    grid-area: info;
+.info-1{
+    grid-area: info-1;
     font-size: 25px;
     font-weight: 100;
-    
+    text-align: center;
+}
+.info-2{
+    grid-area: info-2;
+    font-size: 25px;
+    font-weight: 100;
+    text-align: center;
+}
+.info-3{
+    grid-area: info-3;
+    font-size: 25px;
+    font-weight: 100;
+    text-align: center;
 }
 
 /* label div styling */
@@ -88,7 +143,13 @@
 /* bars styling */
 .bars{
     grid-area: bars;
-    margin:auto;
+    padding-left: 10%;
+    margin-top: 5px;
+    border-left: var(--border-width) solid var(--border-color);
+    /* border-bottom: var(--border-width) solid var(--border-color); */
+    margin-right: 5px;
+    /* border-radius: 10px 10px;
+    background-color: var(--canvas-color); */
 }
 
 #full-label{
@@ -96,8 +157,8 @@
     /* width: 100px; */
     /* text-align: left; */
     position: relative;
-    top: 10px;
-    left: 20px;
+    /* top: 10px;
+    left: 20px; */
     color:gray;
     z-index: 100;
 }
@@ -107,11 +168,23 @@
     /* width: 100px; */
     /* text-align: center; */
     position: relative;
-    top: 10px;
-    left: 45%;
+    /* top: 10px;
+    left: 45%; */
     color: gray;
     z-index: 100;
 }
+
+#mini-label{
+    display: inline-block;
+    /* width: 100px; */
+    /* text-align: center; */
+    position: relative;
+    /* top: 0px;
+    left: 70%; */
+    color: gray;
+    z-index: 100;
+}
+
 
 #heatmap-label{
     display: inline-block;
@@ -124,16 +197,7 @@
     z-index: 100;
 }
 
-#mini-label{
-    display: inline-block;
-    /* width: 100px; */
-    /* text-align: center; */
-    position: relative;
-    top: 0px;
-    left: 70%;
-    color: gray;
-    z-index: 100;
-}
+
 
 #instances-label{
     display: inline-block;
@@ -141,7 +205,7 @@
     /* text-align: left; */
     position: relative;
     top: 5px;
-    left: -250px;
+    left: -40px;
     color:gray;
     z-index: 100;
     visibility: hidden;
@@ -160,7 +224,7 @@
     position: relative;
     grid-area: orig;
     border: var(--border-width) solid var(--border-color);
-    border-right-width: 2px;
+    border-right-width: 0px;
     border-bottom-left-radius: 10px 10px;
     border-top-left-radius: 10px 10px;
     background-color: var(--canvas-color);
@@ -170,9 +234,9 @@
     position: relative;
     grid-area: processed;
     border: var(--border-width)  solid var(--border-color);
-    border-left-width: 2px;
-    border-bottom-right-radius: 10px 10px;
-    border-top-right-radius: 10px 10px;
+    /* border-left-width: 2px; */
+    /* border-bottom-right-radius: 10px 10px;
+    border-top-right-radius: 10px 10px; */
     background-color: var(--canvas-color);
 }
 
@@ -180,8 +244,7 @@
     position: relative;
     grid-area: mini;
     border: var(--border-width)  solid var(--border-color);
-    border-bottom-left-radius: 10px 10px;
-    border-top-left-radius: 10px 10px;
+    border-left-width: 0px;
     border-bottom-right-radius: 10px 10px;
     border-top-right-radius: 10px 10px;
     background-color: var(--canvas-color);
@@ -223,10 +286,58 @@
     border-bottom-right-radius: 20px 20px;
     border-top-right-radius: 20px 20px;
     background-color: var(--canvas-color); */
+    margin-top:15px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 10px 10px;
+    background-color: var(--canvas-color);
+
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0,4fr) minmax(0,2fr);
+    grid-template-areas:
+        "graph-info"
+        "heatmap-info";
+
+    overflow: visible;
+}
+
+#infobox-graph-processed {
+    grid-area: graph-info;
+    position: absolute;
+    text-align: center;
+    /* left: 0px;
+    top: 50%; */
+    width: 100%;
+    height: 100%;
+    /* height: auto; */
+    padding: 5px;
+    background: rgba(255, 255, 255, 0);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+
+}
+
+#infobox-graph-orig{
+    grid-area: heatmap-info;
+    position: absolute;
+    text-align: center;
+    /* left: 0px;
+    top: 0px; */
+    width: 100%;
+    height: auto;
+    padding: 0px;
+    background: rgba(221, 109, 109, 0);
+    stroke: rgb(180, 180, 180);
+    border-radius: 10px;
+    pointer-events: none;
+
+
+
 }
 
 
-#infobox-graph-orig {
+/* #infobox-graph-orig {
     position: absolute;
     text-align: center;
     left: 0px;
@@ -238,9 +349,9 @@
     stroke: rgb(180, 180, 180);
     border-radius: 10px;
     pointer-events: none;
-}
+} */
 
-#infobox-graph-processed {
+/* #infobox-graph-processed {
     position: absolute;
     text-align: center;
     left: 0px;
@@ -252,32 +363,39 @@
     stroke: rgb(180, 180, 180);
     border-radius: 10px;
     pointer-events: none;
-}
+} */
 
 #infobox-graph-processed h3{
-    margin: auto;
-    font-size: 60px;
+    margin: 0px;
+    padding: 0px;
+    font-size: 55px;
     font-weight:bolder;
     color: #484b5a;
 }
 
 #infobox-graph-processed p{
-    margin: auto;
+    margin: 0px;
+    padding: 0px;
+    line-height: 30px;
     font-size: 25px;
     font-weight: lighter;
     color: #81849a;
 }
 
 #infobox-graph-orig h3{
-    margin: auto;
+    margin: 0px;
+    padding: 0px;
     font-size: 30px;
+    /* line-height: 10px; */
     font-weight:bolder;
     color: #484b5a;
 }
 
 #infobox-graph-orig p{
-    margin: auto;
+    margin: 0px;
+    padding: 0px;
     font-size: 25px;
+    line-height: 20px;
     font-weight: lighter;
     color: #81849a;
 }
@@ -326,12 +444,14 @@
 
 #legend-SVG{
     display: inline-block;
-    position: absolute;
-    left: 0%;
-    top: 78%;
-    height:120px;
+    position: relative;
+    /* left: 0%;
+    top: 78%; */
+    /* height:120px; */
+    height:100%;
     width:100%;
-    padding-left:10px;
+    margin:5px;
+    margin-left:7px;
 }
 
 .caption{

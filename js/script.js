@@ -53,7 +53,7 @@ function resize (event) {
     let orig_height = boundingRect_orig.height - 8;
     let proc_width = boundingRect_proc.width - 6;
     // stores new size height
-    let proc_height = boundingRect_proc.height - 8;
+    let proc_height = boundingRect_proc.height - 4;
     let mini_width = boundingRect_mini.width - 7;
     let mini_height = boundingRect_mini.height - 8;
     // re-adjusts the width and height of the graph using new, stored width and height
@@ -989,6 +989,7 @@ function renderCoarseRect(uncert,file){
            Object.keys(qGraph.nodes).forEach( f => qGraph.nodes[f].weight = iInstances.nodes[f].weight )
            console.log(qGraph)
            
+
 
 
 

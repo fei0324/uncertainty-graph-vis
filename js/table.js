@@ -340,8 +340,8 @@ class Table {
                     // console.log(this.proc_ref.node_Color)
 
                     // Color scales
-                    let linkColor = d3.scaleSequential(this.proc_ref.link_Color).domain(d3.extent(avg_arrayLW));
-                    let nodeColor = d3.scaleSequential(this.proc_ref.node_Color).domain(d3.extent(avg_arrayNW));
+                    let linkColor = d3.scaleSequential(that.proc_ref.link_Color).domain(d3.extent(avg_arrayLW));
+                    let nodeColor = d3.scaleSequential(that.proc_ref.node_Color).domain(d3.extent(avg_arrayNW));
 
                     // Width and size scales
                     let linkScale = d3.scaleLinear().domain(d3.extent(avg_arrayLW)).range([1,8]);

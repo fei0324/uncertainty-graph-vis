@@ -72,46 +72,9 @@
 					</div>
 				</div>
 
-				<div class="btn-group btn-group-sm" id='edgeDrop' role='group'>
-					<button class="btn-outline-danger btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						edge vis
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<a class="dropdown-item" href="#" id='square'>square</a>
-						<!-- <a class="dropdown-item" href="#" id='sqareOD'>square on demand</a> -->
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#" id='spline'>spline</a>
-						<a class="dropdown-item active" href="#" id='splineOD'>spline on demand</a>
-						<!-- <div class="dropdown-divider" ></div> -->
-						<!-- <a class="dropdown-item" href="#" id='stdevO'>stdev only</a> -->
-					</div>
-				</div>
-
-				<div class="btn-group btn-group-sm" id='nodeDrop' role='group'>
-					<button class="btn-outline-secondary btn dropdown-toggle" type="button" id="dropdownMenuButtonNode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						node vis
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<a class="dropdown-item" href="#" id='mean'>mean</a>
-						<!-- <a class="dropdown-item" href="#" id='std'>std</a> -->
-						<a class="dropdown-item active" href="#" id='mstdev'>mean+stdev</a>
-						<!-- <a class="dropdown-item" href="#" id='mstdevOD'>mean+stdev on demand</a> -->
-					</div>
-				</div>
-
-				<div class="btn-group btn-group-sm" id='invertDrop' role='group'>
-					<button class="btn-outline-warning btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						scale
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						<a class="dropdown-item active" href="#" id='normal'>normal</a>
-						<a class="dropdown-item" href="#" id='invert'>inverted</a>
-					</div>
-				</div>
-
 			</div>
 
-			<div class='btn-group color-toolbar' role='group' id='button-toolbar'>
+			<div class='btn-group' role='group' id='button-toolbar'>
 
 				<div class="btn-group btn-group-sm" id='nodeColorDrop' role='group'>
 					<button class="btn-outline-secondary btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -162,37 +125,90 @@
 					</div>
 				</div>
 
+			</div>
 
+			<div class='btn-group' role='group' id='button-toolbar'>
+
+				<div class="btn-group btn-group-sm" id='edgeDrop' role='group'>
+					<button class="btn-outline-danger btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						edge vis
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='square'>square</a>
+						<!-- <a class="dropdown-item" href="#" id='sqareOD'>square on demand</a> -->
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#" id='spline'>spline</a>
+						<a class="dropdown-item active" href="#" id='splineOD'>spline on demand</a>
+						<!-- <div class="dropdown-divider" ></div> -->
+						<!-- <a class="dropdown-item" href="#" id='stdevO'>stdev only</a> -->
+					</div>
+				</div>
+
+				<div class="btn-group btn-group-sm" id='nodeDrop' role='group'>
+					<button class="btn-outline-secondary btn dropdown-toggle" type="button" id="dropdownMenuButtonNode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						node vis
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='mean'>mean</a>
+						<!-- <a class="dropdown-item" href="#" id='std'>std</a> -->
+						<a class="dropdown-item active" href="#" id='mstdev'>mean+stdev</a>
+						<!-- <a class="dropdown-item" href="#" id='mstdevOD'>mean+stdev on demand</a> -->
+					</div>
+				</div>
+
+				<div class="btn-group btn-group-sm" id='invertDrop' role='group'>
+					<button class="btn-outline-warning btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						scale
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item active" href="#" id='normal'>normal</a>
+						<a class="dropdown-item" href="#" id='invert'>inverted</a>
+					</div>
+				</div>
 
 
 			</div>
 
+
+
+
 		</div>
 
-		<div class="info">
+		<div class="info-1">
 			<div id='full-label'>original</div>
-			<div id='processed-label'>reduced</div>
-
 		</div>
+		<div class="info-2">
+			<div id='processed-label'>reduced</div>
+		</div>
+		<div class="info-3">
+			<div id='mini-label'>individual instance</div>
+		</div>
+
+		
+
 
 		<div class="labels">
 			<div id='heatmap-label'>heatmap</div>
-			<div id='mini-label'>instance graph</div>
+			<!-- <div id='mini-label'>instance graph</div> -->
 			<div id='instances-label'>individual instances</div>
 
 		</div>
 
 		<div id="data-panel">
-			<svg id='legend-SVG'></svg>
 		</div>
 		<div id="graph-orig">
-			<div id='full-label'>original</div>
+			<!-- <div id='full-label'>original</div> -->
 		</div>
 		<div id="graph-processed">
-			<div id='processed-label'>reduced</div>
+			<!-- <div id='processed-label'>reduced</div> -->
 		</div>
+
 		<div id="graph-mini">
 			<!-- <div id='processed-label'>processed</div> -->
+		</div>
+
+		<div class=legend>
+			<svg id='legend-SVG'></svg>
 		</div>
 
 		<div id='heatmap'></div>
