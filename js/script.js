@@ -971,24 +971,89 @@ function renderCoarseRect(uncert,file){
             // individual instances
             d3.json(`data/${file}/rec_100/cluster_${8}/${uncert}/individual_instances/clustered_graph_${0}.json`),
             // Q_matrix
-            d3.csv(`data/${file}/rec_100/cluster_${8}/${uncert}/Q_matrix/Q_mat_${0}.csv`)
+            d3.csv(`data/${file}/rec_100/cluster_${8}/${uncert}/Q_matrix/Q_mat_${0}.csv`),
+            // Also need to load a representative original graph
+            d3.json(`data/${file}/rec_100/cluster_${8}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
 
         ]).then(function(files){
 
             // Need to combine individual instance and q graph data
             let qGraph = files[0];
+            // need to rename edges to links
+            qGraph['links'] = qGraph['edges'];
             let iInstances = files[1];
             let qMat = files[2];
+            let ori = files[3];
 
             console.log("q graph",qGraph)
             console.log("iInstances",iInstances)
             console.log("qMat",qMat)
+            console.log("representative original graph",ori)
 
-            //Throw weight from individual instances array into the qGraph nodes and edges
-            // This works assuming node keys and IDs are the same 
-           Object.keys(qGraph.nodes).forEach( f => qGraph.nodes[f].weight = iInstances.nodes[f].weight )
-           console.log(qGraph)
-           
+            // Display Q graph
+
+            // Initialize graphs with new data
+            proc_rect.data = qGraph;
+            full_rect.data = ori;
+            // heatMap.myGraph.data = iInstances;
+    
+            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            proc_rect.type = 'qGraph'
+            proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+            proc_rect.linkScale = [0.3411491395477371, 100]
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Handles appropriate zooming on loading
+            proc_rect.myGraph
+                .zoom(2.8);
+            full_rect.myGraph
+                .zoom(0.8);
+            
+            // Ensures links are visibile.
+            full_rect.myGraph
+                .linkVisibility(true);
+
+            // Draws the graphs
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
+
+            // // heatmap initial data and initialization
+            // heatMap.myGraph.nodeVisibility(false)
+            // heatMap.myGraph.linkVisibility(false)
+
+            // heatMap.removeHeatMap()
+            // heatMap.data = files[2];
+            // heatMap.nodeScale = [-0.005664816285412998, 0.5]
+            // heatMap.unif_spars = false;
+            // heatMap.active_alg = file;
+            // heatMap.data_name = 'rec_100';
+            // heatMap.uncert = uncert;
+            // heatMap.k = this.k;
+            // heatMap.createHeatMap()
+            // // Pass references to heatmap as well
+            // heatMap.full_ref = full_rect;
+            // heatMap.proc_ref = proc_rect;
+
+
+
+            // Display individual instances graph
+
+
+
+
+
+
+            // display q matrix
+
+
+
+
+
+
+            // display slider bar for instances
+
+    
 
 
 

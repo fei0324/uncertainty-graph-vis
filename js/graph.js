@@ -229,21 +229,21 @@ class Graph{
             let sum_array = this.data.nodes.map(d => d.uncertainty_mean + d.uncertainty_std*8)
  
             // Different color schemes
-            let viridis = d3.interpolateViridis
-            let inferno = d3.interpolateInferno
-            let plasma =  d3.interpolatePlasma
-            let cool = d3.interpolateCool
-            let warm = d3.interpolateWarm
+            // let viridis = d3.interpolateViridis
+            // let inferno = d3.interpolateInferno
+            // let plasma =  d3.interpolatePlasma
+            // let cool = d3.interpolateCool
+            // let warm = d3.interpolateWarm
 
-            let green =  d3.interpolateGreens
-            let purple = d3.interpolatePurples
-            let orange = d3.interpolateOranges
-            let grey = d3.interpolateGreys
-            let blue = d3.interpolateBlues
-            let prgr = d3.interpolatePRGn
+            // let green =  d3.interpolateGreens
+            // let purple = d3.interpolatePurples
+            // let orange = d3.interpolateOranges
+            // let grey = d3.interpolateGreys
+            // let blue = d3.interpolateBlues
+            // let prgr = d3.interpolatePRGn
 
-            let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
-            let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
+            // let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
+            // let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
 
             // this.link_Color = d3.interpolateCool;
             // this.node_Color = d3.interpolateViridis;
@@ -346,6 +346,107 @@ class Graph{
             
 
         }
+        else if (this.type == 'qGraph'){
+
+
+            console.log("IN QGRAPH",this.data)
+            
+             // Creating legend selection
+             let legendSVG = d3.select("#legend-SVG");
+
+             // removing if it exists
+             d3.select('.node-legend').remove()
+             d3.select('.link-legend').remove()
+ 
+             // Creating legend
+             this.node_legend = legendSVG.append("g")
+                 .attr("class","node-legend")
+                 .attr("transform", "translate(0,15)");
+ 
+             this.link_legend = legendSVG.append("g")
+                 .attr("class","link-legend")
+                 .attr("transform", "translate(0,60)");
+     
+             //finding max and min of mean for nodes
+             let size_array = this.data.nodes.map( d => d.size );
+             let stab_array = this.data.nodes.map( d => d['stability:'] );
+
+             let size_range = d3.extent(size_array);
+             let stab_range = d3.extent(stab_array);
+
+             // Finding max and min for edges
+             let instab_array = this.data.edges.map( d => d.instability);
+             let instab_range = d3.extent(instab_array)
+
+             console.log("size range: ",size_range,"stab range: ",stab_range,"instab range: ",instab_range)
+
+             // Node scale
+            //  this.nodeScale = size_range;
+             
+             //Node range 
+            let node_range = [1,7];
+
+            // Link ranges
+            let squareRange = [1,2.5]
+            let stdRange = [2,10]
+            let splineRange = [1,15]
+            let meanRange = [1,5]
+
+            // Check to see if inverted is activated 
+            let invert_active = $('#invertDrop').find('a.active').attr('id');
+            // console.log("invert active",invert_active)
+            if (invert_active == 'invert'){
+                //Node range 
+                node_range = [7,1];
+
+                // Link ranges
+                squareRange = [2.5,1]
+                stdRange = [10,2]
+                splineRange = [15,1]
+                meanRange = [5,1]
+            }
+        
+
+            // NODE
+
+            //Color scale for nodes
+            this.qColorScale = d3.scaleSequential(this.node_Color).domain(stab_range);
+
+            // linear scale for size of node
+            this.qSizeScale = d3.scaleLinear().domain(size_range).range(node_range)
+
+            // LINK
+
+            // Color scale for edges
+            this.qLinkColor = d3.scaleSequential(this.link_Color).domain(instab_range);
+
+            //thickness scale for edges
+            this.qLinkWidth = d3.scaleLinear().domain(instab_range).range(meanRange);
+
+            //calls legend - need to detect here what options are active in dropdowns and style accordingly
+            let node_active = $('#nodeDrop').find('a.active').attr('id');
+            // console.log("node active in prep",node_active)
+            let edge_active = $('#edgeDrop').find('a.active').attr('id');
+            // console.log("edge active in prep",edge_active)
+
+            // Node legends
+            if (node_active == 'std'){
+                this.legend(this.node_legend,this,this.stdColor,'node-std');
+            }
+            else{
+                this.legend(this.node_legend,this,this.color,'node');
+            }
+
+            // Link legends
+            if (edge_active == 'stdevO'){
+                this.legend(this.link_legend,this,this.linkColorStd,'link-std');
+            }
+            else{
+                this.legend(this.link_legend,this,this.linkColor,'link');
+            }
+
+
+        }
     }
 
     /**
@@ -363,6 +464,7 @@ class Graph{
 
         // let myGraph = ForceGraph();
         let data = this.data;
+        console.log("MY DATA",data)
 
         // For link highlighting
         let highlightLink = null;
@@ -640,6 +742,106 @@ class Graph{
 
             });
             
+        }
+
+        // This is the qGraph for the co-occurence uncertainty measure
+        else if (this.type == 'qGraph'){
+            console.log("in qgraph")
+            // allows me to access this scope inside of drop down functions
+            let that = this;
+
+            let node_rel_size = 4;
+
+            let highlightNodes = [];
+
+            // Graph styling - no alternative options for this measure 
+            this.myGraph
+                .graphData(data)
+                .nodeRelSize(node_rel_size)
+                .nodeVal(node => that.qSizeScale(node.size))
+                // .nodeVal(node => scope.meanScale(node.uncertainty_mean))
+                .nodeLabel(node => node.id)
+                .nodeColor(node => that.qColorScale(node['stability:']))
+                .onNodeHover(node => {
+                    highlightNodes = node ? [node] : []
+                    
+    
+                    // console.log(node)
+                    if (node){
+    
+                        // INFOBOX 
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxQRender(node));
+    
+                        //Row highlighting
+                        d3.select(`#row-${node.id}`).transition()
+                            .duration(100)
+                            .style('opacity',1);
+    
+                    }
+                    else{
+                        highlightNodes = [];
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+    
+                        //Row de-highlighting
+                        d3.selectAll(`.row-back`).transition()
+                            .duration(100)
+                            .style('opacity',0);
+                    }
+    
+                })
+                .nodeCanvasObjectMode(() => 'before')
+                .nodeCanvasObject((node, ctx) => {
+                    let NODE_R = 0;
+                    let halo_color = null;
+                    if (highlightNodes.indexOf(node) !== -1){
+                        NODE_R = 12;
+                        halo_color = '#EA000080'
+                    }
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = halo_color;
+                    ctx.fill();
+                })
+            // EDGE VIS
+                .linkHoverPrecision(4) //May need to adjust based on network size
+                // Sets link hover behavoir based on type
+                .onLinkHover(link => {
+                    let that = this;
+                    highlightLink = link;
+                    // TODO: Add node highlighting
+                    highlightNodes = link ? [link.source, link.target] : [];
+                    //event()
+                    if (link){
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxRenderQLink(link));
+                    }
+                    else{
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+                    }
+                
+                })
+                .onLinkClick(link => null)
+                .linkWidth(link => that.qLinkWidth(link.instability))
+                .linkColor(link => that.qLinkColor(link.instability))
+                
+
+
+           
+
+
+
+
+
+
         }
 
         // This is the original, full, non-reduced graph
@@ -1505,6 +1707,18 @@ class Graph{
 
     }
 
+    infoboxQRender(node_data){
+        // console.log(node_data['stability:'])
+        let that = this;
+        let text = null;
+        text = "<h3>" + node_data.id + "</h3>";
+        text = text + "<p> size: " + node_data.size + "</p>";
+        text = text + "<p> stability: " + node_data['stability:'].toFixed(4) + "</p>";
+        return text;
+
+
+    }
+
     /**
      * Returns info for infobox
      * @param data
@@ -1518,6 +1732,16 @@ class Graph{
         text = text + "<p> weight: " + link.weight + "</p>";
         text = text + "<p> mean: " + link.mean.toFixed(4) + "</p>";
         text = text + "<p> stdev: " + link.std.toFixed(4) + "</p>";
+        return text;
+
+    }
+
+    infoboxRenderQLink(link) {
+        // console.log(link)
+        let that = this;
+        let text = null;
+        text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
+        text = text + "<p> instability: " + link.instability + "</p>";
         return text;
 
     }
