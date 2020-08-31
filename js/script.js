@@ -28,6 +28,7 @@ let full_rect = new Graph(null,'graph-orig','orig');
 let proc_rect = new Graph(null,'graph-processed','clust');
 // // Intance graph exclusively for co-occurrence 
 // let instance_graph = new Graph(null,'graph-mini','instance');
+let instance_graph = null;
 
 // Initializes table object. This is the heatmap. This will be referenced in the rendering functions.
 let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
@@ -65,9 +66,13 @@ function resize (event) {
     proc_rect.myGraph.height(proc_height);
     heatMap.myGraph.width(mini_width);
     heatMap.myGraph.height(mini_height);
-    instance_graph.myGraph
-        .height(mini_height)
-        .width(mini_width);
+    
+    if (instance_graph !== null){
+        instance_graph.myGraph
+            .height(mini_height)
+            .width(mini_width);
+    }
+    
 
     // Now I need to resize the heat map (only if there currently is one)
     if (document.getElementById('row-g-0')){
@@ -1006,13 +1011,13 @@ function renderCoarseRect(uncert,file){
 
             // Maybe just make completely new graph object here....
             // Intance graph exclusively for co-occurrence 
-            let instance_graph = new Graph(null,'graph-mini','instance');
+            instance_graph = new Graph(null,'graph-mini','instance');
             // heatMap.myGraph.graphData(iInstances);
-             // Going to make completely new graph object for individual instance data
-             instance_graph.data = iInstances;
-             instance_graph.type = 'instance'; // Don't think this is necessary
-             instance_graph.prepGraph();
-             instance_graph.drawGraph();
+            // Going to make completely new graph object for individual instance data
+            instance_graph.data = iInstances;
+            instance_graph.type = 'instance'; // Don't think this is necessary
+            instance_graph.prepGraph();
+            instance_graph.drawGraph();
     
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'qGraph'
