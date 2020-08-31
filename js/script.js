@@ -26,6 +26,8 @@
 let full_rect = new Graph(null,'graph-orig','orig');
 // proc_rect is the graph object for the reduced graph. This will be referenced in the rendering functions.
 let proc_rect = new Graph(null,'graph-processed','clust');
+// // Intance graph exclusively for co-occurrence 
+// let instance_graph = new Graph(null,'graph-mini','instance');
 
 // Initializes table object. This is the heatmap. This will be referenced in the rendering functions.
 let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
@@ -63,10 +65,13 @@ function resize (event) {
     proc_rect.myGraph.height(proc_height);
     heatMap.myGraph.width(mini_width);
     heatMap.myGraph.height(mini_height);
+    instance_graph.myGraph
+        .height(mini_height)
+        .width(mini_width);
 
     // Now I need to resize the heat map (only if there currently is one)
     if (document.getElementById('row-g-0')){
-        console.log("heatmap exists")
+        // console.log("heatmap exists")
         heatMap.removeHeatMap()
         heatMap.createHeatMap()
     }
@@ -97,11 +102,11 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
 
         // Finds which dataset is active 
         let active_data = $('#datasetDrop').find('.active')[0].id;
-        console.log("active data",active_data);
+        // console.log("active data",active_data);
 
         // Finds which algorithm is active 
         let active_alg = $('#algDrop').find('.active')[0].id;
-        console.log("active algorithm",active_alg);
+        // console.log("active algorithm",active_alg);
 
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
@@ -192,11 +197,11 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
         // Finds which dataset is active 
         let active_data = $('#datasetDrop').find('.active')[0].id;
-        console.log("active data",active_data);
+        // console.log("active data",active_data);
 
         // Finds which uncertainty is active 
         let active_uncertainty = $('#uncertaintyDrop').find('.active')[0].id;
-        console.log("active uncertainty",active_uncertainty);
+        // console.log("active uncertainty",active_uncertainty);
 
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
@@ -206,7 +211,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         if (target == 'coarse'){
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
-            console.log("active start",start_active)
+            // console.log("active start",start_active)
             let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
@@ -273,7 +278,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             if(active_data =='lesmis'){
                 // changes active highlighting if it's a valid move
                 let start_active = $('#algDrop').find('active');
-                console.log("active start",start_active)
+                // console.log("active start",start_active)
                 let kids = $('#algDrop').find('div')
                 kids.removeClass( "active" );
                 $(`#${target}`).addClass("active")
@@ -339,7 +344,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         else if (target == 'spec_coarse'){
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
-            console.log("active start",start_active)
+            // console.log("active start",start_active)
             let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
@@ -397,7 +402,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         else if (target == 'unifying_framework_coarse'){
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
-            console.log("active start",start_active)
+            // console.log("active start",start_active)
             let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
@@ -453,7 +458,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         else if (target == 'unifying_framework_spars'){
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
-            console.log("active start",start_active)
+            // console.log("active start",start_active)
             let kids = $('#algDrop').find('div')
             kids.removeClass( "active" );
             $(`#${target}`).addClass("active")
@@ -540,11 +545,11 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
 
         // Finds which algorithm is active 
         let active_alg = $('#algDrop').find('.active')[0].id;
-        console.log("active algorithm",active_alg);
+        // console.log("active algorithm",active_alg);
 
         // Finds which uncertainty is active 
         let active_uncertainty = $('#uncertaintyDrop').find('.active')[0].id;
-        console.log("active uncertainty",active_uncertainty);
+        // console.log("active uncertainty",active_uncertainty);
         
         // changes active highlighting
         let kids = $('#datasetDrop').find('a')
@@ -754,7 +759,7 @@ $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
     }
     if (targetClass == 'dropdown-item'){
         let target = e.clickEvent.target.id;
-        console.log('target',target)
+        // console.log('target',target)
         drop_color = target;
 
         // changes active highlighting
@@ -957,7 +962,7 @@ function renderCoarseRect(uncert,file){
 
     // co_occurence is very different from the rest
     if (uncert == 'co_occurrence'){
-        console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
         
         // Things I need to display:
         // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
@@ -987,19 +992,27 @@ function renderCoarseRect(uncert,file){
             let qMat = files[2];
             let ori = files[3];
 
-            console.log("q graph",qGraph)
-            console.log("iInstances",iInstances)
-            console.log("qMat",qMat)
-            console.log("representative original graph",ori)
+            // console.log("q graph",qGraph)
+            // console.log("iInstances",iInstances)
+            // console.log("qMat",qMat)
+            // console.log("representative original graph",ori)
 
             // Display Q graph
 
             // Initialize graphs with new data
             proc_rect.data = qGraph;
             full_rect.data = ori;
-            console.log(iInstances)
+            // console.log(iInstances)
+
             // Maybe just make completely new graph object here....
-            heatMap.myGraph.graphData(iInstances);
+            // Intance graph exclusively for co-occurrence 
+            let instance_graph = new Graph(null,'graph-mini','instance');
+            // heatMap.myGraph.graphData(iInstances);
+             // Going to make completely new graph object for individual instance data
+             instance_graph.data = iInstances;
+             instance_graph.type = 'instance'; // Don't think this is necessary
+             instance_graph.prepGraph();
+             instance_graph.drawGraph();
     
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'qGraph'
@@ -1013,42 +1026,47 @@ function renderCoarseRect(uncert,file){
                 .zoom(2.8);
             full_rect.myGraph
                 .zoom(0.8);
+            instance_graph.myGraph
+                .zoom(2);
             
             // Ensures links are visibile.
             full_rect.myGraph
                 .linkVisibility(true);
+            instance_graph.myGraph 
+                .linkVisibility(true)
+                .nodeVisibility(true);
+
 
             // Draws the graphs
             full_rect.drawGraph(proc_rect);
             proc_rect.drawGraph(full_rect);
 
-            // // heatmap initial data and initialization
-            // heatMap.myGraph.nodeVisibility(false)
-            // heatMap.myGraph.linkVisibility(false)
+            // heatmap initial data and initialization
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
 
-            // heatMap.removeHeatMap()
-            // heatMap.data = files[2];
-            // heatMap.nodeScale = [-0.005664816285412998, 0.5]
-            // heatMap.unif_spars = false;
-            // heatMap.active_alg = file;
-            // heatMap.data_name = 'rec_100';
-            // heatMap.uncert = uncert;
-            // heatMap.k = this.k;
-            // heatMap.createHeatMap()
-            // // Pass references to heatmap as well
-            // heatMap.full_ref = full_rect;
-            // heatMap.proc_ref = proc_rect;
-
-
-
-            // Display individual instances graph
-
-
-
-
-
-
+           
             // display q matrix
+
+            heatMap.removeHeatMap()
+            heatMap.data = qMat;
+            heatMap.unif_spars = false;
+            heatMap.coOccur = true;
+            heatMap.active_alg = file;
+            heatMap.data_name = 'rec_100';
+            heatMap.uncert = uncert;
+            heatMap.k = this.k;
+            heatMap.createHeatMap()
+            // Pass references to heatmap as well
+            heatMap.full_ref = full_rect;
+            heatMap.proc_ref = proc_rect;
+
+
+
+
+
+
+            
 
 
 
@@ -1441,9 +1459,9 @@ function renderCoarseEmail(uncert,file){
 
     // Type of uncertainty
     this.uncert = uncert;
-    console.log("my file",file)
+    // console.log("my file",file)
 
-    console.log("type of uncertainty",this.uncert)
+    // console.log("type of uncertainty",this.uncert)
 
     //Sets default k
     this.k = 20
@@ -1666,7 +1684,7 @@ function renderSparsLesmis(){
         // console.log(that.f)
 
         let threshold = proc_rect.linkRange[1]*that.f;
-        console.log(threshold)
+        // console.log(threshold)
         proc_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.mean) >= threshold) ? true : false )
 
 
@@ -1805,7 +1823,7 @@ function renderUnifSpars(data_name,file){
         // console.log(that.f)
 
         let threshold = proc_rect.linkRange[1]*that.f;
-        console.log(threshold)
+        // console.log(threshold)
         proc_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.mean) >= threshold) ? true : false )
 
 
@@ -1814,7 +1832,7 @@ function renderUnifSpars(data_name,file){
     // detects change on bar and updates data shown accordingly
     d3.select('#unif-spars').on('input', function(d){
         let k = k_Bar.activeK;
-         console.log('in script',k)
+        //  console.log('in script',k)
                 
         // Loads data based on parameters 
         Promise.all([

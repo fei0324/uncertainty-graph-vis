@@ -60,6 +60,7 @@ class Graph{
 
         //Setting width and height of canvas object
         this.LOCATION = document.getElementById(this.location)
+        // console.log("LOCATION",this.LOCATION)
 
         // Canvas width and height
         let boundingRect = this.LOCATION.getBoundingClientRect()
@@ -80,7 +81,7 @@ class Graph{
 
     prepGraph(){
         // Creating scales and legend
-        console.log("PREP GRAPH!!!!!!",this.type)
+        // console.log("PREP GRAPH!!!!!!",this.type)
         //Scales for sparsification
         if (this.type == 'spars'){
 
@@ -167,14 +168,14 @@ class Graph{
                 this.legend(this.link_legend,this,this.linkColorStd,'link-std');
             }
             else{
-                this.legend(this.link_legend,this,this.linkColor,'link');
+                this.legend(this.link_legend,this,this.linkColor,'link mean');
             }
         }
 
         //Scales for clustering
         else if (this.type == 'clust'){
 
-            console.log("In prep graph - scaling stuff",this.nodeScale,this.linkScale)
+            // console.log("In prep graph - scaling stuff",this.nodeScale,this.linkScale)
 
             // Creating legend selection
             let legendSVG = d3.select("#legend-SVG");
@@ -333,7 +334,7 @@ class Graph{
                 this.legend(this.node_legend,this,this.stdColor,'node-std');
             }
             else{
-                this.legend(this.node_legend,this,this.color,'node');
+                this.legend(this.node_legend,this,this.color,'node mean');
             }
 
             // Link legends
@@ -341,7 +342,7 @@ class Graph{
                 this.legend(this.link_legend,this,this.linkColorStd,'link-std');
             }
             else{
-                this.legend(this.link_legend,this,this.linkColor,'link');
+                this.legend(this.link_legend,this,this.linkColor,'link mean');
             }
             
 
@@ -349,7 +350,7 @@ class Graph{
         else if (this.type == 'qGraph'){
 
 
-            console.log("IN QGRAPH",this.data)
+            // console.log("IN QGRAPH",this.data)
             
              // Creating legend selection
              let legendSVG = d3.select("#legend-SVG");
@@ -378,7 +379,7 @@ class Graph{
              let instab_array = this.data.edges.map( d => d.instability);
              let instab_range = d3.extent(instab_array)
 
-             console.log("size range: ",size_range,"stab range: ",stab_range,"instab range: ",instab_range)
+            //  console.log("size range: ",size_range,"stab range: ",stab_range,"instab range: ",instab_range)
 
              // Node scale
             //  this.nodeScale = size_range;
@@ -410,7 +411,7 @@ class Graph{
             // NODE
 
             //Color scale for nodes
-            this.qColorScale = d3.scaleSequential(this.node_Color).domain(stab_range);
+            this.qColorScale = d3.scaleSequential(this.node_Color).domain([0,1]);
 
             // linear scale for size of node
             this.qSizeScale = d3.scaleLinear().domain(size_range).range(node_range)
@@ -418,7 +419,7 @@ class Graph{
             // LINK
 
             // Color scale for edges
-            this.qLinkColor = d3.scaleSequential(this.link_Color).domain(instab_range);
+            this.qLinkColor = d3.scaleSequential(this.link_Color).domain([0,1]);
 
             //thickness scale for edges
             this.qLinkWidth = d3.scaleLinear().domain(instab_range).range(meanRange);
@@ -431,19 +432,62 @@ class Graph{
 
             // Node legends
             if (node_active == 'std'){
-                this.legend(this.node_legend,this,this.stdColor,'node-std');
+                this.legend(this.node_legend,this,this.stdColor,'node std');
             }
             else{
-                this.legend(this.node_legend,this,this.color,'node');
+                this.legend(this.node_legend,this,this.color,'node mean');
             }
 
             // Link legends
             if (edge_active == 'stdevO'){
-                this.legend(this.link_legend,this,this.linkColorStd,'link-std');
+                this.legend(this.link_legend,this,this.linkColorStd,'link std');
             }
             else{
-                this.legend(this.link_legend,this,this.linkColor,'link');
+                this.legend(this.link_legend,this,this.linkColor,'link mean');
             }
+
+
+        }
+        else if (this.type == "instance"){
+            // console.log("IN INSTANCE");
+
+            //finding max and min of mean for nodes (weight is only parameter here) 
+            let weight_array = this.data.nodes.map( d => d.weight );
+            let weight_range = d3.extent(weight_array);
+
+            // Finding max and min for edges
+            let link_weight_array = this.data.edges.map( d => d.weight);
+            let link_weight_range = d3.extent(link_weight_array);
+
+            // console.log("node weight range: ",weight_range,"link weight range: ",link_weight_range)
+
+            //Node range 
+            let node_range = [1,7];
+
+            // Link ranges
+            let meanRange = [1,8]
+
+            // Check to see if inverted is activated 
+            let invert_active = $('#invertDrop').find('a.active').attr('id');
+            // console.log("invert active",invert_active)
+            if (invert_active == 'invert'){
+                //Node range 
+                node_range = [7,1];
+
+                // Link ranges
+                meanRange = [8,1]
+            }
+        
+
+            // NODE
+
+            // linear scale for size of node
+            this.instanceSizeScale = d3.scaleLinear().domain(weight_range).range(node_range)
+
+            // LINK
+
+            //thickness scale for edges
+            this.instanceLinkWidth = d3.scaleLinear().domain(link_weight_range).range(meanRange);
 
 
         }
@@ -464,7 +508,7 @@ class Graph{
 
         // let myGraph = ForceGraph();
         let data = this.data;
-        console.log("MY DATA",data)
+        // console.log("MY DATA",data)
 
         // For link highlighting
         let highlightLink = null;
@@ -477,7 +521,7 @@ class Graph{
 
         // Graph for SPARSIFICATION algorithms
         if (this.type == 'spars'){
-            console.log("IN SPARS IN DRAW GRAPH")
+            // console.log("IN SPARS IN DRAW GRAPH")
 
             let thatNode = this;
             let node_rel_size = 4;
@@ -486,7 +530,7 @@ class Graph{
                 .nodeRelSize(node_rel_size)
                 .nodeColor(() => "black")
                 .nodeLabel(node => node.id)
-                .onNodeClick(node => console.log(node.id))
+                // .onNodeClick(node => console.log(node.id))
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : []
                     
@@ -569,19 +613,19 @@ class Graph{
                 if (drop_edge == 'splineOD'){
                     // console.log('spline on demand')
                     that.splineOD(thatNode.myGraph,that);
-                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    that.legend(that.link_legend,that,that.linkColor,'link mean');
                         
                 }
                 else if(drop_edge == 'spline'){
                     // console.log('spline')
                     that.spline(thatNode.myGraph,that)
-                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    that.legend(that.link_legend,that,that.linkColor,'link mean');
         
                 }
                 else if(drop_edge =='square'){
                     // console.log('square')
                     that.square(thatNode.myGraph,that)
-                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    that.legend(that.link_legend,that,that.linkColor,'link mean');
                     
                 }
 
@@ -593,7 +637,7 @@ class Graph{
 
         //graph for NODE COARSENING algorithms, or essentially any algorithm that isn't sparsification
         else if (this.type == 'clust'){
-            console.log("node clustering")
+            // console.log("node clustering")
             // allows me to access this scope inside of drop down functions
             let thatNode = this;
 
@@ -645,19 +689,19 @@ class Graph{
                     if (drop_edge == 'mstdev'){
                         // console.log('mean + stdev')
                         that.mstdev(thatNode.myGraph,that,node_rel_size);
-                        that.legend(that.node_legend,that,that.color,'node');
+                        that.legend(that.node_legend,that,that.color,'node mean');
                             
                     }
                     else if(drop_edge == 'mean'){
                         // console.log('mean')
                         that.nodeMean(thatNode.myGraph,that,node_rel_size)
-                        that.legend(that.node_legend,that,that.color,'node');
+                        that.legend(that.node_legend,that,that.color,'node mean');
             
                     }
                     else if(drop_edge == 'std'){
                         // console.log('std')
                         that.nodeStd(thatNode.myGraph,that,node_rel_size)
-                        that.legend(that.node_legend,that,that.stdColor,'node-std');
+                        that.legend(that.node_legend,that,that.stdColor,'node std');
             
                     }
 
@@ -718,25 +762,25 @@ class Graph{
                 if (drop_edge == 'splineOD'){
                     // console.log('spline on demand')
                     that.splineOD(thatNode.myGraph,that);
-                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    that.legend(that.link_legend,that,that.linkColor,'link mean');
                         
                 }
                 else if(drop_edge == 'spline'){
                     // console.log('spline')
                     that.spline(thatNode.myGraph,that)
-                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    that.legend(that.link_legend,that,that.linkColor,'link mean');
         
                 }
                 else if(drop_edge =='square'){
                     // console.log('square')
                     that.square(thatNode.myGraph,that)
-                    that.legend(that.link_legend,that,that.linkColor,'link');
+                    that.legend(that.link_legend,that,that.linkColor,'link mean');
                     
                 }
                 else if (drop_edge == 'stdevO'){
                     // console.log('stdevO')
                     that.stdevO(thatNode.myGraph,that)
-                    that.legend(that.link_legend,that,that.linkColorStd,'link-std');
+                    that.legend(that.link_legend,that,that.linkColorStd,'link std');
                     
                 }
 
@@ -746,7 +790,7 @@ class Graph{
 
         // This is the qGraph for the co-occurence uncertainty measure
         else if (this.type == 'qGraph'){
-            console.log("in qgraph")
+            // console.log("in qgraph")
             // allows me to access this scope inside of drop down functions
             let that = this;
 
@@ -765,8 +809,6 @@ class Graph{
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : []
                     
-    
-                    // console.log(node)
                     if (node){
     
                         // INFOBOX 
@@ -779,6 +821,12 @@ class Graph{
                         d3.select(`#row-${node.id}`).transition()
                             .duration(100)
                             .style('opacity',1);
+
+                        // Highlighting instance node
+
+
+
+
     
                     }
                     else{
@@ -791,6 +839,13 @@ class Graph{
                         d3.selectAll(`.row-back`).transition()
                             .duration(100)
                             .style('opacity',0);
+
+                        // De-highlighting instance node
+
+
+
+
+
                     }
     
                 })
@@ -807,7 +862,7 @@ class Graph{
                     ctx.fillStyle = halo_color;
                     ctx.fill();
                 })
-            // EDGE VIS
+                // EDGE VIS
                 .linkHoverPrecision(4) //May need to adjust based on network size
                 // Sets link hover behavoir based on type
                 .onLinkHover(link => {
@@ -835,7 +890,112 @@ class Graph{
                 
 
                 // Handle legend
+                that.legend(that.node_legend,that,that.qColorScale,'node stability');
+                that.legend(that.link_legend,that,that.qLinkColor,'link instability');
+
+
+
+
+
+        }
+
+        else if(this.type == 'instance'){
+            // console.log("IN INSTANCE DRAW GRAPH")
+
+            // allows me to access this scope inside of drop down functions
+            let that = this;
+
+            let node_rel_size = 4;
+
+            let highlightNodes = [];
+
+            // Graph styling - no alternative options for this measure 
+            this.myGraph
+                .graphData(data)
+                .nodeRelSize(node_rel_size)
+                .nodeVal(node => that.instanceSizeScale(node.weight))
+                .nodeColor(()=> "black")
+                .nodeLabel(node => node.id)
+                .onNodeHover(node => {
+                    highlightNodes = node ? [node] : []
+                    
+                    if (node){
+    
+                        // INFOBOX 
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxIRender(node));
+    
+                        //Row highlighting
+                        d3.select(`#row-${node.id}`).transition()
+                            .duration(100)
+                            .style('opacity',1);
+
+                        // Highlighting corresponding q graph node
+
+
+
+
+
+    
+                    }
+                    else{
+                        highlightNodes = [];
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+    
+                        //Row de-highlighting
+                        d3.selectAll(`.row-back`).transition()
+                            .duration(100)
+                            .style('opacity',0);
+
+                        // de-highlighting corresponding q graph node
+
+
+
+
+                    }
+    
+                })
+                .nodeCanvasObjectMode(() => 'before')
+                .nodeCanvasObject((node, ctx) => {
+                    let NODE_R = 0;
+                    let halo_color = null;
+                    if (highlightNodes.indexOf(node) !== -1){
+                        NODE_R = 12;
+                        halo_color = '#EA000080'
+                    }
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = halo_color;
+                    ctx.fill();
+                })
+                // EDGE VIS
+                .linkHoverPrecision(4) //May need to adjust based on network size
+                // Sets link hover behavoir based on type
+                .onLinkHover(link => {
+                    let that = this;
+                    highlightLink = link;
+                    highlightNodes = link ? [link.source, link.target] : [];
+                    //event()
+                    if (link){
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxRenderILink(link));
+                    }
+                    else{
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+                    }
                 
+                })
+                .linkWidth(link => that.instanceLinkWidth(link.weight));
+
+
 
 
 
@@ -858,7 +1018,7 @@ class Graph{
             else{
                 is_sparse = false;
             }
-            console.log("is_sparse:",is_sparse)
+            // console.log("is_sparse:",is_sparse)
 
             this.myGraph
                 .graphData(data)
@@ -969,7 +1129,8 @@ class Graph{
             .attr("x", 10)
             .attr("text-anchor", "start")
             // .text((text=="node") ? 'node mean' : 'edge mean')
-            .text((text=="link-std") ? 'edge std' : (text=="node-std") ? 'node std' : (text=="node") ? 'node mean' : 'edge mean');
+            // .text((text=="link-std") ? 'edge std' : (text=="node-std") ? 'node std' : (text=="node") ? 'node mean' : 'edge mean');
+            .text(text);
         // console.log(color.domain())
 
         g.call(d3.axisBottom(d3.scaleLinear().domain(color.domain()).range([0,width]))
@@ -1322,7 +1483,7 @@ class Graph{
                 }
 
             })
-            .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean)))
+            // .onLinkClick(link => console.log(link.std/link.mean,scope.linkMeanScale(link.mean)))
             .linkCanvasObjectMode(() => 'replace')
             .linkCanvasObject((link, ctx) => {
                 // This draws the links' uncertainty viz
@@ -1471,7 +1632,7 @@ class Graph{
             .nodeColor(node => scope.color(node.uncertainty_mean))
             .onNodeClick(node => {
                 
-                console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+                // console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
             })
             .onNodeHover(node => {
                 highlightNodes = node ? [node] : []
@@ -1566,8 +1727,8 @@ class Graph{
             .nodeLabel(node => node.id)
             .nodeColor(node => scope.color(node.uncertainty_mean))
             .onNodeClick(node => {
-                console.log(node===highlightNodes[0])
-                console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+                // console.log(node===highlightNodes[0])
+                // console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
             })
             .onNodeHover(node => {
                 highlightNodes = node ? [node] : []
@@ -1712,8 +1873,15 @@ class Graph{
         text = text + "<p> size: " + node_data.size + "</p>";
         text = text + "<p> stability: " + node_data['stability:'].toFixed(4) + "</p>";
         return text;
+    }
 
-
+    infoboxIRender(node_data){
+        // console.log(node_data['stability:'])
+        let that = this;
+        let text = null;
+        text = "<h3>" + node_data.id + "</h3>";
+        text = text + "<p> weight: " + node_data.weight + "</p>";
+        return text;
     }
 
     /**
@@ -1739,6 +1907,16 @@ class Graph{
         let text = null;
         text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
         text = text + "<p> instability: " + link.instability + "</p>";
+        return text;
+
+    }
+
+    infoboxRenderILink(link) {
+        // console.log(link)
+        let that = this;
+        let text = null;
+        text = "<h3>" + link.source.id + "&#8212;" + link.target.id + "</h3>";
+        text = text + "<p> weight: " + link.weight + "</p>";
         return text;
 
     }

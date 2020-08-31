@@ -11,6 +11,7 @@ class Table {
         this.k = k;
         this.active_alg = active_alg;
         this.unif_spars = unif_spars;
+        this.coOccur = false;
 
         // Setting scaling variable
         this.scale = null;
@@ -34,10 +35,10 @@ class Table {
 
         // Canvas width and height
         let boundingRect = this.LOCATION.getBoundingClientRect()
-        console.log('graph mini rect',boundingRect)
+        // console.log('graph mini rect',boundingRect)
         this.WIDTH = boundingRect.width - 7;
         this.HEIGHT = boundingRect.height - 8;
-        console.log('graph mini dims',this.WIDTH,this.HEIGHT)
+        // console.log('graph mini dims',this.WIDTH,this.HEIGHT)
         
         this.myGraph(this.LOCATION)
                     .width(this.WIDTH)
@@ -57,7 +58,7 @@ class Table {
 
         /** Creates heat map **/
         let data = this.data
-        console.log("heatmap data",data)
+        // console.log("heatmap data",data)
         
 
         // // Different color schemes
@@ -106,7 +107,7 @@ class Table {
             // c = d3.scale.category10().domain(d3.range(10));
 
         let data_values = this.data.map( d => Object.values(d) );
-        console.log("data values",data_values)
+        // console.log("data values",data_values)
         let mat_values = new Array()
         for (let elem of data_values){
             for (let i of elem){
@@ -122,6 +123,10 @@ class Table {
         if (this.unif_spars==true){
             // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
             color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
+        }
+        else if (this.coOccur == true){
+            color = d3.scaleSequential(this.node_Color).domain([0,1]);
+
         }
         else{
             // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values)); //usually blue
@@ -177,6 +182,17 @@ class Table {
                 .style('opacity',1);
 
             }
+            else if (that.coOccur == true){
+
+
+
+
+
+
+
+
+
+            }
             else{
                 // PROCESSED HIGHLIGHTING
                 // Need to select node with id that is node.cluster
@@ -220,6 +236,18 @@ class Table {
                     .style('opacity',0);
 
             }
+            else if (that.coOccur == true){
+
+
+
+
+
+
+
+
+
+
+            }
             else{
                 // PROCESSED DE-HIGHLIGHTING
                 that.proc_ref.myGraph
@@ -254,6 +282,14 @@ class Table {
                     .duration(200)
                     .style("opacity", 1);
                 d3.select(`#infobox-graph-orig`).html(that.infoboxRenderSpars(c,i)); 
+            }
+            else if (that.coOccur == true){
+
+
+
+
+
+                
             }
             else{
                 // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
@@ -290,6 +326,14 @@ class Table {
 
 
             }
+            else if (that.coOccur == true){
+
+
+
+
+
+                
+            }
             else{
                 // d3.select(this).attr('fill', (d) => color(d))
                 // Highlight column
@@ -319,12 +363,12 @@ class Table {
             // Loading data and plotting graph
             that.myGraph.nodeVisibility(true)
             that.myGraph.linkVisibility(true)
-            console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg,i)
+            // console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg,i)
             if (that.unif_spars == true){
-                console.log("in unif spars load")
+                // console.log("in unif spars load")
                 d3.json(`data/unifying_framework_sparsify/${that.data_name}/${that.data_name}_${that.k}/individual_instances/${that.data_name}_${that.k}_${i}.json`).then(my_data => {
                     
-                    console.log(my_data)
+                    // console.log(my_data)
 
                     // scales
                     // //finding max and min of mean for link weights and means 
@@ -356,19 +400,27 @@ class Table {
 
                 });
 
-            }   
+            }
+            else if (that.coOccur == true){
+
+
+
+
+
+                
+            }
             else{
                 d3.json(`data/${that.active_alg}/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
                     // LOL - need to rename 'edges' to 'links'
                     my_data['links'] = my_data['edges'];
-                    console.log("clicked data",c,i)
+                    // console.log("clicked data",c,i)
                     // Access data in column
                     // Highlight column
                     // console.log(d3.selectAll(`.cell-${i}`).nodes().map( m => m.__data__));
                     
                     // Retrieves column data for coloring of nodes 
                     let nodeColoring = d3.selectAll(`.cell-${i}`).nodes().map( m => m.__data__)
-                    console.log("here",color(parseFloat(nodeColoring[0])),color(parseFloat(nodeColoring[1])))
+                    // console.log("here",color(parseFloat(nodeColoring[0])),color(parseFloat(nodeColoring[1])))
 
                     // scales
                     // //finding max and min of mean for link weights and means 
@@ -402,8 +454,8 @@ class Table {
             }
 
             // If already selected it, then clears selection and removes graph
-            console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
-            console.log(this.id)
+            // console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
+            // console.log(this.id)
             
             if(d3.select('.highlighted')._groups[0][0] == null){
                 // Selects previously highlighted and changes color back and reclasses it
