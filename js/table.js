@@ -361,6 +361,14 @@ class Table {
                 d3.json(`data/${that.active_alg}/${that.data_name}/cluster_${that.k}/${that.uncert}/individual_instances/clustered_graph_${i}.json`).then(my_data => {
                     // LOL - need to rename 'edges' to 'links'
                     my_data['links'] = my_data['edges'];
+                    console.log("clicked data",c,i)
+                    // Access data in column
+                    // Highlight column
+                    // console.log(d3.selectAll(`.cell-${i}`).nodes().map( m => m.__data__));
+                    
+                    // Retrieves column data for coloring of nodes 
+                    let nodeColoring = d3.selectAll(`.cell-${i}`).nodes().map( m => m.__data__)
+                    console.log("here",color(parseFloat(nodeColoring[0])),color(parseFloat(nodeColoring[1])))
 
                     // scales
                     // //finding max and min of mean for link weights and means 
@@ -385,7 +393,8 @@ class Table {
                     that.myGraph
                         .graphData(my_data)
                         .nodeVal(d => nodeScale(d.weight))
-                        .nodeColor(d => nodeColor(d.weight))
+                        // .nodeColor(d => nodeColor(d.weight))
+                        .nodeColor(d => color(parseFloat(nodeColoring[d.id])))
                         .linkWidth( d => linkScale(d.weight))
                         .linkColor(d => linkColor(d.weight));
 

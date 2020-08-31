@@ -831,14 +831,11 @@ class Graph{
                 })
                 .onLinkClick(link => null)
                 .linkWidth(link => that.qLinkWidth(link.instability))
-                .linkColor(link => that.qLinkColor(link.instability))
+                .linkColor(link => that.qLinkColor(link.instability));
                 
 
-
-           
-
-
-
+                // Handle legend
+                
 
 
 

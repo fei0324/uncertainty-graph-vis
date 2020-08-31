@@ -982,6 +982,8 @@ function renderCoarseRect(uncert,file){
             // need to rename edges to links
             qGraph['links'] = qGraph['edges'];
             let iInstances = files[1];
+            // need to rename edges to links
+            iInstances['links'] = iInstances['edges']
             let qMat = files[2];
             let ori = files[3];
 
@@ -995,7 +997,9 @@ function renderCoarseRect(uncert,file){
             // Initialize graphs with new data
             proc_rect.data = qGraph;
             full_rect.data = ori;
-            // heatMap.myGraph.data = iInstances;
+            console.log(iInstances)
+            // Maybe just make completely new graph object here....
+            heatMap.myGraph.graphData(iInstances);
     
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'qGraph'
