@@ -13,6 +13,11 @@ class Table {
         this.unif_spars = unif_spars;
         this.coOccur = false;
 
+        //Used for co-occurence linked highlighting
+        this.row_num = null;
+        this.col_num = null;
+        this.coords = null;
+
         // Setting scaling variable
         this.scale = null;
 
@@ -26,6 +31,7 @@ class Table {
         //Setting references
         this.full_ref = full_ref;
         this.proc_ref = proc_ref;
+        this.instance_ref = null;
 
         // Creating force graph
         this.myGraph = ForceGraph();
@@ -157,7 +163,7 @@ class Table {
         let squares = row.selectAll(".cell")
             .data(function(d,i){return Object.values(d);})
         .enter().append("rect")
-            .attr("class", (d,i) => `cell-${i}`)
+            .attr("class", (d,i) => `cell-${i}   `)
             .attr("id",(d,i) => `${i}`)
             // .attr("y", function(d,i) {return y(i)})
             .attr("x", (d,i) => x(i))
@@ -183,18 +189,15 @@ class Table {
 
             }
             else if (that.coOccur == true){
-
-
-
-
-
-
+                // console.log("ON ROW:",i)
+                // that.row_num = i;
 
 
 
             }
             else{
                 // PROCESSED HIGHLIGHTING
+                // console.log("ON ROW",i)
                 // Need to select node with id that is node.cluster
                 let my_data = that.proc_ref.myGraph.graphData();
                 // console.log(my_data.nodes)
@@ -237,14 +240,7 @@ class Table {
 
             }
             else if (that.coOccur == true){
-
-
-
-
-
-
-
-
+                // that.row_num = i;
 
 
             }
@@ -274,10 +270,11 @@ class Table {
 
         function mouseoverCell(c,i) {
 
-            // Highlight column
-            d3.selectAll(`.cell-${i}`).attr('fill','orange')
-            
+
             if (that.unif_spars == true){
+                // Highlight column
+                d3.selectAll(`.cell-${i}`).attr('fill','orange')
+
                 d3.select(`#infobox-graph-orig`).transition()
                     .duration(200)
                     .style("opacity", 1);
@@ -285,14 +282,70 @@ class Table {
             }
             else if (that.coOccur == true){
 
+                // I need someway to display row and column
+                // console.log("ON CELL",d3.select(this).node().id)
+                // console.log(that.row_num)
+                let coords = [parseInt(d3.select(this.parentNode).node().id.slice(-1)),parseInt(d3.select(this).node().id)]
+                // console.log("COORDS:",coords)
+
+                let my_data = that.proc_ref.myGraph.graphData();
+                // Highlight the corresponding node OR edge of the q graph
+                // HIGHLIGHT NODE
+                if (coords[0] == coords[1]){
+                    // console.log("highlight node")
+                    
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.id == coords[0]); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    that.proc_ref.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.qColorScale(ref_node['stability:']));
+
+                    // HIGHLIGHT individual instance graph nodes
+                    that.instance_ref.myGraph   
+                        .nodeColor( ref_node => da_node[0].id == ref_node.id ? '#EA0000': 'black');
+
+                    // INFOBOX
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxQRender(da_node[0],null));
+
+
+                }
+                // HIGHLIGHT EDGES
+                else{
+                    // console.log("highlight edge")
+                    // console.log(my_data.edges)
+                    let da_edge = my_data.edges.filter(l => (l.source.id == coords[0] && l.target.id == coords[1]) || (l.source.id == coords[1] && l.target.id == coords[0])); // extract node with correct id
+                    // console.log("selected edge",da_edge)
+                    that.proc_ref.myGraph
+                        .linkWidth(ref_node => da_edge.indexOf(ref_node) !== -1 ? 7: that.proc_ref.qLinkWidth(ref_node['instability']))
+                        .linkColor( ref_node => da_edge.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.qLinkColor(ref_node['instability']));
+
+                    // INFOBOX
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRenderQLink(da_edge[0],null));
+
+                }
+
+
+
+                // d3.select(this).attr('fill','orange')
+                d3.select(this).attr('stroke-width','5px')
+                    .attr("stroke-opacity","0.7")
+                    .attr("stroke","orange");
 
                 
-
 
                 
             }
             else{
                 // tooltip showing run and value, using graph-orig becasue it's made automatically and not used for anything else
+                // Highlight column
+                d3.selectAll(`.cell-${i}`).attr('fill','orange')
+
                 // INFOBOX
                 d3.select(`#infobox-graph-orig`).transition()
                     .duration(200)
@@ -327,6 +380,29 @@ class Table {
 
             }
             else if (that.coOccur == true){
+
+                // d3.select(this).attr('fill',(d) => color(d));
+                d3.select(this)
+                    .attr('stroke-width','0px')
+                    .attr('stroke-opacity',"0");
+
+                // DE HIHGLIGHT NODES & EDGES
+                // PROCESSED DE-HIGHLIGHTING
+                that.proc_ref.myGraph
+                    .nodeColor( ref_node => that.proc_ref.qColorScale(ref_node['stability:']))
+                    .linkColor( d => that.proc_ref.qLinkColor(d['instability']) )
+                    .linkWidth( d => that.proc_ref.qLinkWidth(d['instability']));
+
+                // HIGHLIGHT individual instance graph nodes
+                that.instance_ref.myGraph   
+                    .nodeColor( () => "black");
+
+                //INFOBOX 
+                d3.select(`#infobox-graph-processed`).transition()
+                    .duration(200)
+                    .style("opacity", 0);
+
+                
 
 
 

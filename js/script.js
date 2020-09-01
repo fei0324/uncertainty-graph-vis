@@ -813,7 +813,8 @@ $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
         
 
         //Redraws. prepGraph contains logic which detects which invert option is active then 
-        // scales the data appropriately. 
+        // scales the data appropriately.
+
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
         heatMap.removeHeatMap()
@@ -1016,8 +1017,8 @@ function renderCoarseRect(uncert,file){
             // Going to make completely new graph object for individual instance data
             instance_graph.data = iInstances;
             instance_graph.type = 'instance'; // Don't think this is necessary
-            instance_graph.prepGraph();
-            instance_graph.drawGraph();
+            
+            
     
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'qGraph'
@@ -1025,6 +1026,8 @@ function renderCoarseRect(uncert,file){
             proc_rect.linkScale = [0.3411491395477371, 100]
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
+            instance_graph.prepGraph();
+
 
             // Handles appropriate zooming on loading
             proc_rect.myGraph
@@ -1044,7 +1047,12 @@ function renderCoarseRect(uncert,file){
 
             // Draws the graphs
             full_rect.drawGraph(proc_rect);
-            proc_rect.drawGraph(full_rect);
+            proc_rect.drawGraph(instance_graph);
+            instance_graph.drawGraph(proc_rect);
+
+
+            // turns off highlighting from full rect
+            full_rect.myGraph.onNodeHover( () => null)
 
             // heatmap initial data and initialization
             heatMap.myGraph.nodeVisibility(false)
@@ -1055,6 +1063,7 @@ function renderCoarseRect(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = qMat;
+            heatMap.instance_ref = instance_graph;
             heatMap.unif_spars = false;
             heatMap.coOccur = true;
             heatMap.active_alg = file;
@@ -1065,6 +1074,7 @@ function renderCoarseRect(uncert,file){
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
+            
 
 
 

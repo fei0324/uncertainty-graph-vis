@@ -50,6 +50,7 @@ class Graph{
         // this.maxL = -10000000000;
         // this.minL = 1000000000;
 
+
         //This is the varible for the node and link scaling
         this.nodeScale = null;
         this.linkScale = null;
@@ -431,20 +432,8 @@ class Graph{
             // console.log("edge active in prep",edge_active)
 
             // Node legends
-            if (node_active == 'std'){
-                this.legend(this.node_legend,this,this.stdColor,'node std');
-            }
-            else{
-                this.legend(this.node_legend,this,this.color,'node mean');
-            }
-
-            // Link legends
-            if (edge_active == 'stdevO'){
-                this.legend(this.link_legend,this,this.linkColorStd,'link std');
-            }
-            else{
-                this.legend(this.link_legend,this,this.linkColor,'link mean');
-            }
+            this.legend(this.node_legend,this,this.qColorScale,'node stability');
+            this.legend(this.link_legend,this,this.qLinkColor,'link instability');
 
 
         }
@@ -504,6 +493,8 @@ class Graph{
 
         // Reference to other graph object
         this.reference = reference
+
+        
         // console.log("my ref",this.reference)
 
         // let myGraph = ForceGraph();
@@ -808,6 +799,7 @@ class Graph{
                 .nodeColor(node => that.qColorScale(node['stability:']))
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : []
+                    console.log("NODE",node)
                     
                     if (node){
     
@@ -823,8 +815,8 @@ class Graph{
                             .style('opacity',1);
 
                         // Highlighting instance node
-
-
+                        that.reference.myGraph   
+                            .nodeColor( ref_node => node.id == ref_node.id ? '#EA0000': 'black');
 
 
     
@@ -841,6 +833,8 @@ class Graph{
                             .style('opacity',0);
 
                         // De-highlighting instance node
+                        that.reference.myGraph   
+                            .nodeColor( () => 'black');
 
 
 
@@ -918,7 +912,7 @@ class Graph{
                 .nodeLabel(node => node.id)
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : []
-                    
+
                     if (node){
     
                         // INFOBOX 
@@ -933,7 +927,8 @@ class Graph{
                             .style('opacity',1);
 
                         // Highlighting corresponding q graph node
-
+                        that.reference.myGraph
+                            .nodeColor( ref_node => node.id == ref_node.id ? '#EA0000': that.reference.qColorScale(ref_node['stability:']));
 
 
 
@@ -952,7 +947,8 @@ class Graph{
                             .style('opacity',0);
 
                         // de-highlighting corresponding q graph node
-
+                        that.reference.myGraph
+                            .nodeColor( ref_node =>  that.reference.qColorScale(ref_node['stability:']));
 
 
 
