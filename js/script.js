@@ -1130,20 +1130,9 @@ function renderCoarseRect(uncert,file){
                 heatMap.full_ref = full_rect;
                 heatMap.proc_ref = proc_rect;
                 
-    
-    
-    
             })
 
-
-
-
         }
-
-
-
-
-
 
     }
     else{
@@ -1274,113 +1263,259 @@ function renderCoarseLesmis(uncert,file){
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-mis');
 
-    // Loads the data - I chose the default view here to have 9 clusters
-    Promise.all([
-        //reduced
-        d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertainty_graph.json`),
-        //original
-        d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/ori_graph_with_cluster.json`),
-        // uncertainty matrix
-        d3.csv(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertain_mat.csv`)
+    if (uncert == 'co_occurrence'){
 
-    ]).then(function(files){
-        
-        // Loads the data into the graph class
-        proc_rect.data = files[0];
-        full_rect.data = files[1];
-
-        // Handling this graph's parameters
-        proc_rect.type = 'clust'
-        proc_rect.nodeScale = [-0.009660296956141888, 0.5345581749927919];
-        proc_rect.linkScale = [0.010101010101010102, 73.0909090909091];
-
-        full_rect.myGraph
-            .linkVisibility(true);
-        proc_rect.myGraph
-            .zoom(2.7);
-        full_rect.myGraph
-            .zoom(0.8);
-
-        // Recalculates scales and such for new data passed in
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
-
-        // Draws the graph
-        full_rect.drawGraph(proc_rect);
-        proc_rect.drawGraph(full_rect);
-
-        // heatmap initializing data
-        heatMap.myGraph.nodeVisibility(false)
-        heatMap.myGraph.linkVisibility(false)
-
-        heatMap.data = files[2];
-        heatMap.nodeScale = [-0.009660296956141888, 0.5345581749927919];
-        heatMap.unif_spars = false;
-        heatMap.data_name = 'lesmis_77';
-        heatMap.active_alg = file;
-        heatMap.uncert = uncert;
-        heatMap.k = k;
-        heatMap.removeHeatMap()
-        heatMap.createHeatMap()
-        // Pass references to heatmap as well
-        heatMap.full_ref = full_rect;
-        heatMap.proc_ref = proc_rect;
-
-
-    })
-
-    // detects change on bar and updates data shown accordingly
-    d3.select('#coarse-mis').on('input', function(d){
         let k = k_Bar.activeK;
-        //  console.log('in script',that.k)
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
+
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            populateStuff(k,new_q,uncert,file)
+
+
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-mis').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,q,uncert,file)
+
+
+
+        })
+        
+        // Things I need to display:
+        // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
+        // 2. heatmap area as a selection tool for individual instances --> no, lets just make this a slider bar?
+        // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
+
+        // Default view - 2 clusters and first instance
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph
+                d3.json(`data/${file}/lesmis_77/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+    
+            ]).then(function(files){
+    
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                instance_graph = new Graph(null,'graph-mini','instance');
+                // heatMap.myGraph.graphData(iInstances);
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
                 
-        // Loads data based on parameters 
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+                proc_rect.linkScale = [0.3411491395477371, 100]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.8);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'rec_100';
+                heatMap.uncert = uncert;
+                heatMap.k = this.k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                
+            })
+
+        }
+
+    }
+    else{
+        // Loads the data - I chose the default view here to have 9 clusters
         Promise.all([
             //reduced
-            d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
-            // Loads the data
+            
+            // Loads the data into the graph class
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
-            // handling the zooming of this new data 
+            // Handling this graph's parameters
+            proc_rect.type = 'clust'
+            proc_rect.nodeScale = [-0.009660296956141888, 0.5345581749927919];
+            proc_rect.linkScale = [0.010101010101010102, 73.0909090909091];
+
+            full_rect.myGraph
+                .linkVisibility(true);
             proc_rect.myGraph
                 .zoom(2.7);
             full_rect.myGraph
                 .zoom(0.8);
 
+            // Recalculates scales and such for new data passed in
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Draws the graph
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
+
+            // heatmap initializing data
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
 
-            heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.nodeScale = [-0.009660296956141888, 0.5345581749927919];
             heatMap.unif_spars = false;
             heatMap.data_name = 'lesmis_77';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
             heatMap.k = k;
+            heatMap.removeHeatMap()
             heatMap.createHeatMap()
-            
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
-
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
 
-            // Feeding in graph data like this speeds things up really well!
-            full_rect.myGraph.graphData(full_rect.data)
-            proc_rect.myGraph.graphData(proc_rect.data)
 
         })
 
-    })
+        // detects change on bar and updates data shown accordingly
+        d3.select('#coarse-mis').on('input', function(d){
+            let k = k_Bar.activeK;
+            //  console.log('in script',that.k)
+                    
+            // Loads data based on parameters 
+            Promise.all([
+                //reduced
+                d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertainty_graph.json`),
+                //original
+                d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+                // uncertainty matrix
+                d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+            ]).then(function(files){
+                // Loads the data
+                proc_rect.data = files[0];
+                full_rect.data = files[1];
+
+                // handling the zooming of this new data 
+                proc_rect.myGraph
+                    .zoom(2.7);
+                full_rect.myGraph
+                    .zoom(0.8);
+
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+
+                heatMap.removeHeatMap()
+                heatMap.data = files[2];
+                heatMap.unif_spars = false;
+                heatMap.data_name = 'lesmis_77';
+                heatMap.active_alg = file;
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Feeding in graph data like this speeds things up really well!
+                full_rect.myGraph.graphData(full_rect.data)
+                proc_rect.myGraph.graphData(proc_rect.data)
+
+            })
+
+        })
+    }
 }
 
 function renderCoarseCele(uncert,file){
@@ -1397,109 +1532,254 @@ function renderCoarseCele(uncert,file){
 
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-cele');
+    if (uncert == 'co_occurrence'){
 
-    Promise.all([
-        //reduced
-        d3.json(`data/${file}/celegans_453/cluster_${10}/${uncert}/uncertainty_graph.json`),
-        //original
-        d3.json(`data/${file}/celegans_453/cluster_${10}/${uncert}/ori_graph_with_cluster.json`),
-        // uncertainty matrix
-        d3.csv(`data/${file}/celegans_453/cluster_${10}/${uncert}/uncertain_mat.csv`)
-
-    ]).then(function(files){
-        
-        proc_rect.data = files[0];
-        full_rect.data = files[1];
-
-        // Recalculates scales and such for new data passed in and handles graph parameters
-        proc_rect.type = 'clust';
-        proc_rect.nodeScale = [-0.001195036474254751, 0.3845227170550737];
-        proc_rect.linkScale = [0.43434343434343436, 347.45454545454544];
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
-
-        proc_rect.myGraph
-            .zoom(3);
-        full_rect.myGraph
-            .zoom(0.35);
-        
-        full_rect.myGraph
-            .linkVisibility(true);
-
-        full_rect.drawGraph(proc_rect);
-        proc_rect.drawGraph(full_rect);
-
-        // heatmap initializing data
-        heatMap.myGraph.nodeVisibility(false)
-        heatMap.myGraph.linkVisibility(false)
-
-        heatMap.removeHeatMap()
-        heatMap.data = files[2];
-        heatMap.nodeScale = [-0.001195036474254751, 0.3845227170550737];
-        heatMap.unif_spars = false;
-        heatMap.active_alg = file;
-        heatMap.data_name = 'celegans_453';
-        heatMap.uncert = uncert;
-        heatMap.k = k;
-        heatMap.createHeatMap()
-        // Pass references to heatmap as well
-        heatMap.full_ref = full_rect;
-        heatMap.proc_ref = proc_rect;
-
-
-    })
-
-    // detects change on bar and updates data shown accordingly
-    d3.select('#coarse-cele').on('input', function(d){
         let k = k_Bar.activeK;
-        //  console.log('in script',that.k)
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
+
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            populateStuff(k,new_q,uncert,file)
+
+
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-cele').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,q,uncert,file)
+
+
+
+        })
+        
+        // Things I need to display:
+        // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
+        // 2. heatmap area as a selection tool for individual instances --> no, lets just make this a slider bar?
+        // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
+
+        // Default view - 2 clusters and first instance
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph
+                d3.json(`data/${file}/celegans_453/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+    
+            ]).then(function(files){
+    
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                instance_graph = new Graph(null,'graph-mini','instance');
+                // heatMap.myGraph.graphData(iInstances);
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
                 
-        // Loads data based on parameters 
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+                proc_rect.linkScale = [0.3411491395477371, 100]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.35);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'rec_100';
+                heatMap.uncert = uncert;
+                heatMap.k = this.k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                
+            })
+
+        }
+
+    }
+    else{
         Promise.all([
             //reduced
-            d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/celegans_453/cluster_${10}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/celegans_453/cluster_${10}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/celegans_453/cluster_${10}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
+            
             proc_rect.data = files[0];
             full_rect.data = files[1];
+
+            // Recalculates scales and such for new data passed in and handles graph parameters
+            proc_rect.type = 'clust';
+            proc_rect.nodeScale = [-0.001195036474254751, 0.3845227170550737];
+            proc_rect.linkScale = [0.43434343434343436, 347.45454545454544];
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
 
             proc_rect.myGraph
                 .zoom(3);
             full_rect.myGraph
                 .zoom(0.35);
+            
+            full_rect.myGraph
+                .linkVisibility(true);
 
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
+
+            // heatmap initializing data
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
 
             heatMap.removeHeatMap()
-            heatMap.unif_spars = false;
             heatMap.data = files[2];
+            heatMap.nodeScale = [-0.001195036474254751, 0.3845227170550737];
             heatMap.unif_spars = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'celegans_453';
             heatMap.uncert = uncert;
             heatMap.k = k;
             heatMap.createHeatMap()
-            
-            // Recalculates scales and such for new data passed in
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
-
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
 
-            // Feeding in graph data like this speeds things up really well!
-            full_rect.myGraph.graphData(full_rect.data)
-            proc_rect.myGraph.graphData(proc_rect.data)
 
         })
 
-    })
+        // detects change on bar and updates data shown accordingly
+        d3.select('#coarse-cele').on('input', function(d){
+            let k = k_Bar.activeK;
+            //  console.log('in script',that.k)
+                    
+            // Loads data based on parameters 
+            Promise.all([
+                //reduced
+                d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertainty_graph.json`),
+                //original
+                d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+                // uncertainty matrix
+                d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+            ]).then(function(files){
+                proc_rect.data = files[0];
+                full_rect.data = files[1];
+
+                proc_rect.myGraph
+                    .zoom(3);
+                full_rect.myGraph
+                    .zoom(0.35);
+
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+
+                heatMap.removeHeatMap()
+                heatMap.unif_spars = false;
+                heatMap.data = files[2];
+                heatMap.unif_spars = false;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'celegans_453';
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                
+                // Recalculates scales and such for new data passed in
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Feeding in graph data like this speeds things up really well!
+                full_rect.myGraph.graphData(full_rect.data)
+                proc_rect.myGraph.graphData(proc_rect.data)
+
+            })
+
+        })
+    }
 
 }
 
@@ -1519,97 +1799,175 @@ function renderCoarseEmail(uncert,file){
 
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-email');
+    if (uncert == 'co_occurrence'){
 
-    // Initial k is 20
-    Promise.all([
-        //reduced
-        d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertainty_graph.json`),
-        //original
-        d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/ori_graph_with_cluster.json`),
-        // uncertainty matrix
-        d3.csv(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertain_mat.csv`)
-
-    ]).then(function(files){
-        
-        proc_rect.data = files[0];
-        full_rect.data = files[1];
-
-        // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-        proc_rect.type = 'clust';
-        proc_rect.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
-        proc_rect.linkScale = [0.09090909090909091, 375.8484848484849];
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
-
-        proc_rect.myGraph
-            .zoom(2.5);
-
-        // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
-        full_rect.myGraph
-            // .d3AlphaDecay(0)
-            // .d3VelocityDecay(0.08)
-            // .nodeRelSize(6)
-            .cooldownTime(6000)
-            // .linkColor(() => 'rgba(0,0,0,0.05)')
-            .linkVisibility(false)
-            // This only renders the links after the physics engine stops.
-            .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
-            // .onNodeHover( (d,i) => console.log(d) )
-            .zoom(0.1);
-            // .enablePointerInteraction(false);
-        
-        full_rect.drawGraph(proc_rect);
-        proc_rect.drawGraph(full_rect);
-
-        // heatmap initial data
-        heatMap.myGraph.nodeVisibility(false)
-        heatMap.myGraph.linkVisibility(false)
-
-        heatMap.removeHeatMap()
-        heatMap.data = files[2];
-        heatMap.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
-        heatMap.unif_spars = false;
-        heatMap.data_name = 'email_1005';
-        heatMap.active_alg = file;
-        heatMap.uncert = uncert;
-        heatMap.k = this.k;
-        heatMap.createHeatMap()
-        // Pass references to heatmap as well
-        heatMap.full_ref = full_rect;
-        heatMap.proc_ref = proc_rect;
-
-    })
-
-    
-
-    // detects change on bar and updates data shown accordingly
-    d3.select('#coarse-email').on('input', function(d){
         let k = k_Bar.activeK;
-        //  console.log('in script',that.k)
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
 
-        // There are oddly spaced values in this dataset, so a continues slider bar doesn't work.
-        // My solutions involves creating this array of the actual data values, and only calling the 
-        // code if these values are touched on in the slider bar. 
-        let email_vals = [20,30,40,41,42,43,44,50];
-        if (email_vals.includes(parseInt(k))){
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            populateStuff(k,new_q,uncert,file)
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-email').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            let email_vals = [20,30,40,41,42,43,44,50];
+            if (email_vals.includes(parseInt(new_k))){
+                populateStuff(new_k,q,uncert,file)
+            }
+            
+            
+
+        })
+        
+        // Things I need to display:
+        // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
+        // 2. heatmap area as a selection tool for individual instances --> no, lets just make this a slider bar?
+        // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
+
+        // Default view - 2 clusters and first instance
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/email_1005/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph
+                d3.json(`data/${file}/email_1005/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+    
+            ]).then(function(files){
+    
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                instance_graph = new Graph(null,'graph-mini','instance');
+                // heatMap.myGraph.graphData(iInstances);
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
                 
-        // Loads data based on parameters 
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+                proc_rect.linkScale = [0.3411491395477371, 100]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.35);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'rec_100';
+                heatMap.uncert = uncert;
+                heatMap.k = this.k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                
+            })
+
+        }
+
+    }
+    else{
+        // Initial k is 20
         Promise.all([
             //reduced
-            d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/email_1005/cluster_${20}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/${file}/email_1005/cluster_${k}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/email_1005/cluster_${20}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
+            
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
+            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            proc_rect.type = 'clust';
+            proc_rect.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
+            proc_rect.linkScale = [0.09090909090909091, 375.8484848484849];
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
             proc_rect.myGraph
                 .zoom(2.5);
-            full_rect.myGraph
-                .zoom(0.1);
 
             // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
             full_rect.myGraph
@@ -1619,40 +1977,107 @@ function renderCoarseEmail(uncert,file){
                 .cooldownTime(6000)
                 // .linkColor(() => 'rgba(0,0,0,0.05)')
                 .linkVisibility(false)
+                // This only renders the links after the physics engine stops.
                 .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
                 // .onNodeHover( (d,i) => console.log(d) )
                 .zoom(0.1);
                 // .enablePointerInteraction(false);
+            
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
 
+            // heatmap initial data
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
             heatMap.unif_spars = false;
             heatMap.data_name = 'email_1005';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
-            heatMap.k = k;
+            heatMap.k = this.k;
             heatMap.createHeatMap()
-
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
-            
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
 
-            // Feeding in graph data like this speeds things up really well!
-            full_rect.myGraph.graphData(full_rect.data)
-            proc_rect.myGraph.graphData(proc_rect.data)
+        })
+
+        
+
+        // detects change on bar and updates data shown accordingly
+        d3.select('#coarse-email').on('input', function(d){
+            let k = k_Bar.activeK;
+            //  console.log('in script',that.k)
+
+            // There are oddly spaced values in this dataset, so a continues slider bar doesn't work.
+            // My solutions involves creating this array of the actual data values, and only calling the 
+            // code if these values are touched on in the slider bar. 
+            let email_vals = [20,30,40,41,42,43,44,50];
+            if (email_vals.includes(parseInt(k))){
+                    
+            // Loads data based on parameters 
+            Promise.all([
+                //reduced
+                d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/uncertainty_graph.json`),
+                //original
+                d3.json(`data/${file}/email_1005/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+                // uncertainty matrix
+                d3.csv(`data/${file}/email_1005/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+            ]).then(function(files){
+                proc_rect.data = files[0];
+                full_rect.data = files[1];
+
+                proc_rect.myGraph
+                    .zoom(2.5);
+                full_rect.myGraph
+                    .zoom(0.1);
+
+                // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
+                full_rect.myGraph
+                    // .d3AlphaDecay(0)
+                    // .d3VelocityDecay(0.08)
+                    // .nodeRelSize(6)
+                    .cooldownTime(6000)
+                    // .linkColor(() => 'rgba(0,0,0,0.05)')
+                    .linkVisibility(false)
+                    .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
+                    // .onNodeHover( (d,i) => console.log(d) )
+                    .zoom(0.1);
+                    // .enablePointerInteraction(false);
+
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+
+                heatMap.removeHeatMap()
+                heatMap.data = files[2];
+                heatMap.unif_spars = false;
+                heatMap.data_name = 'email_1005';
+                heatMap.active_alg = file;
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                // Feeding in graph data like this speeds things up really well!
+                full_rect.myGraph.graphData(full_rect.data)
+                proc_rect.myGraph.graphData(proc_rect.data)
+
+            })
+        }
 
         })
     }
-
-    })
-    
 }
 
 

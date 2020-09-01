@@ -285,7 +285,9 @@ class Table {
                 // I need someway to display row and column
                 // console.log("ON CELL",d3.select(this).node().id)
                 // console.log(that.row_num)
-                let coords = [parseInt(d3.select(this.parentNode).node().id.slice(-1)),parseInt(d3.select(this).node().id)]
+                // TODO, can't simply slice here, need to get the whole number
+                let num_row = parseInt(d3.select(this.parentNode).node().id.match(/\d+/g))
+                let coords = [num_row,parseInt(d3.select(this).node().id)]
                 // console.log("COORDS:",coords)
 
                 let my_data = that.proc_ref.myGraph.graphData();
