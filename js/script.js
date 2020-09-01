@@ -134,6 +134,21 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
         kids.removeClass( "active" );
         $(`#${target}`).addClass("active")
 
+        //Remove unneccessary buttons for co-occurrence
+        if (target == 'co_occurrence'){
+            $(`#dropdownMenuButtonNode`).addClass('disabled')
+            $(`#dropdownMenuButtonEdge`).addClass('disabled')
+            $(`#dropdownMenuButtonSTD`).addClass('disabled')
+            $(`#dropdownMenuButtonInvert`).addClass('disabled')
+        }
+        //add them back if not co occurrence
+        else{
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
+            $(`#dropdownMenuButtonEdge`).removeClass('disabled')
+            $(`#dropdownMenuButtonSTD`).removeClass('disabled')
+            $(`#dropdownMenuButtonInvert`).removeClass('disabled')
+        }
+
         if (active_alg == 'coarse'){
             if (active_data == 'rectangle'){
                 //Render coarse graph for rect
@@ -510,11 +525,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             if(active_data =='lesmis'){
                 //Render spectral coarse graph for lesmis
-                renderUnifSpars('lesmis_77','unifying_framework_sparsify')
+                // renderUnifSpars('lesmis_77','unifying_framework_sparsify')
+                alert("Error in data - coming soon")
             }
             else if(active_data =='rectangle'){
                 //Render unifying spars graph for rectangle
-                renderUnifSpars('rec_100','unifying_framework_sparsify')
+                renderUnifSpars('adj_rec_100','unifying_framework_sparsify')
             }
 
             // Description code for the cluster text. These needs to be called here in order for 
@@ -2225,9 +2241,9 @@ function renderUnifSpars(data_name,file){
         //reduced
         d3.json(`data/${file}/${data_name}/${data_name}_${range[0]}/sparsified_uncertainty_graph_${range[0]}.json`),
         //original
-        d3.json(`data/${data_name}/original_10.json`),
+        d3.json(`data/rec_100/original_10.json`),
         // selection skeleton for individual instances
-        d3.csv(`data/${file}/${data_name}/uncertain_mat.csv`)
+        d3.csv(`data/unifying_framework_sparsify/rec_100/uncertain_mat.csv`)
 
     ]).then(function(files){
         proc_rect.data = files[0];
@@ -2298,9 +2314,9 @@ function renderUnifSpars(data_name,file){
             //reduced
         d3.json(`data/${file}/${data_name}/${data_name}_${k}/sparsified_uncertainty_graph_${k}.json`),
         //original
-        d3.json(`data/${data_name}/original_10.json`),
+        d3.json(`data/rec_100/original_10.json`),
         // selection skeleton for individual instances
-        d3.csv(`data/${file}/${data_name}/uncertain_mat.csv`)
+        d3.csv(`data/unifying_framework_sparsify/rec_100/uncertain_mat.csv`)
 
         ]).then(function(files){
             proc_rect.data = files[0];
