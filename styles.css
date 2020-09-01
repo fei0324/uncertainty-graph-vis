@@ -232,7 +232,7 @@
     /* text-align: left; */
     position: relative;
     top: 5px;
-    left: -40px;
+    left: 0px;
     color:gray;
     z-index: 100;
     visibility: hidden;
