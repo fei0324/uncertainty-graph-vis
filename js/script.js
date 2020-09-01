@@ -117,6 +117,16 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
 
+        // removes bars
+        // deletes k bar if one exists  
+        d3.select(".active-kBar").remove();
+
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
+
+        // deletes q bar if one exists  
+        d3.select(".active-qBar").remove();
+
         // makes the most recently selected target the 'active' option and removes
         // active class from previously active option
         let start_active = $('#uncertaintyDrop').find('active');
@@ -211,6 +221,16 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
+
+        // removes bars
+        // deletes k bar if one exists  
+        d3.select(".active-kBar").remove();
+
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
+
+        // deletes q bar if one exists  
+        d3.select(".active-qBar").remove();
         
 
         if (target == 'coarse'){
@@ -547,6 +567,16 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
         // Clear anything in the mini graph canvas
         heatMap.myGraph.nodeVisibility(false)
         heatMap.myGraph.linkVisibility(false)
+
+        // removes bars
+        // deletes k bar if one exists  
+        d3.select(".active-kBar").remove();
+
+        // deletes f bar if one exists  
+        d3.select(".active-fBar").remove();
+
+        // deletes q bar if one exists  
+        d3.select(".active-qBar").remove();
 
         // Finds which algorithm is active 
         let active_alg = $('#algDrop').find('.active')[0].id;
@@ -957,18 +987,40 @@ function renderCoarseRect(uncert,file){
     let range = [2,12]
     let that = this;
 
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
-
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
-
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-rect');
 
     // co_occurence is very different from the rest
     if (uncert == 'co_occurrence'){
+
+        let k = k_Bar.activeK;
         // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
+
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            populateStuff(k,new_q,uncert,file)
+
+
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-rect').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,q,uncert,file)
+
+
+
+        })
         
         // Things I need to display:
         // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
@@ -976,127 +1028,120 @@ function renderCoarseRect(uncert,file){
         // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
 
         // Default view - 2 clusters and first instance
-        Promise.all([
-            // Q_graph
-            d3.json(`data/${file}/rec_100/cluster_${8}/${uncert}/Q_graph/Q_graph_${0}.json`),
-            // individual instances
-            d3.json(`data/${file}/rec_100/cluster_${8}/${uncert}/individual_instances/clustered_graph_${0}.json`),
-            // Q_matrix
-            d3.csv(`data/${file}/rec_100/cluster_${8}/${uncert}/Q_matrix/Q_mat_${0}.csv`),
-            // Also need to load a representative original graph
-            d3.json(`data/${file}/rec_100/cluster_${8}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
-
-        ]).then(function(files){
-
-            // Need to combine individual instance and q graph data
-            let qGraph = files[0];
-            // need to rename edges to links
-            qGraph['links'] = qGraph['edges'];
-            let iInstances = files[1];
-            // need to rename edges to links
-            iInstances['links'] = iInstances['edges']
-            let qMat = files[2];
-            let ori = files[3];
-
-            // console.log("q graph",qGraph)
-            // console.log("iInstances",iInstances)
-            // console.log("qMat",qMat)
-            // console.log("representative original graph",ori)
-
-            // Display Q graph
-
-            // Initialize graphs with new data
-            proc_rect.data = qGraph;
-            full_rect.data = ori;
-            // console.log(iInstances)
-
-            // Maybe just make completely new graph object here....
-            // Intance graph exclusively for co-occurrence 
-            instance_graph = new Graph(null,'graph-mini','instance');
-            // heatMap.myGraph.graphData(iInstances);
-            // Going to make completely new graph object for individual instance data
-            instance_graph.data = iInstances;
-            instance_graph.type = 'instance'; // Don't think this is necessary
-            
-            
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/rec_100/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/rec_100/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/rec_100/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph
+                d3.json(`data/${file}/rec_100/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
     
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            proc_rect.type = 'qGraph'
-            proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-            proc_rect.linkScale = [0.3411491395477371, 100]
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
-            instance_graph.prepGraph();
-
-
-            // Handles appropriate zooming on loading
-            proc_rect.myGraph
-                .zoom(2.8);
-            full_rect.myGraph
-                .zoom(0.8);
-            instance_graph.myGraph
-                .zoom(2);
-            
-            // Ensures links are visibile.
-            full_rect.myGraph
-                .linkVisibility(true);
-            instance_graph.myGraph 
-                .linkVisibility(true)
-                .nodeVisibility(true);
-
-
-            // Draws the graphs
-            full_rect.drawGraph(proc_rect);
-            proc_rect.drawGraph(instance_graph);
-            instance_graph.drawGraph(proc_rect);
-
-
-            // turns off highlighting from full rect
-            full_rect.myGraph.onNodeHover( () => null)
-
-            // heatmap initial data and initialization
-            heatMap.myGraph.nodeVisibility(false)
-            heatMap.myGraph.linkVisibility(false)
-
-           
-            // display q matrix
-
-            heatMap.removeHeatMap()
-            heatMap.data = qMat;
-            heatMap.instance_ref = instance_graph;
-            heatMap.unif_spars = false;
-            heatMap.coOccur = true;
-            heatMap.active_alg = file;
-            heatMap.data_name = 'rec_100';
-            heatMap.uncert = uncert;
-            heatMap.k = this.k;
-            heatMap.createHeatMap()
-            // Pass references to heatmap as well
-            heatMap.full_ref = full_rect;
-            heatMap.proc_ref = proc_rect;
-            
-
-
-
-
-
-
-            
-
-
-
-
-
-
-            // display slider bar for instances
-
+            ]).then(function(files){
     
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                instance_graph = new Graph(null,'graph-mini','instance');
+                // heatMap.myGraph.graphData(iInstances);
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
+                
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+                proc_rect.linkScale = [0.3411491395477371, 100]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.8);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'rec_100';
+                heatMap.uncert = uncert;
+                heatMap.k = this.k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+                
+    
+    
+    
+            })
 
 
 
 
+        }
 
-        })
+
+
 
 
 
@@ -1226,12 +1271,6 @@ function renderCoarseLesmis(uncert,file){
     let range = [9,14]
     let that = this;
 
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
-
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
-
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-mis');
 
@@ -1355,11 +1394,6 @@ function renderCoarseCele(uncert,file){
     let range = [10,14]
     let that = this;
 
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
-
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
 
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-cele');
@@ -1482,12 +1516,6 @@ function renderCoarseEmail(uncert,file){
     this.k = 20
     let range = [20,50]
     let that = this;
-
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
-
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
 
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'coarse-email');
@@ -1642,16 +1670,12 @@ function renderSparsLesmis(){
     this.f = 0
     let f_range = [0,1]
 
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
 
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'spars-mis');
 
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
 
-    //Creates k bar
+    //Creates f bar
     let f_Bar = new fBar(this.f,f_range,'spars-mis-f');
 
     // Can choose any data for full graph, there's no linked views with this.
@@ -1762,14 +1786,9 @@ function renderUnifSpars(data_name,file){
     this.f = 0
     let f_range = [0,1]
 
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
-
     //Creates k bar
     let k_Bar = new kBar(this.k,range,'unif-spars');
 
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
 
     //Creates f bar
     let f_Bar = new fBar(this.f,f_range,'spars-mis-f');
@@ -1905,11 +1924,6 @@ function renderGemsecTv(uncert,file){
     // let range = [10,14]
     let that = this;
 
-    // deletes k bar if one exists  
-    d3.select(".active-kBar").remove();
-
-    // deletes f bar if one exists  
-    d3.select(".active-fBar").remove();
 
     //Creates k bar - no kbar for gemsec 
     // let k_Bar = new kBar(this.k,range,'coarse-cele');

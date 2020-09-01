@@ -799,7 +799,7 @@ class Graph{
                 .nodeColor(node => that.qColorScale(node['stability:']))
                 .onNodeHover(node => {
                     highlightNodes = node ? [node] : []
-                    console.log("NODE",node)
+                    // console.log("NODE",node)
                     
                     if (node){
     
@@ -809,10 +809,15 @@ class Graph{
                             .style("opacity", 1);
                         d3.select(`#infobox-graph-processed`).html(that.infoboxQRender(node));
     
-                        //Row highlighting
-                        d3.select(`#row-${node.id}`).transition()
+                        //Highlighting correct table cell
+                        d3.select(`#row-g-${node.id}`).select(`.cell-${node.id}`)
+                            .transition()
                             .duration(100)
-                            .style('opacity',1);
+                            .attr('stroke-width','5px')
+                            .attr("stroke-opacity","0.7")
+                            .attr("stroke","red");
+
+                        
 
                         // Highlighting instance node
                         that.reference.myGraph   
@@ -827,14 +832,17 @@ class Graph{
                             .duration(200)
                             .style("opacity", 0);
     
-                        //Row de-highlighting
-                        d3.selectAll(`.row-back`).transition()
+                        //de-Highlighting correct table cell
+                        d3.selectAll(`.row`).selectAll(`*`)
+                            .transition()
                             .duration(100)
-                            .style('opacity',0);
+                            .attr('stroke-width','0px');
 
                         // De-highlighting instance node
                         that.reference.myGraph   
                             .nodeColor( () => 'black');
+
+
 
 
 
@@ -921,10 +929,14 @@ class Graph{
                             .style("opacity", 1);
                         d3.select(`#infobox-graph-processed`).html(that.infoboxIRender(node));
     
-                        //Row highlighting
-                        d3.select(`#row-${node.id}`).transition()
+                        //Highlighting correct table cell
+                        d3.select(`#row-g-${node.id}`).select(`.cell-${node.id}`)
+                            .transition()
                             .duration(100)
-                            .style('opacity',1);
+                            .attr('stroke-width','5px')
+                            .attr("stroke-opacity","0.7")
+                            .attr("stroke","red");
+
 
                         // Highlighting corresponding q graph node
                         that.reference.myGraph
@@ -941,10 +953,11 @@ class Graph{
                             .duration(200)
                             .style("opacity", 0);
     
-                        //Row de-highlighting
-                        d3.selectAll(`.row-back`).transition()
+                        //de-Highlighting correct table cell
+                        d3.selectAll(`.row`).selectAll(`*`)
+                            .transition()
                             .duration(100)
-                            .style('opacity',0);
+                            .attr('stroke-width','0px');
 
                         // de-highlighting corresponding q graph node
                         that.reference.myGraph
