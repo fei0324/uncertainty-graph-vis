@@ -1,1 +1,1 @@
-{"nodes": [{"id": 0, "size": 25, "stability:": 0.9999999999999996}, {"id": 1, "size": 75, "stability:": 0.5688888888888887}], "edges": [{"source": 0, "target": 1, "instability": 0.32333333333333336}]}
+{"nodes": [{"id": 0, "size": 25, "stability:": 24.000000000000007}, {"id": 1, "size": 75, "stability:": 41.66666666666664}], "edges": [{"source": 0, "target": 1, "instability": 14.000744027848418}]}
