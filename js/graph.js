@@ -40,7 +40,8 @@ class Graph{
         this.type = type;
 
         //Global variable for node and link and std color
-        this.link_Color = d3.interpolateCool;
+
+        this.link_Color = d3.interpolate("#c9c9c9", "#666666");
         this.node_Color = d3.interpolateViridis;
         this.std_Color = '#ff920c';
 
@@ -258,7 +259,7 @@ class Graph{
             let squareRange = [1,2.5]
             let stdRange = [2,10]
             let splineRange = [1,15]
-            let meanRange = [1,5]
+            let meanRange = [3,10]
 
             // Check to see if inverted is activated 
             let invert_active = $('#invertDrop').find('a.active').attr('id');
@@ -417,7 +418,7 @@ class Graph{
             let squareRange = [1,2.5]
             let stdRange = [2,10]
             let splineRange = [1,15]
-            let meanRange = [1,5]
+            let meanRange = [3,15]
 
             // Check to see if inverted is activated 
             let invert_active = $('#invertDrop').find('a.active').attr('id');
@@ -913,7 +914,8 @@ class Graph{
                 })
                 .onLinkClick(link => null)
                 .linkWidth(link => that.qLinkWidth(link.instability))
-                .linkColor(link => that.qLinkColor(link.instability));
+                // d3.color(scope.linkColor(link.mean)).copy({opacity: 0.65}))
+                .linkColor(link => d3.color(that.qLinkColor(link.instability)).copy({opacity: 0.65}));
                 
 
                 // Handle legend
@@ -1233,7 +1235,8 @@ class Graph{
                 // console.log(link.mean,link.std)
             })
             .linkWidth(link => scope.linkMeanScale(link.mean))
-            .linkColor(link => scope.linkColor(link.mean))
+            // let colorM = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.7})
+            .linkColor(link => d3.color(scope.linkColor(link.mean)).copy({opacity: 0.65}))
             .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
             .linkCanvasObject((link, ctx) => {
                 // This draws the links' uncertainty viz

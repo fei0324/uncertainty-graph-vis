@@ -913,7 +913,10 @@ $('#edgeColorDrop').on('hide.bs.dropdown', function (e) {
         let kids = $('#edgeColorDrop').find('a')
         kids.removeClass( "active" );
         $(`#${target}`).addClass("active")
-
+        if (target == 'grey_'){
+            proc_rect.link_Color = d3.interpolate("#c9c9c9", "#666666");
+            heatMap.link_Color = d3.interpolate("##c9c9c9", "#666666");
+        }
         if (target == 'cool_'){
             proc_rect.link_Color = d3.interpolateCool;
             heatMap.link_Color = d3.interpolateCool;

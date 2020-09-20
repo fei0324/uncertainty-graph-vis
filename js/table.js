@@ -23,7 +23,7 @@ class Table {
 
         // Making a universal color for mini-graph and heatmap
         this.node_Color = d3.interpolateViridis;
-        this.link_Color = d3.interpolateCool;
+        this.link_Color = d3.interpolate("#c9c9c9", "#666666");
 
         //This is the varible for the node and link scaling
         this.nodeScale = null;
@@ -345,7 +345,7 @@ class Table {
                     // console.log("selected edge",da_edge)
                     that.proc_ref.myGraph
                         .linkWidth(ref_node => da_edge.indexOf(ref_node) !== -1 ? 7: that.proc_ref.qLinkWidth(ref_node['instability']))
-                        .linkColor( ref_node => da_edge.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.qLinkColor(ref_node['instability']));
+                        .linkColor( ref_node => da_edge.indexOf(ref_node) !== -1 ? '#EA0000': d3.color(that.proc_ref.qLinkColor(ref_node['instability'])).copy({opacity:0.65}));
 
                     // INFOBOX
                     d3.select(`#infobox-graph-processed`).transition()
@@ -415,7 +415,7 @@ class Table {
                 // PROCESSED DE-HIGHLIGHTING
                 that.proc_ref.myGraph
                     .nodeColor( ref_node => that.proc_ref.qColorScale(ref_node['stability:']))
-                    .linkColor( d => that.proc_ref.qLinkColor(d['instability']) )
+                    .linkColor( d => d3.color(that.proc_ref.qLinkColor(d['instability'])).copy({opacity:0.65}) )
                     .linkWidth( d => that.proc_ref.qLinkWidth(d['instability']));
 
                 // HIGHLIGHT individual instance graph nodes
