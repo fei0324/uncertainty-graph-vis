@@ -140,6 +140,8 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonEdge`).addClass('disabled')
             $(`#dropdownMenuButtonSTD`).addClass('disabled')
             $(`#dropdownMenuButtonInvert`).addClass('disabled')
+            instance_graph = new Graph(null,'graph-mini','instance');
+
         }
         //add them back if not co occurrence
         else{
@@ -147,6 +149,28 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonEdge`).removeClass('disabled')
             $(`#dropdownMenuButtonSTD`).removeClass('disabled')
             $(`#dropdownMenuButtonInvert`).removeClass('disabled')
+            // reset individual instance graph that's located in heatmap object
+            d3.select("#graph-mini").select('canvas').remove()
+            heatmap = new Table(null,full_rect,proc_rect,null,null,null)
+            // // Creating force graph
+            // let myGraph = ForceGraph();
+
+            // //Setting width and height of canvas object
+            // let LOCATION = document.getElementById('graph-mini')
+
+            // // Canvas width and height
+            // let boundingRect = LOCATION.getBoundingClientRect()
+            // // console.log('graph mini rect',boundingRect)
+            // let WIDTH = boundingRect.width - 7;
+            // let HEIGHT = boundingRect.height - 8;
+            // // console.log('graph mini dims',this.WIDTH,this.HEIGHT
+            
+            // heatmap.myGraph = myGraph(LOCATION)
+            //     .width(WIDTH)
+            //     .height(HEIGHT)
+            //     .nodeColor(() => "black");
+            // heatmap.coOccur = false
+
         }
 
         if (active_alg == 'coarse'){
@@ -892,34 +916,44 @@ $('#edgeColorDrop').on('hide.bs.dropdown', function (e) {
 
         if (target == 'cool_'){
             proc_rect.link_Color = d3.interpolateCool;
+            heatMap.link_Color = d3.interpolateCool;
         }
         else if (target == 'viridis_'){
             proc_rect.link_Color = d3.interpolateViridis;
+            heatMap.link_Color = d3.interpolateViridis;
         }
         else if (target == 'plasma_'){
             proc_rect.link_Color = d3.interpolatePlasma;
+            heatMap.link_Color = d3.interpolatePlasma;
         }
         else if (target == 'warm_'){
             proc_rect.link_Color = d3.interpolateWarm;
+            heatMap.link_Color = d3.interpolateWarm;
         }
         else if (target == 'inferno_'){
             proc_rect.link_Color = d3.interpolateInferno;
+            heatMap.link_Color = d3.interpolateInferno;
         }
         else if (target == 'purple-green_'){
             proc_rect.link_Color = d3.interpolatePRGn;
+            heatMap.link_Color = d3.interpolatePRGn;
         }
         
         else if (target == 'pink-blue_'){
             proc_rect.link_Color = d3.interpolate("#ff3aa6", "#30ffe3")
+            heatMap.link_Color = d3.interpolate("#ff3aa6", "#30ffe3");
         }
         else if (target == 'green-orange_'){
             proc_rect.link_Color = d3.interpolate('#a6ff3a','#ff5d30')
+            heatMap.link_Color = d3.interpolate('#a6ff3a','#ff5d30');
         }
 
         //Redraws. prepGraph contains logic which detects which invert option is active then 
         // scales the data appropriately. 
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
+        heatMap.removeHeatMap()
+        heatMap.createHeatMap()
 
         // Feeding in graph data like this speeds things up really well!
         full_rect.myGraph.graphData(full_rect.data)
@@ -1135,10 +1169,12 @@ function renderCoarseRect(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -1194,6 +1230,7 @@ function renderCoarseRect(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.005664816285412998, 0.5]
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'rec_100';
             heatMap.uncert = uncert;
@@ -1238,6 +1275,7 @@ function renderCoarseRect(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
@@ -1349,8 +1387,8 @@ function renderCoarseLesmis(uncert,file){
     
                 // Maybe just make completely new graph object here....
                 // Intance graph exclusively for co-occurrence 
-                instance_graph = new Graph(null,'graph-mini','instance');
-                // heatMap.myGraph.graphData(iInstances);
+                // instance_graph = new Graph(null,'graph-mini','instance');
+                
                 // Going to make completely new graph object for individual instance data
                 instance_graph.data = iInstances;
                 instance_graph.type = 'instance'; // Don't think this is necessary
@@ -1403,12 +1441,14 @@ function renderCoarseLesmis(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = qMat;
                 heatMap.instance_ref = instance_graph;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -1462,6 +1502,7 @@ function renderCoarseLesmis(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.009660296956141888, 0.5345581749927919];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.data_name = 'lesmis_77';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
@@ -1506,6 +1547,7 @@ function renderCoarseLesmis(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.data_name = 'lesmis_77';
                 heatMap.active_alg = file;
                 heatMap.uncert = uncert;
@@ -1672,10 +1714,12 @@ function renderCoarseCele(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -1726,6 +1770,7 @@ function renderCoarseCele(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.001195036474254751, 0.3845227170550737];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'celegans_453';
             heatMap.uncert = uncert;
@@ -1768,6 +1813,7 @@ function renderCoarseCele(uncert,file){
                 heatMap.unif_spars = false;
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.active_alg = file;
                 heatMap.data_name = 'celegans_453';
                 heatMap.uncert = uncert;
@@ -1951,10 +1997,12 @@ function renderCoarseEmail(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -2015,6 +2063,7 @@ function renderCoarseEmail(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.data_name = 'email_1005';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
@@ -2076,6 +2125,7 @@ function renderCoarseEmail(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.data_name = 'email_1005';
                 heatMap.active_alg = file;
                 heatMap.uncert = uncert;
@@ -2283,6 +2333,7 @@ function renderUnifSpars(data_name,file){
 
         heatMap.removeHeatMap();
         heatMap.unif_spars = true;
+        heatMap.coOccur = false;
         heatMap.data = files[2];
         heatMap.data_name = data_name;
         heatMap.active_alg = file;
@@ -2342,6 +2393,7 @@ function renderUnifSpars(data_name,file){
 
             heatMap.removeHeatMap()
             heatMap.unif_spars = true;
+            heatMap.coOccur = false;
             heatMap.data = files[2];
             heatMap.data_name = data_name;
             heatMap.active_alg = file;
@@ -2507,10 +2559,12 @@ function renderGemsecTv(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -2573,6 +2627,7 @@ function renderGemsecTv(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [0.0013348737353079964, 0.03940252992083273];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'tvshow_3892';
             heatMap.uncert = uncert;

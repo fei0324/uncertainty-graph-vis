@@ -27,6 +27,7 @@ class Table {
 
         //This is the varible for the node and link scaling
         this.nodeScale = null;
+        this.linkScale = null;
 
         //Setting references
         this.full_ref = full_ref;
@@ -126,12 +127,14 @@ class Table {
         // console.log(d3.extent(mat_values))
 
         let color = null;
+        let link_color = null;
         if (this.unif_spars==true){
             // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
             color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
         }
         else if (this.coOccur == true){
-            color = d3.scaleSequential(this.node_Color).domain([0,1]);
+            color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
+            link_color = d3.scaleSequential(this.link_Color).domain(this.linkScale);
 
         }
         else{
@@ -159,17 +162,37 @@ class Table {
             .attr("transform", function(d, i) { return "translate(-10,"+ -3.5 + ")"; });
             
 
-
+        
         let squares = row.selectAll(".cell")
-            .data(function(d,i){return Object.values(d);})
+            .data(function(d,i){
+                return Object.values(d).map(d => [d,i]);
+                // return Object.values(d);
+            })
         .enter().append("rect")
-            .attr("class", (d,i) => `cell-${i}   `)
-            .attr("id",(d,i) => `${i}`)
+            .attr("class", (d,i) => `cell-${i}`)
+            .attr("id",(d,i,scope) => `${i}`)
             // .attr("y", function(d,i) {return y(i)})
             .attr("x", (d,i) => x(i))
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth()-2)
-            .attr("fill", d => color(d))
+            .attr("fill", (d,i,scope) => {
+                if (this.coOccur == false){
+                    return color(d[0])
+                    // return color(d)
+                }
+                else{
+                    // means we're at a node
+                    // return color(d)
+                    if (i==d[1]){
+                        return color(d[0])
+                    }
+                    // means we're at a link
+                    else{
+                        return link_color(d[0])
+                    }
+                }
+                
+            })
             .on("mouseover", mouseoverCell)
             .on("mouseout", mouseoutCell)
             .on('click', mouseClick);
@@ -361,7 +384,7 @@ class Table {
         function mouseoutCell(d,i) {
 
             if (that.unif_spars == true){
-                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d[0]))
 
                 let highlighted = d3.selectAll('.highlighted')._groups[0][0];
                 // Keeps info up if something's been clicked 
@@ -415,7 +438,7 @@ class Table {
             else{
                 // d3.select(this).attr('fill', (d) => color(d))
                 // Highlight column
-                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d[0]))
 
                 let highlighted = d3.selectAll('.highlighted')._groups[0][0];
                 // Keeps info up if something's been clicked 
