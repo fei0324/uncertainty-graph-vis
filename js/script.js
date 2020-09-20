@@ -37,6 +37,42 @@ let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 renderCoarseLesmis('local_adjusted_rand_index','njw_spectral_clustering');
 $(`#gemsec`).addClass('disabled')
 
+// Populates indiviudal graph - make sure to comment out the 2 lines of code directly above this
+// Add path of data you want to display 
+// path = 'data/njw_spectral_clustering/rec_100/cluster_10/local_jaccard_index/uncertainty_graph.json'
+// renderIndividualGraph(path)
+function renderIndividualGraph(path){
+
+    // Load the data
+    Promise.all([
+        d3.json(path)
+    ]).then(function(files){
+        myData = files[0];
+
+        // Simple graph
+        let myGraph = ForceGraph();
+
+        //Setting width and height of canvas object
+        let location = document.getElementById('graph-processed')
+        // console.log("LOCATION",this.LOCATION)
+
+        // Canvas width and height
+        let boundingRect = location.getBoundingClientRect()
+        let WIDTH = boundingRect.width-6;
+        let HEIGHT = boundingRect.height-4;
+
+        myGraph(location)
+            .graphData(files[0])
+            .width(WIDTH)
+            .height(HEIGHT);
+            // Add any desirable stying here
+
+
+    })
+
+
+}
+
 // Handling resizing stuff
 window.addEventListener("resize", resize);
 var redraw = document.getElementById("redraw");
