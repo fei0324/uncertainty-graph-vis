@@ -1023,18 +1023,16 @@ function renderCoarseRect(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
-
-
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-rect').on('input', function(d){
             let new_k = k_Bar.activeK;
-            populateStuff(new_k,q,uncert,file)
-
-
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
 
         })
         
@@ -1091,8 +1089,8 @@ function renderCoarseRect(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 50]
+                proc_rect.linkScale = [0, 6]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1295,18 +1293,16 @@ function renderCoarseLesmis(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
-
-
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-mis').on('input', function(d){
             let new_k = k_Bar.activeK;
-            populateStuff(new_k,q,uncert,file)
-
-
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
 
         })
         
@@ -1363,8 +1359,8 @@ function renderCoarseLesmis(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 38]
+                proc_rect.linkScale = [0, 4]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1564,18 +1560,16 @@ function renderCoarseCele(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
-
-
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-cele').on('input', function(d){
             let new_k = k_Bar.activeK;
-            populateStuff(new_k,q,uncert,file)
-
-
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
 
         })
         
@@ -1632,8 +1626,8 @@ function renderCoarseCele(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0.9, 107]
+                proc_rect.linkScale = [0, 22]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1831,16 +1825,18 @@ function renderCoarseEmail(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-email').on('input', function(d){
             let new_k = k_Bar.activeK;
+            let new_q = q_Bar.active;
             let email_vals = [20,30,40,41,42,43,44,50];
             if (email_vals.includes(parseInt(new_k))){
-                populateStuff(new_k,q,uncert,file)
+                populateStuff(new_k,new_q,uncert,file)
             }
             
             
@@ -1900,8 +1896,8 @@ function renderCoarseEmail(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 88]
+                proc_rect.linkScale = [0, 36]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1910,14 +1906,23 @@ function renderCoarseEmail(uncert,file){
                 // Handles appropriate zooming on loading
                 proc_rect.myGraph
                     .zoom(2.8);
+                // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
                 full_rect.myGraph
-                    .zoom(0.35);
+                    // .d3AlphaDecay(0)
+                    // .d3VelocityDecay(0.08)
+                    // .nodeRelSize(6)
+                    .cooldownTime(6000)
+                    // .linkColor(() => 'rgba(0,0,0,0.05)')
+                    .linkVisibility(false)
+                    // This only renders the links after the physics engine stops.
+                    .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
+                    // .onNodeHover( (d,i) => console.log(d) )
+                    .zoom(0.1);
+                    // .enablePointerInteraction(false);
                 instance_graph.myGraph
                     .zoom(2);
                 
                 // Ensures links are visibile.
-                full_rect.myGraph
-                    .linkVisibility(true);
                 proc_rect.myGraph
                     .linkVisibility(true);
                 instance_graph.myGraph 
@@ -2438,13 +2443,30 @@ function renderGemsecTv(uncert,file){
                 // Going to make completely new graph object for individual instance data
                 instance_graph.data = iInstances;
                 instance_graph.type = 'instance'; // Don't think this is necessary
+
+
+                // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
+                full_rect.myGraph
+                    // .d3AlphaDecay(0)
+                    // .d3VelocityDecay(0.08)
+                    // .nodeRelSize(6)
+                    // .nodeVal(5)
+                    .cooldownTime(9000)
+                    .linkColor(() => 'rgba(0,0,0,0.005)')
+                    .linkVisibility(false)
+                    // .onNodeHover( (d,i) => console.log(d) )
+                    .zoom(0.07)
+                    .onEngineStop(() => full_rect.myGraph.linkVisibility(true));
+                    // .enablePointerInteraction(false);
+                // full_rect.myGraph
+                //     .linkVisibility(true);
                 
                 
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 26]
+                proc_rect.linkScale = [0.1, 11]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -2453,14 +2475,10 @@ function renderGemsecTv(uncert,file){
                 // Handles appropriate zooming on loading
                 proc_rect.myGraph
                     .zoom(2.8);
-                full_rect.myGraph
-                    .zoom(0.1);
                 instance_graph.myGraph
                     .zoom(2);
                 
                 // Ensures links are visibile.
-                full_rect.myGraph
-                    .linkVisibility(true);
                 proc_rect.myGraph
                     .linkVisibility(true);
                 instance_graph.myGraph 

@@ -44,11 +44,11 @@ class Graph{
         this.node_Color = d3.interpolateViridis;
         this.std_Color = '#ff920c';
 
-        // // Need to make variable to record the current max and min seen.... this is to handle the scaling
-        // this.max = -100000000000;
-        // this.min = 1000000000;
-        // this.maxL = -10000000000;
-        // this.minL = 1000000000;
+        // Need to make variable to record the current max and min seen.... this is to handle the scaling
+        this.max = -Infinity;
+        this.min = Infinity;
+        this.maxL = -Infinity;
+        this.minL = Infinity;
 
 
         //This is the varible for the node and link scaling
@@ -350,7 +350,6 @@ class Graph{
         }
         else if (this.type == 'qGraph'){
 
-
             // console.log("IN QGRAPH",this.data)
             
              // Creating legend selection
@@ -379,6 +378,32 @@ class Graph{
              // Finding max and min for edges
              let instab_array = this.data.edges.map( d => d.instability);
              let instab_range = d3.extent(instab_array)
+
+             // Logic for max and min, this is being used to come up with scaling for an entire dataset
+            let current_max = d3.max(stab_array);
+            let current_min = d3.min(stab_array);
+
+            let current_minL = instab_range[0];
+            let current_maxL = instab_range[1];
+
+
+            console.log('CURRENT NODE MAX AND MIN',current_max,current_min)
+            console.log('CURRENT LINK MAX AND MIN',current_maxL,current_minL)
+            if(current_max > this.max){
+                this.max=current_max
+            }
+            if(current_min < this.min){
+                this.min=current_min
+            }
+            if(current_maxL > this.maxL){
+                this.maxL=current_maxL
+            }
+            if(current_minL < this.minL){
+                this.minL=current_minL
+            }
+
+            console.log("RUNNING NODE MAX AND MIN",this.max,this.min)
+            console.log("RUNNING LINK MAX AND MIN",this.maxL,this.minL)
 
             //  console.log("size range: ",size_range,"stab range: ",stab_range,"instab range: ",instab_range)
 
@@ -412,7 +437,7 @@ class Graph{
             // NODE
 
             //Color scale for nodes
-            this.qColorScale = d3.scaleSequential(this.node_Color).domain([0,1]);
+            this.qColorScale = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
 
             // linear scale for size of node
             this.qSizeScale = d3.scaleLinear().domain(size_range).range(node_range)
@@ -420,7 +445,7 @@ class Graph{
             // LINK
 
             // Color scale for edges
-            this.qLinkColor = d3.scaleSequential(this.link_Color).domain([0,1]);
+            this.qLinkColor = d3.scaleSequential(this.link_Color).domain(this.linkScale);
 
             //thickness scale for edges
             this.qLinkWidth = d3.scaleLinear().domain(instab_range).range(meanRange);
