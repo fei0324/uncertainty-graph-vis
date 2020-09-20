@@ -1686,6 +1686,9 @@ class Graph{
                     // commented code below confirms my stdev calculations
                     // console.log(highlightNodes)
                     // this.myGraph.nodeColor(node => node === highlightNodes[0] ? '#00ff0000' : '#00ff0000');
+                    myGraph
+                        .nodeColor( ref_node => ref_node == node ? that.color(node.uncertainty_mean) : d3.color(that.color(ref_node.uncertainty_mean)).copy({opacity:0.2}))
+                        .linkColor(link => d3.color(that.linkColor(link.mean)).copy({opacity: 0.2}));
 
                     // Need to select node with id that is node.cluster
                     let my_data = scope.reference.myGraph.graphData();
@@ -1693,7 +1696,8 @@ class Graph{
                     let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
                     // console.log("selected node",da_node)
                     this.reference.myGraph
-                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? 'black': d3.color('black').copy({opacity: 0.2}))
+                        .linkColor(()=> d3.color('#878787').copy({opacity: 0.1}));
                     
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
@@ -1706,11 +1710,19 @@ class Graph{
                         .style('opacity',1);
                 }
                 else{
+
                     highlightNodes = []
                     // Need to reset da_node's color to what it was
+                    myGraph
+                        .nodeColor( ref_node => that.color(ref_node.uncertainty_mean))
+                        .linkColor(link => d3.color(that.linkColor(link.mean)).copy({opacity: 0.65}));
+                    
                     scope.reference.myGraph
                         .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        .linkColor(() => '#878787');
                         // .nodeColor( ref_node => 'black');
+
+                    
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 0);
@@ -1730,24 +1742,41 @@ class Graph{
                 let stdSCALING = 1;
                 let NODE_R = 0;
                 let halo_color = null;
-                // Sets the red circle of defined size around node when highlighted
-                if (highlightNodes.indexOf(node) !== -1){
-                    NODE_R = 12;
-                    halo_color = '#EA000080'
-                }
-                // Sets the stdev ring around node when not highlighted
-                else{
-                    // let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
-                    let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
-                    // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
-                    let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
-                    //console.log(std_radius)
-                    NODE_R = std_radius;
-                    // Adjust this to be completely different color for node visibility purposes
-                    // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
-                    halo_color = this.std_Color;
+                // // Sets the red circle of defined size around node when highlighted
+                // if (highlightNodes.indexOf(node) !== -1){
+                //     NODE_R = 12;
+                //     halo_color = '#EA000080'
+                // }
+                // // Sets the stdev ring around node when not highlighted
+                // else{
+                //     // let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
+                //     let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
+                //     // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                //     let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
+                //     //console.log(std_radius)
+                //     NODE_R = std_radius;
+                //     // Adjust this to be completely different color for node visibility purposes
+                //     // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                //     halo_color = this.std_Color;
 
+                // }
+                // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
+                //console.log(std_radius)
+                NODE_R = std_radius;
+                // Adjust this to be completely different color for node visibility purposes
+                // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                halo_color = this.std_Color;
+                // console.log(highlightNodes)
+                if (highlightNodes.length != 0){
+                    if (highlightNodes.indexOf(node) != -1){
+                        // do nothing
+                    }
+                    else{
+                        halo_color = d3.color(halo_color).copy({opacity:0.2})
+                    }
                 }
+                
                 // add a halo for stdev
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
