@@ -222,37 +222,71 @@ class Table {
                 // PROCESSED HIGHLIGHTING
                 // console.log("ON ROW",i)
                 // Need to select node with id that is node.cluster
-                let my_data = that.proc_ref.myGraph.graphData();
-                // console.log(my_data.nodes)
-                let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
-                // console.log("selected node",da_node)
-                that.proc_ref.myGraph
-                    .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+                let active_node_vis = $('#nodeDrop').find('.active')[0].id
+                if (active_node_vis == 'std-color'){
+                    let my_data = that.proc_ref.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    that.proc_ref.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.stdColor(ref_node.uncertainty_std));
+    
+                    // FULL HIGHLIGHTING
+                    // Need to select node with id that is node.cluster
+                    let my_full_data = that.full_ref.myGraph.graphData();
+                    let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
+                    that.full_ref.myGraph
+                        .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+    
+                    // INFOBOX
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
+    
+    
+                    //Row highlighting
+                    d3.select(`#row-${i}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
 
-                // FULL HIGHLIGHTING
-                // Need to select node with id that is node.cluster
-                let my_full_data = that.full_ref.myGraph.graphData();
-                let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
-                that.full_ref.myGraph
-                    .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                }
+                else{
+                    let my_data = that.proc_ref.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    that.proc_ref.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+    
+                    // FULL HIGHLIGHTING
+                    // Need to select node with id that is node.cluster
+                    let my_full_data = that.full_ref.myGraph.graphData();
+                    let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
+                    that.full_ref.myGraph
+                        .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+    
+                    // INFOBOX
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
+    
+    
+                    //Row highlighting
+                    d3.select(`#row-${i}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
 
-                // INFOBOX
-                d3.select(`#infobox-graph-processed`).transition()
-                    .duration(200)
-                    .style("opacity", 1);
-                d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
-
-
-                //Row highlighting
-                d3.select(`#row-${i}`).transition()
-                    .duration(100)
-                    .style('opacity',1);
+                }
+               
             }
 
 
         }
 
         function mouseoutRow(r,i) {
+            
 
             if (that.unif_spars == true){
 
@@ -268,25 +302,53 @@ class Table {
 
             }
             else{
-                // PROCESSED DE-HIGHLIGHTING
-                that.proc_ref.myGraph
-                    .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+                let active_node_vis = $('#nodeDrop').find('.active')[0].id
+                if (active_node_vis == 'std-color'){
+                    // PROCESSED DE-HIGHLIGHTING
+                    that.proc_ref.myGraph
+                    .nodeColor( ref_node => that.proc_ref.stdColor(ref_node.uncertainty_std));
 
-                // FULL DE- HIGHLIGHTING
-                let highlightNodes = []
-                // Need to reset da_node's color to what it was
-                that.full_ref.myGraph
+                    // FULL DE- HIGHLIGHTING
+                    let highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    that.full_ref.myGraph
                     .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
 
-                //INFOBOX 
-                d3.select(`#infobox-graph-processed`).transition()
+                    //INFOBOX 
+                    d3.select(`#infobox-graph-processed`).transition()
                     .duration(200)
                     .style("opacity", 0);
 
-                //Row de-highlighting
-                d3.select(`#row-${i}`).transition()
+                    //Row de-highlighting
+                    d3.select(`#row-${i}`).transition()
                     .duration(100)
                     .style('opacity',0);
+
+
+                }
+                else{
+                    // PROCESSED DE-HIGHLIGHTING
+                    that.proc_ref.myGraph
+                    .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+
+                    // FULL DE- HIGHLIGHTING
+                    let highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    that.full_ref.myGraph
+                    .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+                    //INFOBOX 
+                    d3.select(`#infobox-graph-processed`).transition()
+                    .duration(200)
+                    .style("opacity", 0);
+
+                    //Row de-highlighting
+                    d3.select(`#row-${i}`).transition()
+                    .duration(100)
+                    .style('opacity',0);
+
+                }
+                
             }
             
         }

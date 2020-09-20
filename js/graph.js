@@ -332,7 +332,7 @@ class Graph{
             // console.log("edge active in prep",edge_active)
 
             // Node legends
-            if (node_active == 'std'){
+            if (node_active == 'std-color'){
                 this.legend(this.node_legend,this,this.stdColor,'node-std');
             }
             else{
@@ -718,6 +718,12 @@ class Graph{
                     else if(drop_edge == 'std'){
                         // console.log('std')
                         that.nodeStd(thatNode.myGraph,that,node_rel_size)
+                        that.legend(that.node_legend,that,that.stdColor,'node std');
+            
+                    }
+                    else if(drop_edge == 'std-color'){
+                        // console.log('std')
+                        that.stdNodeColor(thatNode.myGraph,that,node_rel_size)
                         that.legend(that.node_legend,that,that.stdColor,'node std');
             
                     }
@@ -1823,6 +1829,82 @@ class Graph{
                 ctx.fillStyle = halo_color;
                 ctx.fill();
             })
+
+    }
+
+    // // Std node styling
+    stdNodeColor(myGraph,scope,node_rel_size){
+
+        let highlightNodes = [];
+        let that = this;
+
+        myGraph
+            .nodeRelSize(node_rel_size)
+            .nodeVal(node => scope.sumScale(node.uncertainty_mean))
+            .nodeLabel(node => node.id)
+            .nodeColor(node => scope.stdColor(node.uncertainty_std))
+            .onNodeClick(node => {
+                // console.log(node===highlightNodes[0])
+                // console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+            })
+            .onNodeHover(node => {
+                highlightNodes = node ? [node] : []
+
+                // console.log(node)
+                if (node){
+                    // Need to select node with id that is node.cluster
+                    let my_data = scope.reference.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    this.reference.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+                    // INFOBOX 
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
+
+                    //Row highlighting
+                    d3.select(`#row-${node.id}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
+
+                }
+                else{
+                    highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    scope.reference.myGraph
+                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        // .nodeColor( ref_node => 'black');
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+
+                    //Row de-highlighting
+                    d3.selectAll(`.row-back`).transition()
+                        .duration(100)
+                        .style('opacity',0);
+                }
+
+            })
+            // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+            .nodeCanvasObjectMode(() => 'before')
+            .nodeCanvasObject((node, ctx) => {
+                let NODE_R = 0;
+                let halo_color = null;
+                if (highlightNodes.indexOf(node) !== -1){
+                    NODE_R = 12;
+                    halo_color = '#EA000080'
+                }
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                ctx.fillStyle = halo_color;
+                ctx.fill();
+            })
+
+
 
     }
 
