@@ -590,9 +590,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             }
             else if(active_data =='rectangle'){
                 //Render unifying spars graph for rectangle
+                renderUnifSpars('rec_100','unifying_framework_sparsify')
+            }
+            else if(active_data =='adj_rect'){
+                //Render unifying spars graph for rectangle
                 renderUnifSpars('adj_rec_100','unifying_framework_sparsify')
             }
-
             // Description code for the cluster text. These needs to be called here in order for 
             // the description to pop up when the user switches datasets or algorithms. 
             let k_description = d3.select("#cluster-text");
@@ -695,6 +698,34 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#unifying_framework_spars`).removeClass('disabled')
             $(`#gemsec`).addClass('disabled')
             renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
+        }
+        else if (target == "adj_rect"){
+            // highlights unif sparse
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            $(`#unifying_framework_spars`).addClass("active")
+            $(`#unifying_framework_spars`).removeClass('disabled')
+
+            //disables uncertainty buttons
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).addClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).addClass('disabled')
+
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
+
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).addClass('disabled')
+            $(`#unifying_framework_spars`).removeClass('disabled')
+            $(`#gemsec`).addClass('disabled')
+            renderUnifSpars('adj_rec_100','unifying_framework_sparsify')
+
         }
         else if(target =='lesmis'){
             // highlights coarse algorithm
