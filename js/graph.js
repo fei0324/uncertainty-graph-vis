@@ -40,15 +40,16 @@ class Graph{
         this.type = type;
 
         //Global variable for node and link and std color
-        this.link_Color = d3.interpolateCool;
+
+        this.link_Color = d3.interpolate("#c9c9c9", "#666666");
         this.node_Color = d3.interpolateViridis;
         this.std_Color = '#ff920c';
 
-        // // Need to make variable to record the current max and min seen.... this is to handle the scaling
-        // this.max = -100000000000;
-        // this.min = 1000000000;
-        // this.maxL = -10000000000;
-        // this.minL = 1000000000;
+        // Need to make variable to record the current max and min seen.... this is to handle the scaling
+        this.max = -Infinity;
+        this.min = Infinity;
+        this.maxL = -Infinity;
+        this.minL = Infinity;
 
 
         //This is the varible for the node and link scaling
@@ -258,7 +259,7 @@ class Graph{
             let squareRange = [1,2.5]
             let stdRange = [2,10]
             let splineRange = [1,15]
-            let meanRange = [1,5]
+            let meanRange = [3,10]
 
             // Check to see if inverted is activated 
             let invert_active = $('#invertDrop').find('a.active').attr('id');
@@ -331,7 +332,7 @@ class Graph{
             // console.log("edge active in prep",edge_active)
 
             // Node legends
-            if (node_active == 'std'){
+            if (node_active == 'std-color'){
                 this.legend(this.node_legend,this,this.stdColor,'node-std');
             }
             else{
@@ -349,7 +350,6 @@ class Graph{
 
         }
         else if (this.type == 'qGraph'){
-
 
             // console.log("IN QGRAPH",this.data)
             
@@ -380,6 +380,32 @@ class Graph{
              let instab_array = this.data.edges.map( d => d.instability);
              let instab_range = d3.extent(instab_array)
 
+             // Logic for max and min, this is being used to come up with scaling for an entire dataset
+            let current_max = d3.max(stab_array);
+            let current_min = d3.min(stab_array);
+
+            let current_minL = instab_range[0];
+            let current_maxL = instab_range[1];
+
+
+            console.log('CURRENT NODE MAX AND MIN',current_max,current_min)
+            console.log('CURRENT LINK MAX AND MIN',current_maxL,current_minL)
+            if(current_max > this.max){
+                this.max=current_max
+            }
+            if(current_min < this.min){
+                this.min=current_min
+            }
+            if(current_maxL > this.maxL){
+                this.maxL=current_maxL
+            }
+            if(current_minL < this.minL){
+                this.minL=current_minL
+            }
+
+            console.log("RUNNING NODE MAX AND MIN",this.max,this.min)
+            console.log("RUNNING LINK MAX AND MIN",this.maxL,this.minL)
+
             //  console.log("size range: ",size_range,"stab range: ",stab_range,"instab range: ",instab_range)
 
              // Node scale
@@ -392,7 +418,7 @@ class Graph{
             let squareRange = [1,2.5]
             let stdRange = [2,10]
             let splineRange = [1,15]
-            let meanRange = [1,5]
+            let meanRange = [3,15]
 
             // Check to see if inverted is activated 
             let invert_active = $('#invertDrop').find('a.active').attr('id');
@@ -412,7 +438,7 @@ class Graph{
             // NODE
 
             //Color scale for nodes
-            this.qColorScale = d3.scaleSequential(this.node_Color).domain([0,1]);
+            this.qColorScale = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
 
             // linear scale for size of node
             this.qSizeScale = d3.scaleLinear().domain(size_range).range(node_range)
@@ -420,7 +446,7 @@ class Graph{
             // LINK
 
             // Color scale for edges
-            this.qLinkColor = d3.scaleSequential(this.link_Color).domain([0,1]);
+            this.qLinkColor = d3.scaleSequential(this.link_Color).domain(this.linkScale);
 
             //thickness scale for edges
             this.qLinkWidth = d3.scaleLinear().domain(instab_range).range(meanRange);
@@ -695,6 +721,12 @@ class Graph{
                         that.legend(that.node_legend,that,that.stdColor,'node std');
             
                     }
+                    else if(drop_edge == 'std-color'){
+                        // console.log('std')
+                        that.stdNodeColor(thatNode.myGraph,that,node_rel_size)
+                        that.legend(that.node_legend,that,that.stdColor,'node std');
+            
+                    }
 
 
                 });
@@ -888,7 +920,8 @@ class Graph{
                 })
                 .onLinkClick(link => null)
                 .linkWidth(link => that.qLinkWidth(link.instability))
-                .linkColor(link => that.qLinkColor(link.instability));
+                // d3.color(scope.linkColor(link.mean)).copy({opacity: 0.65}))
+                .linkColor(link => d3.color(that.qLinkColor(link.instability)).copy({opacity: 0.65}));
                 
 
                 // Handle legend
@@ -1208,7 +1241,8 @@ class Graph{
                 // console.log(link.mean,link.std)
             })
             .linkWidth(link => scope.linkMeanScale(link.mean))
-            .linkColor(link => scope.linkColor(link.mean))
+            // let colorM = d3.color(scope.linkColor(link.mean)).copy({opacity: 0.7})
+            .linkColor(link => d3.color(scope.linkColor(link.mean)).copy({opacity: 0.65}))
             .linkCanvasObjectMode(link => (link === highlightLink || clickedLink.includes(link)) ? 'replace': undefined)
             .linkCanvasObject((link, ctx) => {
                 // This draws the links' uncertainty viz
@@ -1652,6 +1686,9 @@ class Graph{
                     // commented code below confirms my stdev calculations
                     // console.log(highlightNodes)
                     // this.myGraph.nodeColor(node => node === highlightNodes[0] ? '#00ff0000' : '#00ff0000');
+                    myGraph
+                        .nodeColor( ref_node => ref_node == node ? that.color(node.uncertainty_mean) : d3.color(that.color(ref_node.uncertainty_mean)).copy({opacity:0.2}))
+                        .linkColor(link => d3.color(that.linkColor(link.mean)).copy({opacity: 0.2}));
 
                     // Need to select node with id that is node.cluster
                     let my_data = scope.reference.myGraph.graphData();
@@ -1659,7 +1696,8 @@ class Graph{
                     let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
                     // console.log("selected node",da_node)
                     this.reference.myGraph
-                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? 'black': d3.color('black').copy({opacity: 0.2}))
+                        .linkColor(()=> d3.color('#878787').copy({opacity: 0.1}));
                     
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
@@ -1672,11 +1710,19 @@ class Graph{
                         .style('opacity',1);
                 }
                 else{
+
                     highlightNodes = []
                     // Need to reset da_node's color to what it was
+                    myGraph
+                        .nodeColor( ref_node => that.color(ref_node.uncertainty_mean))
+                        .linkColor(link => d3.color(that.linkColor(link.mean)).copy({opacity: 0.65}));
+                    
                     scope.reference.myGraph
                         .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        .linkColor(() => '#878787');
                         // .nodeColor( ref_node => 'black');
+
+                    
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 0);
@@ -1696,24 +1742,41 @@ class Graph{
                 let stdSCALING = 1;
                 let NODE_R = 0;
                 let halo_color = null;
-                // Sets the red circle of defined size around node when highlighted
-                if (highlightNodes.indexOf(node) !== -1){
-                    NODE_R = 12;
-                    halo_color = '#EA000080'
-                }
-                // Sets the stdev ring around node when not highlighted
-                else{
-                    // let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
-                    let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
-                    // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
-                    let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
-                    //console.log(std_radius)
-                    NODE_R = std_radius;
-                    // Adjust this to be completely different color for node visibility purposes
-                    // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
-                    halo_color = this.std_Color;
+                // // Sets the red circle of defined size around node when highlighted
+                // if (highlightNodes.indexOf(node) !== -1){
+                //     NODE_R = 12;
+                //     halo_color = '#EA000080'
+                // }
+                // // Sets the stdev ring around node when not highlighted
+                // else{
+                //     // let std_perc = Math.abs(node.uncertainty_std)/Math.abs(node.uncertainty_mean);
+                //     let mean_radius = Math.sqrt(scope.meanScale(node.uncertainty_mean))*node_rel_size;
+                //     // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                //     let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
+                //     //console.log(std_radius)
+                //     NODE_R = std_radius;
+                //     // Adjust this to be completely different color for node visibility purposes
+                //     // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                //     halo_color = this.std_Color;
 
+                // }
+                // let std_radius = (mean_radius*std_perc)*stdSCALING + mean_radius
+                let std_radius = Math.sqrt(scope.sumScale(node.uncertainty_mean + node.uncertainty_std*8))*node_rel_size
+                //console.log(std_radius)
+                NODE_R = std_radius;
+                // Adjust this to be completely different color for node visibility purposes
+                // halo_color = d3.color(scope.color(node.uncertainty_mean)).copy({opacity: 0.45});
+                halo_color = this.std_Color;
+                // console.log(highlightNodes)
+                if (highlightNodes.length != 0){
+                    if (highlightNodes.indexOf(node) != -1){
+                        // do nothing
+                    }
+                    else{
+                        halo_color = d3.color(halo_color).copy({opacity:0.2})
+                    }
                 }
+                
                 // add a halo for stdev
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
@@ -1795,6 +1858,82 @@ class Graph{
                 ctx.fillStyle = halo_color;
                 ctx.fill();
             })
+
+    }
+
+    // // Std node styling
+    stdNodeColor(myGraph,scope,node_rel_size){
+
+        let highlightNodes = [];
+        let that = this;
+
+        myGraph
+            .nodeRelSize(node_rel_size)
+            .nodeVal(node => scope.sumScale(node.uncertainty_mean))
+            .nodeLabel(node => node.id)
+            .nodeColor(node => scope.stdColor(node.uncertainty_std))
+            .onNodeClick(node => {
+                // console.log(node===highlightNodes[0])
+                // console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
+            })
+            .onNodeHover(node => {
+                highlightNodes = node ? [node] : []
+
+                // console.log(node)
+                if (node){
+                    // Need to select node with id that is node.cluster
+                    let my_data = scope.reference.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    this.reference.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+                    // INFOBOX 
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
+
+                    //Row highlighting
+                    d3.select(`#row-${node.id}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
+
+                }
+                else{
+                    highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    scope.reference.myGraph
+                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        // .nodeColor( ref_node => 'black');
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 0);
+
+                    //Row de-highlighting
+                    d3.selectAll(`.row-back`).transition()
+                        .duration(100)
+                        .style('opacity',0);
+                }
+
+            })
+            // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
+            .nodeCanvasObjectMode(() => 'before')
+            .nodeCanvasObject((node, ctx) => {
+                let NODE_R = 0;
+                let halo_color = null;
+                if (highlightNodes.indexOf(node) !== -1){
+                    NODE_R = 12;
+                    halo_color = '#EA000080'
+                }
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                ctx.fillStyle = halo_color;
+                ctx.fill();
+            })
+
+
 
     }
 

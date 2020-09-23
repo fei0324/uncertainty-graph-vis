@@ -23,10 +23,11 @@ class Table {
 
         // Making a universal color for mini-graph and heatmap
         this.node_Color = d3.interpolateViridis;
-        this.link_Color = d3.interpolateCool;
+        this.link_Color = d3.interpolate("#c9c9c9", "#666666");
 
         //This is the varible for the node and link scaling
         this.nodeScale = null;
+        this.linkScale = null;
 
         //Setting references
         this.full_ref = full_ref;
@@ -126,12 +127,14 @@ class Table {
         // console.log(d3.extent(mat_values))
 
         let color = null;
+        let link_color = null;
         if (this.unif_spars==true){
             // color = d3.scaleSequential(viridis).domain(d3.extent(mat_values));
             color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
         }
         else if (this.coOccur == true){
-            color = d3.scaleSequential(this.node_Color).domain([0,1]);
+            color = d3.scaleSequential(this.node_Color).domain(this.nodeScale);
+            link_color = d3.scaleSequential(this.link_Color).domain(this.linkScale);
 
         }
         else{
@@ -159,17 +162,37 @@ class Table {
             .attr("transform", function(d, i) { return "translate(-10,"+ -3.5 + ")"; });
             
 
-
+        
         let squares = row.selectAll(".cell")
-            .data(function(d,i){return Object.values(d);})
+            .data(function(d,i){
+                return Object.values(d).map(d => [d,i]);
+                // return Object.values(d);
+            })
         .enter().append("rect")
-            .attr("class", (d,i) => `cell-${i}   `)
-            .attr("id",(d,i) => `${i}`)
+            .attr("class", (d,i) => `cell-${i}`)
+            .attr("id",(d,i,scope) => `${i}`)
             // .attr("y", function(d,i) {return y(i)})
             .attr("x", (d,i) => x(i))
             .attr("width", x.bandwidth())
             .attr("height", y.bandwidth()-2)
-            .attr("fill", d => color(d))
+            .attr("fill", (d,i,scope) => {
+                if (this.coOccur == false){
+                    return color(d[0])
+                    // return color(d)
+                }
+                else{
+                    // means we're at a node
+                    // return color(d)
+                    if (i==d[1]){
+                        return color(d[0])
+                    }
+                    // means we're at a link
+                    else{
+                        return link_color(d[0])
+                    }
+                }
+                
+            })
             .on("mouseover", mouseoverCell)
             .on("mouseout", mouseoutCell)
             .on('click', mouseClick);
@@ -199,37 +222,71 @@ class Table {
                 // PROCESSED HIGHLIGHTING
                 // console.log("ON ROW",i)
                 // Need to select node with id that is node.cluster
-                let my_data = that.proc_ref.myGraph.graphData();
-                // console.log(my_data.nodes)
-                let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
-                // console.log("selected node",da_node)
-                that.proc_ref.myGraph
-                    .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+                let active_node_vis = $('#nodeDrop').find('.active')[0].id
+                if (active_node_vis == 'std-color'){
+                    let my_data = that.proc_ref.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    that.proc_ref.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.stdColor(ref_node.uncertainty_std));
+    
+                    // FULL HIGHLIGHTING
+                    // Need to select node with id that is node.cluster
+                    let my_full_data = that.full_ref.myGraph.graphData();
+                    let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
+                    that.full_ref.myGraph
+                        .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+    
+                    // INFOBOX
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
+    
+    
+                    //Row highlighting
+                    d3.select(`#row-${i}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
 
-                // FULL HIGHLIGHTING
-                // Need to select node with id that is node.cluster
-                let my_full_data = that.full_ref.myGraph.graphData();
-                let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
-                that.full_ref.myGraph
-                    .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                }
+                else{
+                    let my_data = that.proc_ref.myGraph.graphData();
+                    // console.log(my_data.nodes)
+                    let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
+                    // console.log("selected node",da_node)
+                    that.proc_ref.myGraph
+                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+    
+                    // FULL HIGHLIGHTING
+                    // Need to select node with id that is node.cluster
+                    let my_full_data = that.full_ref.myGraph.graphData();
+                    let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
+                    that.full_ref.myGraph
+                        .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+    
+                    // INFOBOX
+                    d3.select(`#infobox-graph-processed`).transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
+    
+    
+                    //Row highlighting
+                    d3.select(`#row-${i}`).transition()
+                        .duration(100)
+                        .style('opacity',1);
 
-                // INFOBOX
-                d3.select(`#infobox-graph-processed`).transition()
-                    .duration(200)
-                    .style("opacity", 1);
-                d3.select(`#infobox-graph-processed`).html(that.proc_ref.infoboxRender(da_node[0],null));
-
-
-                //Row highlighting
-                d3.select(`#row-${i}`).transition()
-                    .duration(100)
-                    .style('opacity',1);
+                }
+               
             }
 
 
         }
 
         function mouseoutRow(r,i) {
+            
 
             if (that.unif_spars == true){
 
@@ -245,25 +302,53 @@ class Table {
 
             }
             else{
-                // PROCESSED DE-HIGHLIGHTING
-                that.proc_ref.myGraph
-                    .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+                let active_node_vis = $('#nodeDrop').find('.active')[0].id
+                if (active_node_vis == 'std-color'){
+                    // PROCESSED DE-HIGHLIGHTING
+                    that.proc_ref.myGraph
+                    .nodeColor( ref_node => that.proc_ref.stdColor(ref_node.uncertainty_std));
 
-                // FULL DE- HIGHLIGHTING
-                let highlightNodes = []
-                // Need to reset da_node's color to what it was
-                that.full_ref.myGraph
+                    // FULL DE- HIGHLIGHTING
+                    let highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    that.full_ref.myGraph
                     .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
 
-                //INFOBOX 
-                d3.select(`#infobox-graph-processed`).transition()
+                    //INFOBOX 
+                    d3.select(`#infobox-graph-processed`).transition()
                     .duration(200)
                     .style("opacity", 0);
 
-                //Row de-highlighting
-                d3.select(`#row-${i}`).transition()
+                    //Row de-highlighting
+                    d3.select(`#row-${i}`).transition()
                     .duration(100)
                     .style('opacity',0);
+
+
+                }
+                else{
+                    // PROCESSED DE-HIGHLIGHTING
+                    that.proc_ref.myGraph
+                    .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+
+                    // FULL DE- HIGHLIGHTING
+                    let highlightNodes = []
+                    // Need to reset da_node's color to what it was
+                    that.full_ref.myGraph
+                    .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+                    //INFOBOX 
+                    d3.select(`#infobox-graph-processed`).transition()
+                    .duration(200)
+                    .style("opacity", 0);
+
+                    //Row de-highlighting
+                    d3.select(`#row-${i}`).transition()
+                    .duration(100)
+                    .style('opacity',0);
+
+                }
+                
             }
             
         }
@@ -322,7 +407,7 @@ class Table {
                     // console.log("selected edge",da_edge)
                     that.proc_ref.myGraph
                         .linkWidth(ref_node => da_edge.indexOf(ref_node) !== -1 ? 7: that.proc_ref.qLinkWidth(ref_node['instability']))
-                        .linkColor( ref_node => da_edge.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.qLinkColor(ref_node['instability']));
+                        .linkColor( ref_node => da_edge.indexOf(ref_node) !== -1 ? '#EA0000': d3.color(that.proc_ref.qLinkColor(ref_node['instability'])).copy({opacity:0.65}));
 
                     // INFOBOX
                     d3.select(`#infobox-graph-processed`).transition()
@@ -361,7 +446,7 @@ class Table {
         function mouseoutCell(d,i) {
 
             if (that.unif_spars == true){
-                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d[0]))
 
                 let highlighted = d3.selectAll('.highlighted')._groups[0][0];
                 // Keeps info up if something's been clicked 
@@ -392,7 +477,7 @@ class Table {
                 // PROCESSED DE-HIGHLIGHTING
                 that.proc_ref.myGraph
                     .nodeColor( ref_node => that.proc_ref.qColorScale(ref_node['stability:']))
-                    .linkColor( d => that.proc_ref.qLinkColor(d['instability']) )
+                    .linkColor( d => d3.color(that.proc_ref.qLinkColor(d['instability'])).copy({opacity:0.65}) )
                     .linkWidth( d => that.proc_ref.qLinkWidth(d['instability']));
 
                 // HIGHLIGHT individual instance graph nodes
@@ -415,7 +500,7 @@ class Table {
             else{
                 // d3.select(this).attr('fill', (d) => color(d))
                 // Highlight column
-                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d))
+                d3.selectAll(`.cell-${i}`).attr('fill',(d) => color(d[0]))
 
                 let highlighted = d3.selectAll('.highlighted')._groups[0][0];
                 // Keeps info up if something's been clicked 

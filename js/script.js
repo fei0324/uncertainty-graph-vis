@@ -37,6 +37,42 @@ let heatMap = new Table(null,full_rect,proc_rect,null,null,null)
 renderCoarseLesmis('local_adjusted_rand_index','njw_spectral_clustering');
 $(`#gemsec`).addClass('disabled')
 
+// Populates indiviudal graph - make sure to comment out the 2 lines of code directly above this
+// Add path of data you want to display 
+// path = 'data/njw_spectral_clustering/rec_100/cluster_10/local_jaccard_index/uncertainty_graph.json'
+// renderIndividualGraph(path)
+function renderIndividualGraph(path){
+
+    // Load the data
+    Promise.all([
+        d3.json(path)
+    ]).then(function(files){
+        myData = files[0];
+
+        // Simple graph
+        let myGraph = ForceGraph();
+
+        //Setting width and height of canvas object
+        let location = document.getElementById('graph-processed')
+        // console.log("LOCATION",this.LOCATION)
+
+        // Canvas width and height
+        let boundingRect = location.getBoundingClientRect()
+        let WIDTH = boundingRect.width-6;
+        let HEIGHT = boundingRect.height-4;
+
+        myGraph(location)
+            .graphData(files[0])
+            .width(WIDTH)
+            .height(HEIGHT);
+            // Add any desirable stying here
+
+
+    })
+
+
+}
+
 // Handling resizing stuff
 window.addEventListener("resize", resize);
 var redraw = document.getElementById("redraw");
@@ -140,6 +176,8 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonEdge`).addClass('disabled')
             $(`#dropdownMenuButtonSTD`).addClass('disabled')
             $(`#dropdownMenuButtonInvert`).addClass('disabled')
+            instance_graph = new Graph(null,'graph-mini','instance');
+
         }
         //add them back if not co occurrence
         else{
@@ -147,6 +185,28 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
             $(`#dropdownMenuButtonEdge`).removeClass('disabled')
             $(`#dropdownMenuButtonSTD`).removeClass('disabled')
             $(`#dropdownMenuButtonInvert`).removeClass('disabled')
+            // reset individual instance graph that's located in heatmap object
+            d3.select("#graph-mini").select('canvas').remove()
+            heatmap = new Table(null,full_rect,proc_rect,null,null,null)
+            // // Creating force graph
+            // let myGraph = ForceGraph();
+
+            // //Setting width and height of canvas object
+            // let LOCATION = document.getElementById('graph-mini')
+
+            // // Canvas width and height
+            // let boundingRect = LOCATION.getBoundingClientRect()
+            // // console.log('graph mini rect',boundingRect)
+            // let WIDTH = boundingRect.width - 7;
+            // let HEIGHT = boundingRect.height - 8;
+            // // console.log('graph mini dims',this.WIDTH,this.HEIGHT
+            
+            // heatmap.myGraph = myGraph(LOCATION)
+            //     .width(WIDTH)
+            //     .height(HEIGHT)
+            //     .nodeColor(() => "black");
+            // heatmap.coOccur = false
+
         }
 
         if (active_alg == 'coarse'){
@@ -530,9 +590,12 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             }
             else if(active_data =='rectangle'){
                 //Render unifying spars graph for rectangle
+                renderUnifSpars('rec_100','unifying_framework_sparsify')
+            }
+            else if(active_data =='adj_rect'){
+                //Render unifying spars graph for rectangle
                 renderUnifSpars('adj_rec_100','unifying_framework_sparsify')
             }
-
             // Description code for the cluster text. These needs to be called here in order for 
             // the description to pop up when the user switches datasets or algorithms. 
             let k_description = d3.select("#cluster-text");
@@ -635,6 +698,34 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#unifying_framework_spars`).removeClass('disabled')
             $(`#gemsec`).addClass('disabled')
             renderCoarseRect(active_uncertainty,'njw_spectral_clustering')
+        }
+        else if (target == "adj_rect"){
+            // highlights unif sparse
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            $(`#unifying_framework_spars`).addClass("active")
+            $(`#unifying_framework_spars`).removeClass('disabled')
+
+            //disables uncertainty buttons
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).addClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).addClass('disabled')
+
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
+
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).addClass('disabled')
+            $(`#unifying_framework_spars`).removeClass('disabled')
+            $(`#gemsec`).addClass('disabled')
+            renderUnifSpars('adj_rec_100','unifying_framework_sparsify')
+
         }
         else if(target =='lesmis'){
             // highlights coarse algorithm
@@ -889,37 +980,50 @@ $('#edgeColorDrop').on('hide.bs.dropdown', function (e) {
         let kids = $('#edgeColorDrop').find('a')
         kids.removeClass( "active" );
         $(`#${target}`).addClass("active")
-
+        if (target == 'grey_'){
+            proc_rect.link_Color = d3.interpolate("#c9c9c9", "#666666");
+            heatMap.link_Color = d3.interpolate("##c9c9c9", "#666666");
+        }
         if (target == 'cool_'){
             proc_rect.link_Color = d3.interpolateCool;
+            heatMap.link_Color = d3.interpolateCool;
         }
         else if (target == 'viridis_'){
             proc_rect.link_Color = d3.interpolateViridis;
+            heatMap.link_Color = d3.interpolateViridis;
         }
         else if (target == 'plasma_'){
             proc_rect.link_Color = d3.interpolatePlasma;
+            heatMap.link_Color = d3.interpolatePlasma;
         }
         else if (target == 'warm_'){
             proc_rect.link_Color = d3.interpolateWarm;
+            heatMap.link_Color = d3.interpolateWarm;
         }
         else if (target == 'inferno_'){
             proc_rect.link_Color = d3.interpolateInferno;
+            heatMap.link_Color = d3.interpolateInferno;
         }
         else if (target == 'purple-green_'){
             proc_rect.link_Color = d3.interpolatePRGn;
+            heatMap.link_Color = d3.interpolatePRGn;
         }
         
         else if (target == 'pink-blue_'){
             proc_rect.link_Color = d3.interpolate("#ff3aa6", "#30ffe3")
+            heatMap.link_Color = d3.interpolate("#ff3aa6", "#30ffe3");
         }
         else if (target == 'green-orange_'){
             proc_rect.link_Color = d3.interpolate('#a6ff3a','#ff5d30')
+            heatMap.link_Color = d3.interpolate('#a6ff3a','#ff5d30');
         }
 
         //Redraws. prepGraph contains logic which detects which invert option is active then 
         // scales the data appropriately. 
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
+        heatMap.removeHeatMap()
+        heatMap.createHeatMap()
 
         // Feeding in graph data like this speeds things up really well!
         full_rect.myGraph.graphData(full_rect.data)
@@ -1023,18 +1127,16 @@ function renderCoarseRect(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
-
-
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-rect').on('input', function(d){
             let new_k = k_Bar.activeK;
-            populateStuff(new_k,q,uncert,file)
-
-
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
 
         })
         
@@ -1091,8 +1193,8 @@ function renderCoarseRect(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 50]
+                proc_rect.linkScale = [0, 6]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1137,10 +1239,12 @@ function renderCoarseRect(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -1196,6 +1300,7 @@ function renderCoarseRect(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.005664816285412998, 0.5]
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'rec_100';
             heatMap.uncert = uncert;
@@ -1240,6 +1345,7 @@ function renderCoarseRect(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
@@ -1295,18 +1401,16 @@ function renderCoarseLesmis(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
-
-
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-mis').on('input', function(d){
             let new_k = k_Bar.activeK;
-            populateStuff(new_k,q,uncert,file)
-
-
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
 
         })
         
@@ -1353,8 +1457,8 @@ function renderCoarseLesmis(uncert,file){
     
                 // Maybe just make completely new graph object here....
                 // Intance graph exclusively for co-occurrence 
-                instance_graph = new Graph(null,'graph-mini','instance');
-                // heatMap.myGraph.graphData(iInstances);
+                // instance_graph = new Graph(null,'graph-mini','instance');
+                
                 // Going to make completely new graph object for individual instance data
                 instance_graph.data = iInstances;
                 instance_graph.type = 'instance'; // Don't think this is necessary
@@ -1363,8 +1467,8 @@ function renderCoarseLesmis(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 38]
+                proc_rect.linkScale = [0, 4]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1407,12 +1511,14 @@ function renderCoarseLesmis(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = qMat;
                 heatMap.instance_ref = instance_graph;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -1466,6 +1572,7 @@ function renderCoarseLesmis(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.009660296956141888, 0.5345581749927919];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.data_name = 'lesmis_77';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
@@ -1510,6 +1617,7 @@ function renderCoarseLesmis(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.data_name = 'lesmis_77';
                 heatMap.active_alg = file;
                 heatMap.uncert = uncert;
@@ -1564,18 +1672,16 @@ function renderCoarseCele(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
-
-
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-cele').on('input', function(d){
             let new_k = k_Bar.activeK;
-            populateStuff(new_k,q,uncert,file)
-
-
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
 
         })
         
@@ -1632,8 +1738,8 @@ function renderCoarseCele(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0.9, 107]
+                proc_rect.linkScale = [0, 22]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1678,10 +1784,12 @@ function renderCoarseCele(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -1732,6 +1840,7 @@ function renderCoarseCele(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.001195036474254751, 0.3845227170550737];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'celegans_453';
             heatMap.uncert = uncert;
@@ -1774,6 +1883,7 @@ function renderCoarseCele(uncert,file){
                 heatMap.unif_spars = false;
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.active_alg = file;
                 heatMap.data_name = 'celegans_453';
                 heatMap.uncert = uncert;
@@ -1831,16 +1941,18 @@ function renderCoarseEmail(uncert,file){
         // detects change on qBar and changes files accordingly
         d3.select('#qBar').on('mouseup', function(d){
             let new_q = q_Bar.active;
-            populateStuff(k,new_q,uncert,file)
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
 
         });
 
         //detects changes on k bar and changes files accordingly 
         d3.select('#coarse-email').on('input', function(d){
             let new_k = k_Bar.activeK;
+            let new_q = q_Bar.active;
             let email_vals = [20,30,40,41,42,43,44,50];
             if (email_vals.includes(parseInt(new_k))){
-                populateStuff(new_k,q,uncert,file)
+                populateStuff(new_k,new_q,uncert,file)
             }
             
             
@@ -1900,8 +2012,8 @@ function renderCoarseEmail(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 88]
+                proc_rect.linkScale = [0, 36]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -1910,14 +2022,23 @@ function renderCoarseEmail(uncert,file){
                 // Handles appropriate zooming on loading
                 proc_rect.myGraph
                     .zoom(2.8);
+                // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
                 full_rect.myGraph
-                    .zoom(0.35);
+                    // .d3AlphaDecay(0)
+                    // .d3VelocityDecay(0.08)
+                    // .nodeRelSize(6)
+                    .cooldownTime(6000)
+                    // .linkColor(() => 'rgba(0,0,0,0.05)')
+                    .linkVisibility(false)
+                    // This only renders the links after the physics engine stops.
+                    .onEngineStop(() => full_rect.myGraph.linkVisibility(true))
+                    // .onNodeHover( (d,i) => console.log(d) )
+                    .zoom(0.1);
+                    // .enablePointerInteraction(false);
                 instance_graph.myGraph
                     .zoom(2);
                 
                 // Ensures links are visibile.
-                full_rect.myGraph
-                    .linkVisibility(true);
                 proc_rect.myGraph
                     .linkVisibility(true);
                 instance_graph.myGraph 
@@ -1946,10 +2067,12 @@ function renderCoarseEmail(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -2010,6 +2133,7 @@ function renderCoarseEmail(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.data_name = 'email_1005';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
@@ -2071,6 +2195,7 @@ function renderCoarseEmail(uncert,file){
                 heatMap.removeHeatMap()
                 heatMap.data = files[2];
                 heatMap.unif_spars = false;
+                heatMap.coOccur = false;
                 heatMap.data_name = 'email_1005';
                 heatMap.active_alg = file;
                 heatMap.uncert = uncert;
@@ -2278,6 +2403,7 @@ function renderUnifSpars(data_name,file){
 
         heatMap.removeHeatMap();
         heatMap.unif_spars = true;
+        heatMap.coOccur = false;
         heatMap.data = files[2];
         heatMap.data_name = data_name;
         heatMap.active_alg = file;
@@ -2337,6 +2463,7 @@ function renderUnifSpars(data_name,file){
 
             heatMap.removeHeatMap()
             heatMap.unif_spars = true;
+            heatMap.coOccur = false;
             heatMap.data = files[2];
             heatMap.data_name = data_name;
             heatMap.active_alg = file;
@@ -2438,13 +2565,30 @@ function renderGemsecTv(uncert,file){
                 // Going to make completely new graph object for individual instance data
                 instance_graph.data = iInstances;
                 instance_graph.type = 'instance'; // Don't think this is necessary
+
+
+                // This graph is large, so I fiddle with some of the graph rendering parameters to optimize performance.
+                full_rect.myGraph
+                    // .d3AlphaDecay(0)
+                    // .d3VelocityDecay(0.08)
+                    // .nodeRelSize(6)
+                    // .nodeVal(5)
+                    .cooldownTime(9000)
+                    .linkColor(() => 'rgba(0,0,0,0.005)')
+                    .linkVisibility(false)
+                    // .onNodeHover( (d,i) => console.log(d) )
+                    .zoom(0.07)
+                    .onEngineStop(() => full_rect.myGraph.linkVisibility(true));
+                    // .enablePointerInteraction(false);
+                // full_rect.myGraph
+                //     .linkVisibility(true);
                 
                 
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-                proc_rect.linkScale = [0.3411491395477371, 100]
+                proc_rect.nodeScale = [0, 26]
+                proc_rect.linkScale = [0.1, 11]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
@@ -2453,14 +2597,10 @@ function renderGemsecTv(uncert,file){
                 // Handles appropriate zooming on loading
                 proc_rect.myGraph
                     .zoom(2.8);
-                full_rect.myGraph
-                    .zoom(0.1);
                 instance_graph.myGraph
                     .zoom(2);
                 
                 // Ensures links are visibile.
-                full_rect.myGraph
-                    .linkVisibility(true);
                 proc_rect.myGraph
                     .linkVisibility(true);
                 instance_graph.myGraph 
@@ -2489,10 +2629,12 @@ function renderGemsecTv(uncert,file){
                 heatMap.instance_ref = instance_graph;
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
                 heatMap.active_alg = file;
                 heatMap.data_name = 'rec_100';
                 heatMap.uncert = uncert;
-                heatMap.k = this.k;
+                heatMap.k = k;
                 heatMap.createHeatMap()
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
@@ -2555,6 +2697,7 @@ function renderGemsecTv(uncert,file){
             heatMap.data = files[2];
             heatMap.nodeScale = [0.0013348737353079964, 0.03940252992083273];
             heatMap.unif_spars = false;
+            heatMap.coOccur = false;
             heatMap.active_alg = file;
             heatMap.data_name = 'tvshow_3892';
             heatMap.uncert = uncert;
