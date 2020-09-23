@@ -2587,8 +2587,8 @@ function renderGemsecTv(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
-                proc_rect.nodeScale = [0, 26]
-                proc_rect.linkScale = [0.1, 11]
+                proc_rect.nodeScale = [15, 220]
+                proc_rect.linkScale = [0, 55]
                 full_rect.prepGraph(proc_rect);
                 proc_rect.prepGraph(full_rect);
                 instance_graph.prepGraph();
