@@ -201,7 +201,7 @@ class Graph{
             let avg_array = this.data.nodes.map( d => d.uncertainty_mean );
             let std_array = this.data.nodes.map( d => d.uncertainty_std );
 
-            // // Logic for max and min, this is being used to come up with scaling for an entire dataset
+            // Logic for max and min, this is being used to come up with scaling for an entire dataset
             // let current_max = d3.max(avg_array);
             // let current_min = d3.min(avg_array);
 

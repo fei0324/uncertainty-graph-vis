@@ -1090,12 +1090,13 @@ $('#stdColorDrop').on('hide.bs.dropdown', function (e) {
 //////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////   RENDERING FUNCTIONS   //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
-
+this.mutual_information_node_scale = [0, 43];
+this.mutual_information_link_scale = [0, 375];
+let that = this;
 
 /////////////////////// NJW SPECTRAL CLUSTERING RENDERING FUNCTIONS //////////////////////////////////////
 
 function renderCoarseRect(uncert,file){
-
     // Type of uncertainty
     this.uncert = uncert;
 
@@ -1273,8 +1274,15 @@ function renderCoarseRect(uncert,file){
 
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'clust'
-            proc_rect.nodeScale = [-0.005664816285412998, 0.5]
-            proc_rect.linkScale = [0.3411491395477371, 100]
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                proc_rect.nodeScale = [-0.005664816285412998, 0.5]
+                proc_rect.linkScale = [0.3411491395477371, 100]
+            }
+            
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
@@ -1298,7 +1306,7 @@ function renderCoarseRect(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
-            heatMap.nodeScale = [-0.005664816285412998, 0.5]
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.active_alg = file;
@@ -1379,7 +1387,7 @@ function renderCoarseLesmis(uncert,file){
     // Loads lesmis data set
     //Sets default k
     this.k = 9
-    let range = [9,14]
+    let range = [9,16]
     let that = this;
 
     //Creates k bar
@@ -1548,8 +1556,14 @@ function renderCoarseLesmis(uncert,file){
 
             // Handling this graph's parameters
             proc_rect.type = 'clust'
-            proc_rect.nodeScale = [-0.009660296956141888, 0.5345581749927919];
-            proc_rect.linkScale = [0.010101010101010102, 73.0909090909091];
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                proc_rect.nodeScale = [-0.009660296956141888, 0.5345581749927919];
+                proc_rect.linkScale = [0.010101010101010102, 73.0909090909091];
+            }
 
             full_rect.myGraph
                 .linkVisibility(true);
@@ -1571,7 +1585,7 @@ function renderCoarseLesmis(uncert,file){
             heatMap.myGraph.linkVisibility(false)
 
             heatMap.data = files[2];
-            heatMap.nodeScale = [-0.009660296956141888, 0.5345581749927919];
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.data_name = 'lesmis_77';
@@ -1817,8 +1831,14 @@ function renderCoarseCele(uncert,file){
 
             // Recalculates scales and such for new data passed in and handles graph parameters
             proc_rect.type = 'clust';
-            proc_rect.nodeScale = [-0.001195036474254751, 0.3845227170550737];
-            proc_rect.linkScale = [0.43434343434343436, 347.45454545454544];
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                proc_rect.nodeScale = [-0.001195036474254751, 0.3845227170550737];
+                proc_rect.linkScale = [0.43434343434343436, 347.45454545454544];
+            }
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
@@ -1839,7 +1859,7 @@ function renderCoarseCele(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
-            heatMap.nodeScale = [-0.001195036474254751, 0.3845227170550737];
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.active_alg = file;
@@ -2101,8 +2121,14 @@ function renderCoarseEmail(uncert,file){
 
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'clust';
-            proc_rect.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
-            proc_rect.linkScale = [0.09090909090909091, 375.8484848484849];
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                proc_rect.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
+                proc_rect.linkScale = [0.09090909090909091, 375.8484848484849];
+            }
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
@@ -2132,7 +2158,7 @@ function renderCoarseEmail(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
-            heatMap.nodeScale = [-0.0006845867347048577, 0.12624419648766752];
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.data_name = 'email_1005';
@@ -2663,8 +2689,16 @@ function renderGemsecTv(uncert,file){
 
             // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
             proc_rect.type = 'clust';
-            proc_rect.nodeScale = [0.0013348737353079964, 0.03940252992083273];
-            proc_rect.linkScale = [2.3157894736842106, 19.63157894736842];
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+
+                proc_rect.nodeScale = [0.0013348737353079964, 0.03940252992083273];
+                proc_rect.linkScale = [2.3157894736842106, 19.63157894736842];
+            }
+
             full_rect.prepGraph(proc_rect);
             proc_rect.prepGraph(full_rect);
 
@@ -2696,7 +2730,7 @@ function renderGemsecTv(uncert,file){
 
             heatMap.removeHeatMap()
             heatMap.data = files[2];
-            heatMap.nodeScale = [0.0013348737353079964, 0.03940252992083273];
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.active_alg = file;
