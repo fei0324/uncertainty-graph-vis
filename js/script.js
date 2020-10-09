@@ -1665,7 +1665,7 @@ function renderCoarseCele(uncert,file){
 
     //Sets default k
     this.k = 10
-    let range = [10,14]
+    let range = [9,16]
     let that = this;
 
 
