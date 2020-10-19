@@ -440,6 +440,38 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
 
             }
+            else if (active_data == 'adj_rect'){
+                // changes active highlighting if it's a valid move
+                let start_active = $('#algDrop').find('active');
+                // console.log("active start",start_active)
+                let kids = $('#algDrop').find('div')
+                kids.removeClass( "active" );
+                $(`#${target}`).addClass("active")
+
+                // disables datasets without sparsification data
+                // $(`#rectangle`).addClass('disabled')
+                // $(`#cele`).addClass('disabled')
+                // $(`#email`).addClass('disabled')
+
+                //disable buttons that don't work with sparsification algo
+                // uncertainty button
+                $(`#dropdownMenuButtonUncertainty`).addClass('disabled')
+                //node vis button
+                $(`#dropdownMenuButtonNode`).addClass('disabled')
+
+                // Hides minigraph and labels div
+                // d3.select('#graph-mini').style('visibility','hidden')
+                d3.select('#heatmap-label').style('visibility','hidden')
+                d3.select('#instances-label').style('visibility','hidden')
+                d3.select('#mini-label').style('visibility','hidden')
+
+                //Render sparse graph for adjusted rect
+                // Highjacking the unif spars function here to viusalize spectral sparsification
+                renderUnifSpars('adj_rec_100','spectral_sparsification')
+
+
+
+            }
         }
         else if (target == 'spec_coarse'){
             // changes active highlighting if it's a valid move
@@ -719,7 +751,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             d3.select('#mini-label').style('visibility','visible')
 
 
-            $(`#spars`).addClass('disabled')
+            $(`#spars`).removeClass('disabled')
             $(`#unifying_framework_coarse`).addClass('disabled')
             $(`#spec_coarse`).addClass('disabled')
             $(`#unifying_framework_spars`).removeClass('disabled')
@@ -1971,7 +2003,7 @@ function renderCoarseEmail(uncert,file){
         d3.select('#coarse-email').on('input', function(d){
             let new_k = k_Bar.activeK;
             let new_q = q_Bar.active;
-            let email_vals = [20,30,40,41,42,43,44,50];
+            let email_vals = [20,30,32,34,36,38,40,41,42,43,44,50];
             if (email_vals.includes(parseInt(new_k))){
                 populateStuff(new_k,new_q,uncert,file)
             }
@@ -2368,8 +2400,17 @@ function renderUnifSpars(data_name,file){
     if (data_name == 'lesmis_77'){
         range = [0.7,0.9]
     }
+    // Adjusted rect 
     else{
-        range = [0.6,0.9]
+        // For unif spars
+        if (file == "unifying_framework_sparsify"){
+            range = [0.6,0.9]
+        }
+        // for spectral spars
+        else{
+            range = [0.1,0.9]
+        }
+        
     }
     // console.log(range)
     let that = this;

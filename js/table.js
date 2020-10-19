@@ -529,7 +529,7 @@ class Table {
             // console.log(" in mouse click",that.data_name,that.k,that.uncert,that.active_alg,i)
             if (that.unif_spars == true){
                 // console.log("in unif spars load")
-                d3.json(`data/unifying_framework_sparsify/${that.data_name}/${that.data_name}_${that.k}/individual_instances/${that.data_name}_${that.k}_${i}.json`).then(my_data => {
+                d3.json(`data/${that.active_alg}/${that.data_name}/${that.data_name}_${that.k}/individual_instances/${that.data_name}_${that.k}_${i}.json`).then(my_data => {
                     
                     // console.log(my_data)
 
