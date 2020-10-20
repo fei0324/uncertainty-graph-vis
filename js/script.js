@@ -1745,6 +1745,14 @@ function renderCoarseCele(uncert,file){
         let q_Bar = new qBar(this.q,qRange,'qBar');
         let q = q_Bar.active;
 
+        // Creating filter bar
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
+
+        //Creates f bar
+        let f_Bar = new fBar(this.f,f_range,'cele-filter');
+
         // default view
         populateStuff(k,q,uncert,file)
 
@@ -1763,6 +1771,19 @@ function renderCoarseCele(uncert,file){
             populateStuff(new_k,new_q,uncert,file)
 
         })
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#cele-filter').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = full_rect.linkRange[1]*that.f;
+            // console.log(threshold)
+            full_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.weight) >= threshold) ? true : false )
+
+
+        })
         
         // Things I need to display:
         // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
@@ -1778,8 +1799,10 @@ function renderCoarseCele(uncert,file){
                 d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
                 // Q_matrix
                 d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
-                // Also need to load a representative original graph
-                d3.json(`data/${file}/celegans_453/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // // Also need to load a representative original graph
+                // d3.json(`data/${file}/celegans_453/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Instead, I'm loading a - star data
+                d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/a_star_graph.json`)
     
             ]).then(function(files){
     
@@ -1792,6 +1815,8 @@ function renderCoarseCele(uncert,file){
                 iInstances['links'] = iInstances['edges']
                 let qMat = files[2];
                 let ori = files[3];
+                // need to rename edges to links here too
+                ori['links'] = ori['edges']
     
                 // console.log("q graph",qGraph)
                 // console.log("iInstances",iInstances)
@@ -1814,9 +1839,11 @@ function renderCoarseCele(uncert,file){
                 instance_graph.type = 'instance'; // Don't think this is necessary
                 
                 
+                
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
+                full_rect.type = 'a-star'
                 proc_rect.nodeScale = [0.9, 107]
                 proc_rect.linkScale = [0, 22]
                 full_rect.prepGraph(proc_rect);
@@ -1873,6 +1900,9 @@ function renderCoarseCele(uncert,file){
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
                 heatMap.proc_ref = proc_rect;
+
+                // Reset type of full rect to orig - hacky fix
+                full_rect.type = 'orig';
                 
             })
 
