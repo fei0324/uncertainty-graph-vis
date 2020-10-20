@@ -516,6 +516,7 @@ class Graph{
             // Finding max and min for edges
             let link_weight_array = this.data.edges.map( d => d.weight);
             let link_weight_range = d3.extent(link_weight_array);
+            this.linkRange = link_weight_range;
 
             // console.log("node weight range: ",weight_range,"link weight range: ",link_weight_range)
 
@@ -1153,6 +1154,7 @@ class Graph{
         else if (this.type == 'orig'){
 
             const NODE_R = 8;
+            this.myGraph.nodeVal(() => null)
 
             // Detects if sparsification is active algo and sets is_sparse accordingly
             let is_sparse = null;

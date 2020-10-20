@@ -1429,6 +1429,15 @@ function renderCoarseLesmis(uncert,file){
 
         let k = k_Bar.activeK;
         // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+
+        // Creating filter bar
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
+
+        //Creates f bar
+        let f_Bar = new fBar(this.f,f_range,'mis-filter');
+
         this.q = 0;
         qRange = [0,99]
         // create q bar
@@ -1451,6 +1460,19 @@ function renderCoarseLesmis(uncert,file){
             let new_k = k_Bar.activeK;
             let new_q = q_Bar.active;
             populateStuff(new_k,new_q,uncert,file)
+
+        })
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#mis-filter').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = full_rect.linkRange[1]*that.f;
+            // console.log(threshold)
+            full_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.weight) >= threshold) ? true : false )
+
 
         })
         
