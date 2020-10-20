@@ -1468,8 +1468,10 @@ function renderCoarseLesmis(uncert,file){
                 d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
                 // Q_matrix
                 d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
-                // Also need to load a representative original graph
-                d3.json(`data/${file}/lesmis_77/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Also need to load a representative original graph 
+                // d3.json(`data/${file}/lesmis_77/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Instead, I'm loading a - star data
+                d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/a_star_graph.json`)
     
             ]).then(function(files){
     
@@ -1482,6 +1484,10 @@ function renderCoarseLesmis(uncert,file){
                 iInstances['links'] = iInstances['edges']
                 let qMat = files[2];
                 let ori = files[3];
+                // need to rename edges to links here too
+                ori['links'] = ori['edges']
+                // console.log(ori)
+                // console.log(qGraph)
     
                 // console.log("q graph",qGraph)
                 // console.log("iInstances",iInstances)
@@ -1507,6 +1513,7 @@ function renderCoarseLesmis(uncert,file){
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
+                full_rect.type = 'a-star' // setting type to a-star so it constructs the a star graph
                 // proc_rect.nodeScale = [0, 38]
                 proc_rect.nodeScale = [0, 15]
                 proc_rect.linkScale = [0, 4]
@@ -1564,6 +1571,9 @@ function renderCoarseLesmis(uncert,file){
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
                 heatMap.proc_ref = proc_rect;
+
+                // Reset type of full rect to orig - hacky fix
+                full_rect.type = 'orig';
                 
             })
 

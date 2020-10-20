@@ -255,6 +255,7 @@
     border-bottom-left-radius: 10px 10px;
     border-top-left-radius: 10px 10px;
     background-color: var(--canvas-color);
+    mix-blend-mode: multiply;
 }
 
 #graph-processed{
