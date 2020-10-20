@@ -381,30 +381,30 @@ class Graph{
              let instab_range = d3.extent(instab_array)
 
              // Logic for max and min, this is being used to come up with scaling for an entire dataset
-            let current_max = d3.max(stab_array);
-            let current_min = d3.min(stab_array);
+            // let current_max = d3.max(stab_array);
+            // let current_min = d3.min(stab_array);
 
-            let current_minL = instab_range[0];
-            let current_maxL = instab_range[1];
+            // let current_minL = instab_range[0];
+            // let current_maxL = instab_range[1];
 
 
-            console.log('CURRENT NODE MAX AND MIN',current_max,current_min)
-            console.log('CURRENT LINK MAX AND MIN',current_maxL,current_minL)
-            if(current_max > this.max){
-                this.max=current_max
-            }
-            if(current_min < this.min){
-                this.min=current_min
-            }
-            if(current_maxL > this.maxL){
-                this.maxL=current_maxL
-            }
-            if(current_minL < this.minL){
-                this.minL=current_minL
-            }
+            // console.log('CURRENT NODE MAX AND MIN',current_max,current_min)
+            // console.log('CURRENT LINK MAX AND MIN',current_maxL,current_minL)
+            // if(current_max > this.max){
+            //     this.max=current_max
+            // }
+            // if(current_min < this.min){
+            //     this.min=current_min
+            // }
+            // if(current_maxL > this.maxL){
+            //     this.maxL=current_maxL
+            // }
+            // if(current_minL < this.minL){
+            //     this.minL=current_minL
+            // }
 
-            console.log("RUNNING NODE MAX AND MIN",this.max,this.min)
-            console.log("RUNNING LINK MAX AND MIN",this.maxL,this.minL)
+            // console.log("RUNNING NODE MAX AND MIN",this.max,this.min)
+            // console.log("RUNNING LINK MAX AND MIN",this.maxL,this.minL)
 
             //  console.log("size range: ",size_range,"stab range: ",stab_range,"instab range: ",instab_range)
 
@@ -503,6 +503,50 @@ class Graph{
 
             //thickness scale for edges
             this.instanceLinkWidth = d3.scaleLinear().domain(link_weight_range).range(meanRange);
+
+
+        }
+        else if (this.type == "a-star"){
+            // console.log("IN INSTANCE");
+
+            //finding max and min of mean for nodes (weight is only parameter here) 
+            let weight_array = this.data.nodes.map( d => d.weight );
+            let weight_range = d3.extent(weight_array);
+
+            // Finding max and min for edges
+            let link_weight_array = this.data.edges.map( d => d.weight);
+            let link_weight_range = d3.extent(link_weight_array);
+            this.linkRange = link_weight_range;
+
+            // console.log("node weight range: ",weight_range,"link weight range: ",link_weight_range)
+
+            //Node range 
+            let node_range = [1,7];
+
+            // Link ranges
+            let meanRange = [1,4]
+
+            // Check to see if inverted is activated 
+            let invert_active = $('#invertDrop').find('a.active').attr('id');
+            // console.log("invert active",invert_active)
+            if (invert_active == 'invert'){
+                //Node range 
+                node_range = [7,1];
+
+                // Link ranges
+                meanRange = [4,1]
+            }
+        
+
+            // NODE
+
+            // linear scale for size of node
+            this.aStarSizeScale = d3.scaleLinear().domain(weight_range).range(node_range)
+
+            // LINK
+
+            //thickness scale for edges
+            this.aStarLinkWidth = d3.scaleLinear().domain(link_weight_range).range(meanRange);
 
 
         }
@@ -935,7 +979,7 @@ class Graph{
         }
 
         else if(this.type == 'instance'){
-            // console.log("IN INSTANCE DRAW GRAPH")
+            console.log("IN INSTANCE DRAW GRAPH")
 
             // allows me to access this scope inside of drop down functions
             let that = this;
@@ -976,9 +1020,6 @@ class Graph{
                             .nodeColor( ref_node => node.id == ref_node.id ? '#EA0000': that.reference.qColorScale(ref_node['stability:']));
 
 
-
-
-    
                     }
                     else{
                         highlightNodes = [];
@@ -1037,16 +1078,83 @@ class Graph{
                 })
                 .linkWidth(link => that.instanceLinkWidth(link.weight));
 
+        }
+        // This is for the a star graph
+        else if (this.type == 'a-star'){
+            console.log(" A STAR")
+            let that = this;
+            let NODE_R = 4
+            this.myGraph
+                .graphData(data)
+                .nodeRelSize(NODE_R)
+                .nodeVal(node => that.aStarSizeScale(node.weight))
+                .nodeLabel(node => node.id)
+                .nodeColor(()=> "black")
+                .onNodeHover(node => {
+                    console.log(node)
+                    highlightNodes = node ? [node] : []
+                    console.log(highlightNodes)
+                    if (node){
+    
+                        // INFOBOX 
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxIRender(node));
+    
+                    }
+                    else{
+                        highlightNodes = [];
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
 
-
-
-
+                    }
+    
+                })
+                .nodeCanvasObjectMode(() => 'before')
+                .nodeCanvasObject((node, ctx) => {
+                    let NODE_R = 0;
+                    let halo_color = null;
+                    if (highlightNodes.indexOf(node) !== -1){
+                        NODE_R = 12;
+                        halo_color = '#EA000080'
+                    }
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = halo_color;
+                    ctx.fill();
+                })
+                // EDGE VIS
+                .linkHoverPrecision(4) //May need to adjust based on network size
+                // Sets link hover behavoir based on type
+                .onLinkHover(link => {
+                    let that = this;
+                    highlightLink = link;
+                    highlightNodes = link ? [link.source, link.target] : [];
+                    //event()
+                    if (link){
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        d3.select(`#infobox-graph-processed`).html(that.infoboxRenderILink(link));
+                    }
+                    else{
+                        d3.select(`#infobox-graph-processed`).transition()
+                            .duration(200)
+                            .style("opacity", 0);
+                    }
+                
+                })
+                .linkColor(() => d3.color('#878787').copy({opacity:0.7}))
+                .linkWidth(link => that.aStarLinkWidth(link.weight));
         }
 
         // This is the original, full, non-reduced graph
         else if (this.type == 'orig'){
 
             const NODE_R = 8;
+            this.myGraph.nodeVal(() => null)
 
             // Detects if sparsification is active algo and sets is_sparse accordingly
             let is_sparse = null;
