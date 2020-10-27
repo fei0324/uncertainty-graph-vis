@@ -2210,7 +2210,7 @@ class Graph{
             })
             // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
             .nodeCanvasObjectMode(() => 'before')
-            .nodeCanvasObject((node, ctx) => {
+            .nodeCanvasObject((node, ctx, globalScale) => {
                 // let NODE_R = 0;
                 // let halo_color = null;
                 // if (highlightNodes.indexOf(node) !== -1){
@@ -2221,6 +2221,28 @@ class Graph{
                 // ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
                 // ctx.fillStyle = halo_color;
                 // ctx.fill();
+
+                // Adding label
+                if (this.show_labels){
+                    // console.log(node.id)
+                    const label = node.id;
+                    const fontSize = 20/globalScale;
+                    ctx.font = `${fontSize}px Sans-Serif`;
+                    const textWidth = ctx.measureText(label).width;
+                    // const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+                    ctx.fillStyle = 'black';
+                    // ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+                    const font_offset = 10.0;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = node.color;
+                    // console.log(node.x)
+                    ctx.fillText(label, node.x+font_offset, node.y);
+
+
+                }
             });
 
     }
@@ -2284,7 +2306,7 @@ class Graph{
             })
             // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
             .nodeCanvasObjectMode(() => 'before')
-            .nodeCanvasObject((node, ctx) => {
+            .nodeCanvasObject((node, ctx, globalScale) => {
                 let NODE_R = 0;
                 let halo_color = null;
                 if (highlightNodes.indexOf(node) !== -1){
@@ -2295,6 +2317,28 @@ class Graph{
                 ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
                 ctx.fillStyle = halo_color;
                 ctx.fill();
+
+                // Adding label
+                if (this.show_labels){
+                    // console.log(node.id)
+                    const label = node.id;
+                    const fontSize = 20/globalScale;
+                    ctx.font = `${fontSize}px Sans-Serif`;
+                    const textWidth = ctx.measureText(label).width;
+                    // const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+                    ctx.fillStyle = 'black';
+                    // ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+                    const font_offset = 10.0;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = node.color;
+                    // console.log(node.x)
+                    ctx.fillText(label, node.x+font_offset, node.y);
+
+
+                }
             })
 
 
