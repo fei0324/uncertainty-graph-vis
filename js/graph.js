@@ -232,8 +232,8 @@ class Graph{
                     node_range = [7,1];
                 }
 
-                this.sizeScale = d3.scaleSqrt().domain(size_range).range(node_range)
-                // this.sizeScale = d3.scaleLinear().domain(size_range).range(node_range)
+                // this.sizeScale = d3.scaleSqrt().domain(size_range).range(node_range)
+                this.sizeScale = d3.scaleLinear().domain(size_range).range(node_range)
 
             }
 
