@@ -61,6 +61,9 @@ class Graph{
         this.maxL = -Infinity;
         this.minL = Infinity;
 
+        //Cluster size object
+        this.clusters = null;
+
 
         //This is the varible for the node and link scaling
         this.nodeScale = null;
@@ -185,16 +188,56 @@ class Graph{
         }
 
         //scales for orig
-        // else if (this.type == 'orig'){
+        else if (this.type == 'orig'){
             
-        //     if (this.color_by_group){
-        //         let id_array = this.data.nodes.map( d => d.cluster);
-        //         let id_domain = d3.extent(id_array)
-        //         console.log(id_domain)
-        //         this.color_group_orig = d3.scaleOrdinal(this.ordinal_color_scheme).domain(id_domain);
-        //     }
+            // if (this.color_by_group){
+            //     let id_array = this.data.nodes.map( d => d.cluster);
+            //     let id_domain = d3.extent(id_array)
+            //     console.log(id_domain)
+            //     this.color_group_orig = d3.scaleOrdinal(this.ordinal_color_scheme).domain(id_domain);
+            // }
 
-        // }
+            // Lets compute how many members belong to each cluster and make a scale 
+            // console.log(this.data)
+            if (this.data.nodes[0].cluster){
+                let id_array = this.data.nodes.map( d => d.cluster);
+                let cluster_ids = [...new Set(id_array)];
+                // console.log(cluster_ids)
+                let clusters = [];
+                cluster_ids.forEach( (d) => {
+                    let current_cluster = this.data.nodes.filter(f => f.cluster == d)
+                    // console.log(current_cluster.length)
+                    clusters.push({
+                        "id":d,
+                        "size":current_cluster.length
+                    })
+    
+                })
+                this.clusters = clusters
+                // console.log(clusters)
+
+                // Make scale
+                let size_range = d3.extent(this.clusters.map( m => m.size))
+                // console.log(size_range)
+
+                //Node range 
+                // let node_range = [1,4];
+                let node_range = [1,7];
+
+                // Check to see if inverted is activated 
+                let invert_active = $('#invertDrop').find('a.active').attr('id');
+                // console.log("invert active",invert_active)
+                if (invert_active == 'invert'){
+                    //Node range 
+                    node_range = [7,1];
+                }
+
+                this.sizeScale = d3.scaleSqrt().domain(size_range).range(node_range)
+                // this.sizeScale = d3.scaleLinear().domain(size_range).range(node_range)
+
+            }
+
+        }
 
         //Scales for clustering
         else if (this.type == 'clust'){
@@ -807,6 +850,12 @@ class Graph{
                         that.stdNodeColor(thatNode.myGraph,that,node_rel_size)
                         that.legend(that.node_legend,that,that.stdColor,'node std');
             
+                    }
+                    else if(drop_edge == 'size-mean'){
+                        // console.log('size-mean')
+                        that.nodeMean(thatNode.myGraph,that,node_rel_size,true)
+                        that.legend(that.node_legend,that,that.color,'node mean');
+                        
                     }
 
 
@@ -2046,14 +2095,25 @@ class Graph{
 
 
     // Mean node styling
-    nodeMean(myGraph,scope,node_rel_size){
+    nodeMean(myGraph,scope,node_rel_size,size_by_size=false){
 
         let highlightNodes = [];
         let that = this;
 
         myGraph
             .nodeRelSize(node_rel_size)
-            .nodeVal(node => scope.sumScale(node.uncertainty_mean))
+            .nodeVal(node => {
+                if (size_by_size){
+                    // need to make a size scale
+                    let cluster_size = that.reference.clusters.filter(f => node.id == f.id)
+                    // console.log(cluster_size[0].size)
+                    return that.reference.sizeScale(cluster_size[0].size)
+                }
+                else{
+                    return scope.sumScale(node.uncertainty_mean)
+                }
+                
+            })
             // .nodeVal(node => scope.meanScale(node.uncertainty_mean))
             .nodeLabel(node => node.id)
             .nodeColor(node => {
