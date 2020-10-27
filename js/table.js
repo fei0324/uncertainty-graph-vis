@@ -228,6 +228,7 @@ class Table {
                     // console.log(my_data.nodes)
                     let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
                     // console.log("selected node",da_node)
+
                     that.proc_ref.myGraph
                         .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.stdColor(ref_node.uncertainty_std));
     
@@ -256,15 +257,23 @@ class Table {
                     // console.log(my_data.nodes)
                     let da_node = my_data.nodes.filter(l => l.id == i); // extract node with correct id
                     // console.log("selected node",da_node)
-                    that.proc_ref.myGraph
-                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
-    
                     // FULL HIGHLIGHTING
                     // Need to select node with id that is node.cluster
                     let my_full_data = that.full_ref.myGraph.graphData();
                     let da_nodes = my_full_data.nodes.filter(l => l.cluster == i); // extract node with correct id
-                    that.full_ref.myGraph
-                        .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                    if (that.proc_ref.color_by_group){
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color_group(ref_node.id));
+                        that.full_ref.myGraph
+                            .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color_group(ref_node.cluster));
+                    }
+                    else{
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+                        that.full_ref.myGraph
+                            .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                    }
+                    
     
                     // INFOBOX
                     d3.select(`#infobox-graph-processed`).transition()
@@ -327,15 +336,26 @@ class Table {
 
                 }
                 else{
-                    // PROCESSED DE-HIGHLIGHTING
-                    that.proc_ref.myGraph
-                    .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
-
+                    
                     // FULL DE- HIGHLIGHTING
                     let highlightNodes = []
-                    // Need to reset da_node's color to what it was
-                    that.full_ref.myGraph
-                    .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+                    if (that.proc_ref.color_by_group){
+                        // PROCESSED DE-HIGHLIGHTING
+                        that.proc_ref.myGraph
+                        .nodeColor( ref_node => that.proc_ref.color_group(ref_node.id));
+                        // Need to reset da_node's color to what it was
+                        that.full_ref.myGraph
+                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' :that.proc_ref.color_group(ref_node.cluster))
+                    }
+                    else{
+                        // PROCESSED DE-HIGHLIGHTING
+                        that.proc_ref.myGraph
+                            .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+                        // Need to reset da_node's color to what it was
+                        that.full_ref.myGraph
+                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                    }
 
                     //INFOBOX 
                     d3.select(`#infobox-graph-processed`).transition()
@@ -406,7 +426,7 @@ class Table {
                     let da_edge = my_data.edges.filter(l => (l.source.id == coords[0] && l.target.id == coords[1]) || (l.source.id == coords[1] && l.target.id == coords[0])); // extract node with correct id
                     // console.log("selected edge",da_edge)
                     that.proc_ref.myGraph
-                        .linkWidth(ref_node => da_edge.indexOf(ref_node) !== -1 ? 7: that.proc_ref.qLinkWidth(ref_node['instability']))
+                        // .linkWidth(ref_node => da_edge.indexOf(ref_node) !== -1 ? 7: that.proc_ref.qLinkWidth(ref_node['instability']))
                         .linkColor( ref_node => da_edge.indexOf(ref_node) !== -1 ? '#EA0000': d3.color(that.proc_ref.qLinkColor(ref_node['instability'])).copy({opacity:0.65}));
 
                     // INFOBOX
@@ -417,14 +437,11 @@ class Table {
 
                 }
 
-
-
                 // d3.select(this).attr('fill','orange')
                 d3.select(this).attr('stroke-width','5px')
                     .attr("stroke-opacity","0.7")
                     .attr("stroke","orange");
 
-                
 
                 
             }
@@ -562,13 +579,35 @@ class Table {
                         .linkColor(d => linkColor(d.weight));
 
                 });
+                // If already selected it, then clears selection and removes graph
+                // console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
+                // console.log(this.id)
+                
+                if(d3.select('.highlighted')._groups[0][0] == null){
+                    // Selects previously highlighted and changes color back and reclasses it
+                    d3.selectAll('.highlighted').style('fill',d => color(d))
+                    d3.selectAll('.highlighted').classed("highlighted",false)
+                    // Highlights newly selected
+                    d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
+                }
+                else if (d3.select('.highlighted')._groups[0][0].id == this.id){
+                    // Selects previously highlighted and changes color back and reclasses it
+                    d3.selectAll('.highlighted').style('fill',d => color(d))
+                    d3.selectAll('.highlighted').classed("highlighted",false)
+                    // clearing graph
+                    that.myGraph.nodeVisibility(false)
+                    that.myGraph.linkVisibility(false)
+                }
+                else if (d3.select('.highlighted')._groups[0][0].id != this.id){
+                    // Selects previously highlighted and changes color back and reclasses it
+                    d3.selectAll('.highlighted').style('fill',d => color(d))
+                    d3.selectAll('.highlighted').classed("highlighted",false)
+                    // Highlights newly selected
+                    d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
+                }
 
             }
             else if (that.coOccur == true){
-
-
-
-
 
                 
             }
@@ -609,39 +648,48 @@ class Table {
                         .graphData(my_data)
                         .nodeVal(d => nodeScale(d.weight))
                         // .nodeColor(d => nodeColor(d.weight))
-                        .nodeColor(d => color(parseFloat(nodeColoring[d.id])))
+                        .nodeColor(d => {
+                            if (that.proc_ref.color_by_group){
+                                return that.proc_ref.color_group(d.id)
+                            }
+                            else{
+                                return color(parseFloat(nodeColoring[d.id]))
+                            }
+                            
+                        })
                         .linkWidth( d => linkScale(d.weight))
                         .linkColor(d => linkColor(d.weight));
 
                 });
+                // If already selected it, then clears selection and removes graph
+                // console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
+                // console.log(this.id)
+                
+                if(d3.select('.highlighted')._groups[0][0] == null){
+                    // Selects previously highlighted and changes color back and reclasses it
+                    d3.selectAll('.highlighted').style('fill',d => color(d))
+                    d3.selectAll('.highlighted').classed("highlighted",false)
+                    // Highlights newly selected
+                    d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
+                }
+                else if (d3.select('.highlighted')._groups[0][0].id == this.id){
+                    // Selects previously highlighted and changes color back and reclasses it
+                    d3.selectAll('.highlighted').style('fill',d => color(d))
+                    d3.selectAll('.highlighted').classed("highlighted",false)
+                    // clearing graph
+                    that.myGraph.nodeVisibility(false)
+                    that.myGraph.linkVisibility(false)
+                }
+                else if (d3.select('.highlighted')._groups[0][0].id != this.id){
+                    // Selects previously highlighted and changes color back and reclasses it
+                    d3.selectAll('.highlighted').style('fill',d => color(d))
+                    d3.selectAll('.highlighted').classed("highlighted",false)
+                    // Highlights newly selected
+                    d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
+                }
             }
 
-            // If already selected it, then clears selection and removes graph
-            // console.log(" highlighted",d3.select('.highlighted')._groups[0][0])
-            // console.log(this.id)
             
-            if(d3.select('.highlighted')._groups[0][0] == null){
-                // Selects previously highlighted and changes color back and reclasses it
-                d3.selectAll('.highlighted').style('fill',d => color(d))
-                d3.selectAll('.highlighted').classed("highlighted",false)
-                // Highlights newly selected
-                d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
-            }
-            else if (d3.select('.highlighted')._groups[0][0].id == this.id){
-                // Selects previously highlighted and changes color back and reclasses it
-                d3.selectAll('.highlighted').style('fill',d => color(d))
-                d3.selectAll('.highlighted').classed("highlighted",false)
-                // clearing graph
-                that.myGraph.nodeVisibility(false)
-                that.myGraph.linkVisibility(false)
-            }
-            else if (d3.select('.highlighted')._groups[0][0].id != this.id){
-                // Selects previously highlighted and changes color back and reclasses it
-                d3.selectAll('.highlighted').style('fill',d => color(d))
-                d3.selectAll('.highlighted').classed("highlighted",false)
-                // Highlights newly selected
-                d3.selectAll(`.cell-${i}`).attr('fill','orange').classed("highlighted",true).style('fill','orange')
-            }
 
         }
 
@@ -692,15 +740,26 @@ class Table {
                         // console.log(my_data.nodes)
                         let da_node = my_data.nodes.filter(l => l.id == i.id); // extract node with correct id
                         // console.log("selected node",da_node)
-                        that.proc_ref.myGraph
-                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+                        
 
                         // FULL HIGHLIGHTING
                         // Need to select node with id that is node.cluster
                         let my_full_data = that.full_ref.myGraph.graphData();
                         let da_nodes = my_full_data.nodes.filter(l => l.cluster == i.id); // extract node with correct id
-                        that.full_ref.myGraph
-                            .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+                        if (that.proc_ref.color_by_group){
+                            that.proc_ref.myGraph
+                                .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color_group(ref_node.id));
+                            that.full_ref.myGraph
+                                .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color_group(ref_node.cluster));
+                        }
+                        else{
+                            that.proc_ref.myGraph
+                                .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': that.proc_ref.color(ref_node.uncertainty_mean));
+                            that.full_ref.myGraph
+                                .nodeColor( ref_node => da_nodes.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                        }
+                        
 
                         // INFOBOX
                         d3.select(`#infobox-graph-processed`).transition()
@@ -716,15 +775,28 @@ class Table {
 
                     }
                     else{
-                        // PROCESSED DE-HIGHLIGHTING
-                        that.proc_ref.myGraph
-                            .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+                        
 
                         // FULL DE- HIGHLIGHTING
                         let highlightNodes = []
-                        // Need to reset da_node's color to what it was
-                        that.full_ref.myGraph
-                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+                        if (that.proc_ref.color_by_group){
+                            // PROCESSED DE-HIGHLIGHTING
+                            that.proc_ref.myGraph
+                                .nodeColor( ref_node => that.proc_ref.color_group(ref_node.id));
+                            // Need to reset da_node's color to what it was
+                            that.full_ref.myGraph
+                                .nodeColor(ref_node => that.proc_ref.color_group(ref_node.cluster))
+                        }
+                        else{
+                            // PROCESSED DE-HIGHLIGHTING
+                            that.proc_ref.myGraph
+                                .nodeColor( ref_node => that.proc_ref.color(ref_node.uncertainty_mean));
+                            // Need to reset da_node's color to what it was
+                            that.full_ref.myGraph
+                                .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                        }
+                        
 
                         //INFOBOX 
                         d3.select(`#infobox-graph-processed`).transition()

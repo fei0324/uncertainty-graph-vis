@@ -943,40 +943,77 @@ $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
 
         // Sets color to selected
         if (target == 'cool'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateCool;
             heatMap.node_Color = d3.interpolateCool;
         }
         else if (target == 'viridis'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateViridis;
             heatMap.node_Color = d3.interpolateViridis;
         }
         else if (target == 'plasma'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolatePlasma;
             heatMap.node_Color = d3.interpolatePlasma;
         }
         else if (target == 'warm'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateWarm;
             heatMap.node_Color = d3.interpolateWarm;
         }
         else if (target == 'inferno'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateInferno;
             heatMap.node_Color = d3.interpolateInferno;
         }
         else if (target == 'blues'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolate("#CEDDF2", "rgb(40, 85, 148)");
             heatMap.node_Color = d3.interpolate("#CEDDF2", "rgb(40, 85, 148)");
         }
         else if (target == 'purple-green'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolatePRGn;
             heatMap.node_Color = d3.interpolatePRGn;
         }
         else if (target == 'pink-blue'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolate("#ff3aa6", "#30ffe3");
             heatMap.node_Color = d3.interpolate("#ff3aa6", "#30ffe3");
         }
         else if (target == 'green-orange'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolate('#a6ff3a','#ff5d30');
             heatMap.node_Color = d3.interpolate('#a6ff3a','#ff5d30');
+        }
+        else if(target == 'group'){
+            // but need to indicate that the group option was selected
+            proc_rect.color_by_group = true;
+            full_rect.color_by_group = true;
+            // Still set these colors for the default view 
+            proc_rect.node_Color = d3.interpolateViridis;;
+            heatMap.node_Color = d3.interpolateViridis;
+            // full_rect.prepGraph(proc_rect);
+            // proc_rect.prepGraph(full_rect);
+            // heatMap.removeHeatMap()
+            // heatMap.createHeatMap()
+            // Feeding in graph data like this speeds things up really well!
+            // full_rect.myGraph.graphData(full_rect.data)
+            // proc_rect.myGraph.graphData(proc_rect.data)
+            // Draw graph
+            // full_rect.drawGraph(proc_rect);
+            // proc_rect.drawGraph(full_rect);
+
         }
         
         
@@ -986,12 +1023,18 @@ $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
 
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
+        // Clear instance
+        // heatmap initializing data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
         heatMap.removeHeatMap()
         heatMap.createHeatMap()
 
         // Feeding in graph data like this speeds things up really well!
-        full_rect.myGraph.graphData(full_rect.data)
-        proc_rect.myGraph.graphData(proc_rect.data)
+        // full_rect.myGraph.graphData(full_rect.data)
+        // proc_rect.myGraph.graphData(proc_rect.data)
+        full_rect.drawGraph(proc_rect)
+        proc_rect.drawGraph(full_rect)
     }
 
 })
