@@ -2029,25 +2029,110 @@ class Graph{
             .nodeVal(node => scope.sumScale(node.uncertainty_mean))
             // .nodeVal(node => scope.meanScale(node.uncertainty_mean))
             .nodeLabel(node => node.id)
-            .nodeColor(node => scope.color(node.uncertainty_mean))
+            .nodeColor(node => {
+                if (scope.color_by_group){
+                    return scope.color_group(node.id)
+                }
+                else{
+                    return scope.color(node.uncertainty_mean)
+                } 
+            })
             .onNodeClick(node => {
                 // console.log(node===highlightNodes[0])
                 // console.log(node.uncertainty_std/node.uncertainty_mean,node.uncertainty_mean*(node.uncertainty_std/node.uncertainty_mean)+node.uncertainty_std,node,this.meanScale(node.uncertainty_mean))
             })
+            // .onNodeHover(node => {
+            //     highlightNodes = node ? [node] : []
+
+            //     // console.log(node)
+            //     if (node){
+            //         // Need to select node with id that is node.cluster
+            //         let my_data = scope.reference.myGraph.graphData();
+            //         // console.log(my_data.nodes)
+            //         let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+            //         // console.log("selected node",da_node)
+            //         this.reference.myGraph
+            //             .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+
+            //         // INFOBOX 
+            //         d3.select(`#infobox-graph-processed`).transition()
+            //             .duration(200)
+            //             .style("opacity", 1);
+            //         d3.select(`#infobox-graph-processed`).html(that.infoboxRender(node,da_node));
+
+            //         //Row highlighting
+            //         d3.select(`#row-${node.id}`).transition()
+            //             .duration(100)
+            //             .style('opacity',1);
+
+            //     }
+            //     else{
+            //         highlightNodes = []
+            //         // Need to reset da_node's color to what it was
+            //         scope.reference.myGraph
+            //             .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+            //             // .nodeColor( ref_node => 'black');
+            //         d3.select(`#infobox-graph-processed`).transition()
+            //             .duration(200)
+            //             .style("opacity", 0);
+
+            //         //Row de-highlighting
+            //         d3.selectAll(`.row-back`).transition()
+            //             .duration(100)
+            //             .style('opacity',0);
+            //     }
+
+            // })
             .onNodeHover(node => {
                 highlightNodes = node ? [node] : []
-
+                
+                // let that = this
                 // console.log(node)
                 if (node){
-                    // Need to select node with id that is node.cluster
-                    let my_data = scope.reference.myGraph.graphData();
-                    // console.log(my_data.nodes)
-                    let da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
-                    // console.log("selected node",da_node)
-                    this.reference.myGraph
-                        .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? '#EA0000': 'black');
+                    // commented code below confirms my stdev calculations
+                    // console.log(highlightNodes)
+                    // this.myGraph.nodeColor(node => node === highlightNodes[0] ? '#00ff0000' : '#00ff0000');
 
-                    // INFOBOX 
+                    let da_node = null;
+                    if(that.color_by_group){
+                        myGraph
+                            .nodeColor( ref_node => ref_node == node ? that.highlight_color : that.color_group(ref_node.id))
+                            .linkColor(link => that.linkColor(link.mean));
+                            // .nodeColor( ref_node => ref_node == node ? that.color_group(node.id) : d3.color(that.color_group(ref_node.id)).copy({opacity:0.2}))
+                            // .linkColor(link => d3.color(that.linkColor(link.mean)).copy({opacity: 0.2}));
+
+                        // Need to select node with id that is node.cluster
+                        let my_data = scope.reference.myGraph.graphData();
+                        // console.log(my_data.nodes)
+                        da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                        // console.log("selected node",da_node)
+                        this.reference.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? that.highlight_color: that.color_group(ref_node.cluster))
+                            .linkColor(()=> '#878787');
+                            // .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? that.color_group(ref_node.cluster): d3.color(that.color_group(ref_node.cluster)).copy({opacity: 0.2}))
+                            // .linkColor(()=> d3.color('#878787').copy({opacity: 0.1}));
+
+                    }
+                    else{
+                        myGraph
+                            .nodeColor( ref_node => ref_node == node ? that.highlight_color : that.color(ref_node.uncertainty_mean))
+                            .linkColor(link => that.linkColor(link.mean));
+                            // .nodeColor( ref_node => ref_node == node ? that.color(node.uncertainty_mean) : d3.color(that.color(ref_node.uncertainty_mean)).copy({opacity:0.2}))
+                            // .linkColor(link => d3.color(that.linkColor(link.mean)).copy({opacity: 0.2}));
+
+                        // Need to select node with id that is node.cluster
+                        let my_data = scope.reference.myGraph.graphData();
+                        // console.log(my_data.nodes)
+                        da_node = my_data.nodes.filter(l => l.cluster == node.id); // extract node with correct id
+                        // console.log("selected node",da_node)
+                        this.reference.myGraph
+                            .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? that.highlight_color: "black")
+                            .linkColor(()=> '#878787');
+                            // .nodeColor( ref_node => da_node.indexOf(ref_node) !== -1 ? 'black': d3.color('black').copy({opacity: 0.2}))
+                            // .linkColor(()=> d3.color('#878787').copy({opacity: 0.1}));
+
+                    }
+                    
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 1);
@@ -2057,14 +2142,34 @@ class Graph{
                     d3.select(`#row-${node.id}`).transition()
                         .duration(100)
                         .style('opacity',1);
-
                 }
                 else{
+
                     highlightNodes = []
                     // Need to reset da_node's color to what it was
-                    scope.reference.myGraph
-                        .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+
+                    if (this.color_by_group){
+                        myGraph
+                            .nodeColor( ref_node => that.color_group(ref_node.id))
+                            .linkColor(link => that.linkColor(link.mean));
+                    
+                        scope.reference.myGraph
+                            .nodeColor(ref_node => that.color_group(ref_node.cluster))
+                            .linkColor(() => '#878787');
                         // .nodeColor( ref_node => 'black');
+                    }
+                    else{
+                        myGraph
+                            .nodeColor( ref_node => that.color(ref_node.uncertainty_mean))
+                            .linkColor(link => that.linkColor(link.mean));
+                    
+                        scope.reference.myGraph
+                            .nodeColor(ref_node => ref_node === highlightNodes ? '#EA0000' : 'black')
+                            .linkColor(() => '#878787');
+                        // .nodeColor( ref_node => 'black');
+                    }
+                
+                    
                     d3.select(`#infobox-graph-processed`).transition()
                         .duration(200)
                         .style("opacity", 0);
@@ -2079,17 +2184,17 @@ class Graph{
             // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
             .nodeCanvasObjectMode(() => 'before')
             .nodeCanvasObject((node, ctx) => {
-                let NODE_R = 0;
-                let halo_color = null;
-                if (highlightNodes.indexOf(node) !== -1){
-                    NODE_R = 12;
-                    halo_color = '#EA000080'
-                }
-                ctx.beginPath();
-                ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
-                ctx.fillStyle = halo_color;
-                ctx.fill();
-            })
+                // let NODE_R = 0;
+                // let halo_color = null;
+                // if (highlightNodes.indexOf(node) !== -1){
+                //     NODE_R = 12;
+                //     halo_color = '#EA000080'
+                // }
+                // ctx.beginPath();
+                // ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
+                // ctx.fillStyle = halo_color;
+                // ctx.fill();
+            });
 
     }
 

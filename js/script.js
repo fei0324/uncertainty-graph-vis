@@ -375,6 +375,17 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
         }
         else if (target == 'spars'){
+            // Remove color by 
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
+            // reset color to viridis 
+            // changes active highlighting
+            let color_kids = $('#nodeColorDrop').find('a')
+            color_kids.removeClass( "active" );
+            $(`#viridis`).addClass("active")
+
+            // $(`#dropdownMenuButtonNodeColor`).addClass('disabled')
+
             if(active_data =='lesmis'){
                 // changes active highlighting if it's a valid move
                 let start_active = $('#algDrop').find('active');
@@ -588,6 +599,14 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         }
 
         else if (target == 'unifying_framework_spars'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
+            // changes active highlighting
+            let color_kids = $('#nodeColorDrop').find('a')
+            color_kids.removeClass( "active" );
+            $(`#viridis`).addClass("active")
+
+            
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             // console.log("active start",start_active)
