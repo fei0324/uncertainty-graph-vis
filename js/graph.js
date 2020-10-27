@@ -51,6 +51,9 @@ class Graph{
         //https://observablehq.com/@d3/color-schemes?collection=@d3/d3-scale-chromatic
         this.ordinal_color_scheme = ["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"]
 
+        //labels
+        this.show_labels = false;
+
 
         // Need to make variable to record the current max and min seen.... this is to handle the scaling
         this.max = -Infinity;
@@ -1967,7 +1970,7 @@ class Graph{
             })
             // .nodeColor(node => highlightNodes.indexOf(node) !== -1 ? '#EA0000' : this.color(node.uncertainty_mean))
             .nodeCanvasObjectMode(()=> 'before')
-            .nodeCanvasObject((node, ctx) => {
+            .nodeCanvasObject((node, ctx, globalScale) => {
                 // Calculate radius for std
                 //let stdSCALING = highlighTNodes.indexOf(node) !== -1 ? 4000 : 1000;
                 let stdSCALING = 1;
@@ -2013,6 +2016,30 @@ class Graph{
                 ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
                 ctx.fillStyle = halo_color;
                 ctx.fill();
+
+                // Adding label
+                if (this.show_labels){
+                    // console.log(node.id)
+                    const label = node.id;
+                    const fontSize = 20/globalScale;
+                    ctx.font = `${fontSize}px Sans-Serif`;
+                    const textWidth = ctx.measureText(label).width;
+                    // const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+                    ctx.fillStyle = 'black';
+                    // ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+                    const font_offset = 10.0;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = node.color;
+                    // console.log(node.x)
+                    ctx.fillText(label, node.x+font_offset, node.y);
+
+
+                }
+                
+
             });
 
     }

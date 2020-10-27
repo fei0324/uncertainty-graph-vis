@@ -606,7 +606,7 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             color_kids.removeClass( "active" );
             $(`#viridis`).addClass("active")
 
-            
+
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             // console.log("active start",start_active)
@@ -941,6 +941,41 @@ $('#invertDrop').on('hide.bs.dropdown', function (e) {
 
 // let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
 // let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
+
+// label logic
+$('#labelDrop').on('hide.bs.dropdown', function (e) {
+    // console.log(e)
+    let drop_color = null;
+    let targetClass = null;
+    if (e.clickEvent){
+        targetClass = $(e.clickEvent.target).attr('class')
+    }
+    if (targetClass == 'dropdown-item'){
+        let target = e.clickEvent.target.id;
+        // console.log('target',target)
+        drop_color = target;
+
+        // changes active highlighting
+        let kids = $('#labelDrop').find('a')
+        kids.removeClass( "active" );
+        $(`#${target}`).addClass("active")
+
+        // Sets color to selected
+        if (target == 'label_off'){
+            proc_rect.show_labels = false;
+            // full_rect.color_by_group = false;
+        }
+        else if (target == 'label_on'){
+            proc_rect.show_labels = true;
+        }       
+    }
+        
+    // redraw with labels
+    // full_rect.drawGraph(proc_rect)
+    proc_rect.drawGraph(full_rect)
+})
+
+
 
 // Color button dropdown logic
 $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
