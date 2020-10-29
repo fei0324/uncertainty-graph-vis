@@ -78,10 +78,12 @@
 			<div class='btn-group' role='group' id='button-toolbar'>
 
 				<div class="btn-group btn-group-sm" id='nodeColorDrop' role='group'>
-					<button class="btn-outline-secondary btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn-outline-secondary btn dropdown-toggle" type="button" id="dropdownMenuButtonNodeColor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						node color
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='group'>color by cluster</a>
+						<div class="dropdown-divider"></div>
 						<a class="dropdown-item active" href="#" id='viridis'>viridis</a>
 						<a class="dropdown-item" href="#" id='cool'>cool</a>
 						<a class="dropdown-item" href="#" id='warm'>warm</a>
@@ -127,6 +129,16 @@
 					</div>
 				</div>
 
+				<div class="btn-group btn-group-sm" id='labelDrop' role='group'>
+					<button class="btn-outline-warning btn dropdown-toggle" type="button" id="dropdownMenuButtonLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						labels
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="#" id='label_on'>on</a>
+						<a class="dropdown-item active" href="#" id='label_off'>off</a>
+					</div>
+				</div>
+
 			</div>
 
 			<div class='btn-group' role='group' id='button-toolbar'>
@@ -155,6 +167,7 @@
 						<!-- <a class="dropdown-item" href="#" id='std'>std</a> -->
 						<a class="dropdown-item active" href="#" id='mstdev'>mean+stdev</a>
 						<a class="dropdown-item" href="#" id='std-color'>std-color</a>
+						<a class="dropdown-item" href="#" id='size-mean'>cluster size + color by mean</a>
 						<!-- <a class="dropdown-item" href="#" id='mstdevOD'>mean+stdev on demand</a> -->
 					</div>
 				</div>

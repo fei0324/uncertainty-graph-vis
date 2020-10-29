@@ -375,6 +375,17 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
         }
         else if (target == 'spars'){
+            // Remove color by 
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
+            // reset color to viridis 
+            // changes active highlighting
+            let color_kids = $('#nodeColorDrop').find('a')
+            color_kids.removeClass( "active" );
+            $(`#viridis`).addClass("active")
+
+            // $(`#dropdownMenuButtonNodeColor`).addClass('disabled')
+
             if(active_data =='lesmis'){
                 // changes active highlighting if it's a valid move
                 let start_active = $('#algDrop').find('active');
@@ -588,6 +599,14 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
         }
 
         else if (target == 'unifying_framework_spars'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
+            // changes active highlighting
+            let color_kids = $('#nodeColorDrop').find('a')
+            color_kids.removeClass( "active" );
+            $(`#viridis`).addClass("active")
+
+
             // changes active highlighting if it's a valid move
             let start_active = $('#algDrop').find('active');
             // console.log("active start",start_active)
@@ -923,6 +942,41 @@ $('#invertDrop').on('hide.bs.dropdown', function (e) {
 // let pinkblue = d3.interpolate("#ff3aa6", "#30ffe3")
 // let greenorange = d3.interpolate('#a6ff3a','#ff5d30')
 
+// label logic
+$('#labelDrop').on('hide.bs.dropdown', function (e) {
+    // console.log(e)
+    let drop_color = null;
+    let targetClass = null;
+    if (e.clickEvent){
+        targetClass = $(e.clickEvent.target).attr('class')
+    }
+    if (targetClass == 'dropdown-item'){
+        let target = e.clickEvent.target.id;
+        // console.log('target',target)
+        drop_color = target;
+
+        // changes active highlighting
+        let kids = $('#labelDrop').find('a')
+        kids.removeClass( "active" );
+        $(`#${target}`).addClass("active")
+
+        // Sets color to selected
+        if (target == 'label_off'){
+            proc_rect.show_labels = false;
+            // full_rect.color_by_group = false;
+        }
+        else if (target == 'label_on'){
+            proc_rect.show_labels = true;
+        }       
+    }
+        
+    // redraw with labels
+    // full_rect.drawGraph(proc_rect)
+    proc_rect.drawGraph(full_rect)
+})
+
+
+
 // Color button dropdown logic
 $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
     // console.log(e)
@@ -943,40 +997,77 @@ $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
 
         // Sets color to selected
         if (target == 'cool'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateCool;
             heatMap.node_Color = d3.interpolateCool;
         }
         else if (target == 'viridis'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateViridis;
             heatMap.node_Color = d3.interpolateViridis;
         }
         else if (target == 'plasma'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolatePlasma;
             heatMap.node_Color = d3.interpolatePlasma;
         }
         else if (target == 'warm'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateWarm;
             heatMap.node_Color = d3.interpolateWarm;
         }
         else if (target == 'inferno'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolateInferno;
             heatMap.node_Color = d3.interpolateInferno;
         }
         else if (target == 'blues'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolate("#CEDDF2", "rgb(40, 85, 148)");
             heatMap.node_Color = d3.interpolate("#CEDDF2", "rgb(40, 85, 148)");
         }
         else if (target == 'purple-green'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolatePRGn;
             heatMap.node_Color = d3.interpolatePRGn;
         }
         else if (target == 'pink-blue'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolate("#ff3aa6", "#30ffe3");
             heatMap.node_Color = d3.interpolate("#ff3aa6", "#30ffe3");
         }
         else if (target == 'green-orange'){
+            proc_rect.color_by_group = false;
+            full_rect.color_by_group = false;
             proc_rect.node_Color = d3.interpolate('#a6ff3a','#ff5d30');
             heatMap.node_Color = d3.interpolate('#a6ff3a','#ff5d30');
+        }
+        else if(target == 'group'){
+            // but need to indicate that the group option was selected
+            proc_rect.color_by_group = true;
+            full_rect.color_by_group = true;
+            // Still set these colors for the default view 
+            proc_rect.node_Color = d3.interpolateViridis;;
+            heatMap.node_Color = d3.interpolateViridis;
+            // full_rect.prepGraph(proc_rect);
+            // proc_rect.prepGraph(full_rect);
+            // heatMap.removeHeatMap()
+            // heatMap.createHeatMap()
+            // Feeding in graph data like this speeds things up really well!
+            // full_rect.myGraph.graphData(full_rect.data)
+            // proc_rect.myGraph.graphData(proc_rect.data)
+            // Draw graph
+            // full_rect.drawGraph(proc_rect);
+            // proc_rect.drawGraph(full_rect);
+
         }
         
         
@@ -986,12 +1077,18 @@ $('#nodeColorDrop').on('hide.bs.dropdown', function (e) {
 
         full_rect.prepGraph(proc_rect);
         proc_rect.prepGraph(full_rect);
+        // Clear instance
+        // heatmap initializing data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
         heatMap.removeHeatMap()
         heatMap.createHeatMap()
 
         // Feeding in graph data like this speeds things up really well!
-        full_rect.myGraph.graphData(full_rect.data)
-        proc_rect.myGraph.graphData(proc_rect.data)
+        // full_rect.myGraph.graphData(full_rect.data)
+        // proc_rect.myGraph.graphData(proc_rect.data)
+        full_rect.drawGraph(proc_rect)
+        proc_rect.drawGraph(full_rect)
     }
 
 })
@@ -1745,6 +1842,14 @@ function renderCoarseCele(uncert,file){
         let q_Bar = new qBar(this.q,qRange,'qBar');
         let q = q_Bar.active;
 
+        // Creating filter bar
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
+
+        //Creates f bar
+        let f_Bar = new fBar(this.f,f_range,'cele-filter');
+
         // default view
         populateStuff(k,q,uncert,file)
 
@@ -1763,6 +1868,19 @@ function renderCoarseCele(uncert,file){
             populateStuff(new_k,new_q,uncert,file)
 
         })
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#cele-filter').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = full_rect.linkRange[1]*that.f;
+            // console.log(threshold)
+            full_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.weight) >= threshold) ? true : false )
+
+
+        })
         
         // Things I need to display:
         // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
@@ -1778,8 +1896,10 @@ function renderCoarseCele(uncert,file){
                 d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
                 // Q_matrix
                 d3.csv(`data/${file}/celegans_453/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
-                // Also need to load a representative original graph
-                d3.json(`data/${file}/celegans_453/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // // Also need to load a representative original graph
+                // d3.json(`data/${file}/celegans_453/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Instead, I'm loading a - star data
+                d3.json(`data/${file}/celegans_453/cluster_${k}/${uncert}/a_star_graph.json`)
     
             ]).then(function(files){
     
@@ -1792,6 +1912,8 @@ function renderCoarseCele(uncert,file){
                 iInstances['links'] = iInstances['edges']
                 let qMat = files[2];
                 let ori = files[3];
+                // need to rename edges to links here too
+                ori['links'] = ori['edges']
     
                 // console.log("q graph",qGraph)
                 // console.log("iInstances",iInstances)
@@ -1814,9 +1936,11 @@ function renderCoarseCele(uncert,file){
                 instance_graph.type = 'instance'; // Don't think this is necessary
                 
                 
+                
         
                 // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
                 proc_rect.type = 'qGraph'
+                full_rect.type = 'a-star'
                 proc_rect.nodeScale = [0.9, 107]
                 proc_rect.linkScale = [0, 22]
                 full_rect.prepGraph(proc_rect);
@@ -1873,6 +1997,9 @@ function renderCoarseCele(uncert,file){
                 // Pass references to heatmap as well
                 heatMap.full_ref = full_rect;
                 heatMap.proc_ref = proc_rect;
+
+                // Reset type of full rect to orig - hacky fix
+                full_rect.type = 'orig';
                 
             })
 
