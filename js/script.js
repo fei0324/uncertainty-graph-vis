@@ -1516,7 +1516,7 @@ function renderCoarseLesmis(uncert,file){
     // Loads lesmis data set
     //Sets default k
     this.k = 9
-    let range = [9,16]
+    let range = [8,16]
     let that = this;
 
     //Creates k bar
