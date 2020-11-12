@@ -252,6 +252,9 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseCele(target,'spectral_coarsening')
 
             }
+            else if(active_data == 'enron'){
+                renderCoarseEnron(target,'spectral_coarsening')
+            }
 
         }
         else if (active_alg == 'unifying_framework_coarse'){
@@ -529,6 +532,9 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             else if(active_data == 'cele'){
                 //Render spectral coarse graph for cele
                 renderCoarseCele(active_uncertainty,'spectral_coarsening')
+            }
+            else if(active_data == 'enron'){
+                renderCoarseEnron(active_uncertainty,'spectral_coarsening')
             }
 
             // Description code for the cluster text. These needs to be called here in order for 
@@ -921,7 +927,7 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
 
             $(`#spars`).addClass('disabled')
             $(`#unifying_framework_coarse`).addClass('disabled')
-            $(`#spec_coarse`).addClass('disabled')
+            $(`#spec_coarse`).removeClass('disabled')
             $(`#unifying_framework_spars`).addClass('disabled')
             $(`#coarse`).addClass('active')
             renderCoarseEnron(active_uncertainty,'njw_spectral_clustering')
