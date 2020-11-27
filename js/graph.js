@@ -49,7 +49,10 @@ class Graph{
         //Group coloring
         this.color_by_group = false;
         //https://observablehq.com/@d3/color-schemes?collection=@d3/d3-scale-chromatic
-        this.ordinal_color_scheme = ["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"]
+        // this.ordinal_color_scheme = ["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"]
+        this.ordinal_color_scheme = ["#4e79a7","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab",
+        "#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]
+        //I included 20 colors here and too out the ones that are orange related. (Fei)
 
         //labels
         this.show_labels = false;
