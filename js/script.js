@@ -235,6 +235,11 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseEnron(target,'njw_spectral_clustering')
 
             }
+            else if(active_data == 'football'){
+                //Render coarse graph for email
+                renderCoarseFootball(target,'njw_spectral_clustering')
+
+            }
         }
         else if (active_alg == 'spec_coarse'){
             if (active_data == 'rectangle'){
@@ -362,6 +367,11 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             else if(active_data == 'enron'){
                 //Render coarse graph for email
                 renderCoarseEnron(active_uncertainty,'njw_spectral_clustering')
+
+            }
+            else if(active_data == 'football'){
+                //Render coarse graph for email
+                renderCoarseFootball(active_uncertainty,'njw_spectral_clustering')
 
             }
 
@@ -931,6 +941,35 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#unifying_framework_spars`).addClass('disabled')
             $(`#coarse`).addClass('active')
             renderCoarseEnron(active_uncertainty,'njw_spectral_clustering')
+
+        }
+        else if(target =='football'){
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            // $(`#gemsec`).addClass("disabled")
+            $(`#coarse`).addClass("active")
+            $(`#coarse`).removeClass('disabled')
+
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).addClass('disabled')
+            $(`#unifying_framework_spars`).addClass('disabled')
+            $(`#coarse`).addClass('active')
+            renderCoarseFootball(active_uncertainty,'njw_spectral_clustering')
 
         }
     }
@@ -2596,6 +2635,143 @@ function renderCoarseEnron(uncert,file){
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.data_name = 'enron_148';
+            heatMap.active_alg = file;
+            heatMap.uncert = uncert;
+            heatMap.k = k;
+            heatMap.createHeatMap()
+            
+            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Pass references to heatmap as well
+            heatMap.full_ref = full_rect;
+            heatMap.proc_ref = proc_rect;
+
+            // Feeding in graph data like this speeds things up really well!
+            full_rect.myGraph.graphData(full_rect.data)
+            proc_rect.myGraph.graphData(proc_rect.data)
+
+        })
+
+    })
+    
+}
+
+function renderCoarseFootball(uncert,file){
+
+    // Type of coarsening uncertainty vis
+    this.uncert=uncert;
+
+    // Loads enron
+    //Sets default k
+    this.k = 8
+    let range = [8,20]
+    let that = this;
+
+    //Creates k bar
+    let k_Bar = new kBar(this.k,range,'coarse-football');
+
+    // No co-occurence for this one, so I removed it, if I need it back,
+    // copy and past and instert below this comment
+
+    // Loads the data - I chose the default view here to have 9 clusters
+    Promise.all([
+        //reduced
+        d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/uncertainty_graph.json`),
+        //original
+        d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+        // uncertainty matrix
+        d3.csv(`data/${file}/football_115/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+    ]).then(function(files){
+        
+        // Loads the data into the graph class
+        proc_rect.data = files[0];
+        full_rect.data = files[1];
+
+        // Handling this graph's parameters
+        proc_rect.type = 'clust'
+        if (uncert == 'local_mutual_information'){
+            proc_rect.nodeScale = this.mutual_information_node_scale
+            proc_rect.linkScale = this.mutual_information_link_scale
+        }
+        else{
+            // RUNNING NODE MAX AND MIN 0.30256182745293475 -0.004258117355327653
+            // RUNNING LINK MAX AND MIN 64 0.30303030303030304
+            proc_rect.nodeScale = [-0.0045,0.4];
+            proc_rect.linkScale = [0.3, 65];
+        }
+
+        full_rect.myGraph
+            .linkVisibility(true);
+        proc_rect.myGraph
+            .zoom(2.7);
+        full_rect.myGraph
+            .zoom(0.8);
+
+        // Recalculates scales and such for new data passed in
+        full_rect.prepGraph(proc_rect);
+        proc_rect.prepGraph(full_rect);
+
+        // Draws the graph
+        full_rect.drawGraph(proc_rect);
+        proc_rect.drawGraph(full_rect);
+
+        // heatmap initializing data
+        heatMap.myGraph.nodeVisibility(false)
+        heatMap.myGraph.linkVisibility(false)
+
+        heatMap.data = files[2];
+        heatMap.nodeScale = proc_rect.nodeScale;
+        heatMap.unif_spars = false;
+        heatMap.coOccur = false;
+        heatMap.data_name = 'football_115';
+        heatMap.active_alg = file;
+        heatMap.uncert = uncert;
+        heatMap.k = k;
+        heatMap.removeHeatMap()
+        heatMap.createHeatMap()
+        // Pass references to heatmap as well
+        heatMap.full_ref = full_rect;
+        heatMap.proc_ref = proc_rect;
+
+
+    })
+
+    // detects change on bar and updates data shown accordingly
+    d3.select('#coarse-football').on('input', function(d){
+        let k = k_Bar.activeK;
+        //  console.log('in script',that.k)
+                
+        // Loads data based on parameters 
+        Promise.all([
+            //reduced
+            d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            //original
+            d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            // uncertainty matrix
+            d3.csv(`data/${file}/football_115/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+        ]).then(function(files){
+            // Loads the data
+            proc_rect.data = files[0];
+            full_rect.data = files[1];
+
+            // handling the zooming of this new data 
+            proc_rect.myGraph
+                .zoom(2.7);
+            full_rect.myGraph
+                .zoom(0.8);
+
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
+            heatMap.removeHeatMap()
+            heatMap.data = files[2];
+            heatMap.unif_spars = false;
+            heatMap.coOccur = false;
+            heatMap.data_name = 'football_115';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
             heatMap.k = k;
