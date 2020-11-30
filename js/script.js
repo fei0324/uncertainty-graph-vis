@@ -377,22 +377,22 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             // Descriotion code for the cluster text. These needs to be called here in order for 
             // the description to pop up when the user switches datasets or algorithms. 
-            let k_description = d3.select("#cluster-text");
+            // let k_description = d3.select("#cluster-text");
 
-            k_description
-                .on("mouseover",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");  
-                })
-                .on("mouseout",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 0);
-                });
+            // k_description
+            //     .on("mouseover",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 1);
+            //         d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");  
+            //     })
+            //     .on("mouseout",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 0);
+            //     });
 
 
         }
@@ -438,38 +438,38 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
                 // Need to insert this particular description code on alg drop, otherwise
                 // it gets overwritten when there is just a k-clusters bar present.
-                let filter_description = d3.select("#filter-text");
-                let reduction_description = d3.select("#reduction-text");
+                // let filter_description = d3.select("#filter-text");
+                // let reduction_description = d3.select("#reduction-text");
 
-                filter_description
-                    .on("mouseover",function(){
-                        d3.select("#info-tooltip")
-                            .transition()
-                            .duration(200)
-                            .style("opacity", 1);
-                        d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>"); 
-                    })
-                    .on("mouseout",function(){
-                        d3.select("#info-tooltip")
-                            .transition()
-                            .duration(200)
-                            .style("opacity", 0);
-                    });
+                // filter_description
+                //     .on("mouseover",function(){
+                //         d3.select("#info-tooltip")
+                //             .transition()
+                //             .duration(200)
+                //             .style("opacity", 1);
+                //         d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>"); 
+                //     })
+                //     .on("mouseout",function(){
+                //         d3.select("#info-tooltip")
+                //             .transition()
+                //             .duration(200)
+                //             .style("opacity", 0);
+                //     });
 
-                reduction_description
-                    .on("mouseover",function(){
-                        d3.select("#info-tooltip")
-                            .transition()
-                            .duration(200)
-                            .style("opacity", 1);
-                        d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios.</p>");
-                    })
-                    .on("mouseout",function(){
-                        d3.select("#info-tooltip")
-                            .transition()
-                            .duration(200)
-                            .style("opacity", 0);
-                    });
+                // reduction_description
+                //     .on("mouseover",function(){
+                //         d3.select("#info-tooltip")
+                //             .transition()
+                //             .duration(200)
+                //             .style("opacity", 1);
+                //         d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios.</p>");
+                //     })
+                //     .on("mouseout",function(){
+                //         d3.select("#info-tooltip")
+                //             .transition()
+                //             .duration(200)
+                //             .style("opacity", 0);
+                //     });
 
 
             }
@@ -549,22 +549,22 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             // Description code for the cluster text. These needs to be called here in order for 
             // the description to pop up when the user switches datasets or algorithms. 
-            let k_description = d3.select("#cluster-text");
+            // let k_description = d3.select("#cluster-text");
 
-            k_description
-                .on("mouseover",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
-                })
-                .on("mouseout",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 0);
-                });
+            // k_description
+            //     .on("mouseover",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 1);
+            //         d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+            //     })
+            //     .on("mouseout",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 0);
+            //     });
 
         }
         else if (target == 'unifying_framework_coarse'){
@@ -604,22 +604,22 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
 
             // Description code for the cluster text. These needs to be called here in order for 
             // the description to pop up when the user switches datasets or algorithms. 
-            let k_description = d3.select("#cluster-text");
+            // let k_description = d3.select("#cluster-text");
 
-            k_description
-                .on("mouseover",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>"); 
-                })
-                .on("mouseout",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 0);
-                });
+            // k_description
+            //     .on("mouseover",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 1);
+            //         d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>"); 
+            //     })
+            //     .on("mouseout",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 0);
+            //     });
 
         }
 
@@ -674,22 +674,22 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             }
             // Description code for the cluster text. These needs to be called here in order for 
             // the description to pop up when the user switches datasets or algorithms. 
-            let k_description = d3.select("#cluster-text");
+            // let k_description = d3.select("#cluster-text");
 
-            k_description
-                .on("mouseover",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 1);
-                    d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");   
-                })
-                .on("mouseout",function(){
-                    d3.select("#info-tooltip")
-                        .transition()
-                        .duration(200)
-                        .style("opacity", 0);
-                });
+            // k_description
+            //     .on("mouseover",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 1);
+            //         d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");   
+            //     })
+            //     .on("mouseout",function(){
+            //         d3.select("#info-tooltip")
+            //             .transition()
+            //             .duration(200)
+            //             .style("opacity", 0);
+            //     });
 
         }
 
@@ -2537,77 +2537,185 @@ function renderCoarseEnron(uncert,file){
 
     // No co-occurence for this one, so I removed it, if I need it back,
     // copy and past and instert below this comment
+    if (uncert == 'co_occurrence'){
 
-    // Loads the data - I chose the default view here to have 9 clusters
-    Promise.all([
-        //reduced
-        d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/uncertainty_graph.json`),
-        //original
-        d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
-        // uncertainty matrix
-        d3.csv(`data/${file}/enron_148/cluster_${k}/${uncert}/uncertain_mat.csv`)
-
-    ]).then(function(files){
-        
-        // Loads the data into the graph class
-        proc_rect.data = files[0];
-        full_rect.data = files[1];
-
-        // Handling this graph's parameters
-        proc_rect.type = 'clust'
-        if (uncert == 'local_mutual_information'){
-            proc_rect.nodeScale = this.mutual_information_node_scale
-            proc_rect.linkScale = this.mutual_information_link_scale
-        }
-        else{
-            // RUNNING NODE MAX AND MIN 0.6071195070307225 -0.00485521522699129
-            //  RUNNING LINK MAX AND MIN 1093.3535353535353 0.26262626262626265
-            proc_rect.nodeScale = [-0.00485521522699129,0.6071195070307225];
-            proc_rect.linkScale = [0.26262626262626265, 1093.3535353535353];
-        }
-
-        full_rect.myGraph
-            .linkVisibility(true);
-        proc_rect.myGraph
-            .zoom(2.7);
-        full_rect.myGraph
-            .zoom(0.8);
-
-        // Recalculates scales and such for new data passed in
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
-
-        // Draws the graph
-        full_rect.drawGraph(proc_rect);
-        proc_rect.drawGraph(full_rect);
-
-        // heatmap initializing data
-        heatMap.myGraph.nodeVisibility(false)
-        heatMap.myGraph.linkVisibility(false)
-
-        heatMap.data = files[2];
-        heatMap.nodeScale = proc_rect.nodeScale;
-        heatMap.unif_spars = false;
-        heatMap.coOccur = false;
-        heatMap.data_name = 'enron_148';
-        heatMap.active_alg = file;
-        heatMap.uncert = uncert;
-        heatMap.k = k;
-        heatMap.removeHeatMap()
-        heatMap.createHeatMap()
-        // Pass references to heatmap as well
-        heatMap.full_ref = full_rect;
-        heatMap.proc_ref = proc_rect;
-
-
-    })
-
-    // detects change on bar and updates data shown accordingly
-    d3.select('#coarse-enron').on('input', function(d){
         let k = k_Bar.activeK;
-        //  console.log('in script',that.k)
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+
+        // Creating filter bar
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
+
+        //Creates f bar
+        let f_Bar = new fBar(this.f,f_range,'enron-filter');
+
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
+
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-enron').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
+
+        })
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#enron-filter').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = full_rect.linkRange[1]*that.f;
+            // console.log(threshold)
+            full_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.weight) >= threshold) ? true : false )
+
+
+        })
+        
+        // Things I need to display:
+        // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
+        // 2. heatmap area as a selection tool for individual instances --> no, lets just make this a slider bar?
+        // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
+
+        // Default view - 2 clusters and first instance
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/enron_148/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph 
+                // d3.json(`data/${file}/enron_148/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Instead, I'm loading a - star data
+                d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/a_star_graph.json`)
+    
+            ]).then(function(files){
+    
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+                // need to rename edges to links here too
+                ori['links'] = ori['edges']
+                // console.log(ori)
+                // console.log(qGraph)
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                // instance_graph = new Graph(null,'graph-mini','instance');
                 
-        // Loads data based on parameters 
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
+                
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                full_rect.type = 'a-star' // setting type to a-star so it constructs the a star graph
+                // proc_rect.nodeScale = [0, 38]
+                proc_rect.nodeScale = [0, 15]
+                proc_rect.linkScale = [0, 4]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.8);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'rec_100';
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Reset type of full rect to orig - hacky fix
+                full_rect.type = 'orig';
+                
+            })
+
+        }
+
+    }
+    else{
+        // Loads the data - I chose the default view here to have 9 clusters
         Promise.all([
             //reduced
             d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/uncertainty_graph.json`),
@@ -2617,44 +2725,114 @@ function renderCoarseEnron(uncert,file){
             d3.csv(`data/${file}/enron_148/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
-            // Loads the data
+            
+            // Loads the data into the graph class
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
-            // handling the zooming of this new data 
+            // Handling this graph's parameters
+            proc_rect.type = 'clust'
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                // RUNNING NODE MAX AND MIN 0.6071195070307225 -0.00485521522699129
+                //  RUNNING LINK MAX AND MIN 1093.3535353535353 0.26262626262626265
+                proc_rect.nodeScale = [-0.00485521522699129,0.6071195070307225];
+                proc_rect.linkScale = [0.26262626262626265, 1093.3535353535353];
+            }
+
+            full_rect.myGraph
+                .linkVisibility(true);
             proc_rect.myGraph
                 .zoom(2.7);
             full_rect.myGraph
                 .zoom(0.8);
 
+            // Recalculates scales and such for new data passed in
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Draws the graph
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
+
+            // heatmap initializing data
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
 
-            heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.data_name = 'enron_148';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
             heatMap.k = k;
+            heatMap.removeHeatMap()
             heatMap.createHeatMap()
-            
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
-
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
 
-            // Feeding in graph data like this speeds things up really well!
-            full_rect.myGraph.graphData(full_rect.data)
-            proc_rect.myGraph.graphData(proc_rect.data)
 
         })
 
-    })
+        // detects change on bar and updates data shown accordingly
+        d3.select('#coarse-enron').on('input', function(d){
+            let k = k_Bar.activeK;
+            //  console.log('in script',that.k)
+                    
+            // Loads data based on parameters 
+            Promise.all([
+                //reduced
+                d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/uncertainty_graph.json`),
+                //original
+                d3.json(`data/${file}/enron_148/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+                // uncertainty matrix
+                d3.csv(`data/${file}/enron_148/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+            ]).then(function(files){
+                // Loads the data
+                proc_rect.data = files[0];
+                full_rect.data = files[1];
+
+                // handling the zooming of this new data 
+                proc_rect.myGraph
+                    .zoom(2.7);
+                full_rect.myGraph
+                    .zoom(0.8);
+
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+
+                heatMap.removeHeatMap()
+                heatMap.data = files[2];
+                heatMap.unif_spars = false;
+                heatMap.coOccur = false;
+                heatMap.data_name = 'enron_148';
+                heatMap.active_alg = file;
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Feeding in graph data like this speeds things up really well!
+                full_rect.myGraph.graphData(full_rect.data)
+                proc_rect.myGraph.graphData(proc_rect.data)
+
+            })
+
+        })
+    }
     
 }
 
@@ -2674,77 +2852,185 @@ function renderCoarseFootball(uncert,file){
 
     // No co-occurence for this one, so I removed it, if I need it back,
     // copy and past and instert below this comment
+    if (uncert == 'co_occurrence'){
 
-    // Loads the data - I chose the default view here to have 9 clusters
-    Promise.all([
-        //reduced
-        d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/uncertainty_graph.json`),
-        //original
-        d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
-        // uncertainty matrix
-        d3.csv(`data/${file}/football_115/cluster_${k}/${uncert}/uncertain_mat.csv`)
-
-    ]).then(function(files){
-        
-        // Loads the data into the graph class
-        proc_rect.data = files[0];
-        full_rect.data = files[1];
-
-        // Handling this graph's parameters
-        proc_rect.type = 'clust'
-        if (uncert == 'local_mutual_information'){
-            proc_rect.nodeScale = this.mutual_information_node_scale
-            proc_rect.linkScale = this.mutual_information_link_scale
-        }
-        else{
-            // RUNNING NODE MAX AND MIN 0.30256182745293475 -0.004258117355327653
-            // RUNNING LINK MAX AND MIN 64 0.30303030303030304
-            proc_rect.nodeScale = [-0.0045,0.4];
-            proc_rect.linkScale = [0.3, 65];
-        }
-
-        full_rect.myGraph
-            .linkVisibility(true);
-        proc_rect.myGraph
-            .zoom(2.7);
-        full_rect.myGraph
-            .zoom(0.8);
-
-        // Recalculates scales and such for new data passed in
-        full_rect.prepGraph(proc_rect);
-        proc_rect.prepGraph(full_rect);
-
-        // Draws the graph
-        full_rect.drawGraph(proc_rect);
-        proc_rect.drawGraph(full_rect);
-
-        // heatmap initializing data
-        heatMap.myGraph.nodeVisibility(false)
-        heatMap.myGraph.linkVisibility(false)
-
-        heatMap.data = files[2];
-        heatMap.nodeScale = proc_rect.nodeScale;
-        heatMap.unif_spars = false;
-        heatMap.coOccur = false;
-        heatMap.data_name = 'football_115';
-        heatMap.active_alg = file;
-        heatMap.uncert = uncert;
-        heatMap.k = k;
-        heatMap.removeHeatMap()
-        heatMap.createHeatMap()
-        // Pass references to heatmap as well
-        heatMap.full_ref = full_rect;
-        heatMap.proc_ref = proc_rect;
-
-
-    })
-
-    // detects change on bar and updates data shown accordingly
-    d3.select('#coarse-football').on('input', function(d){
         let k = k_Bar.activeK;
-        //  console.log('in script',that.k)
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+
+        // Creating filter bar
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
+
+        //Creates f bar
+        let f_Bar = new fBar(this.f,f_range,'football-filter');
+
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
+
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-football').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
+
+        })
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#football-filter').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = full_rect.linkRange[1]*that.f;
+            // console.log(threshold)
+            full_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.weight) >= threshold) ? true : false )
+
+
+        })
+        
+        // Things I need to display:
+        // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
+        // 2. heatmap area as a selection tool for individual instances --> no, lets just make this a slider bar?
+        // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
+
+        // Default view - 2 clusters and first instance
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/football_115/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph 
+                // d3.json(`data/${file}/football_115/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Instead, I'm loading a - star data
+                d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/a_star_graph.json`)
+    
+            ]).then(function(files){
+    
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+                // need to rename edges to links here too
+                ori['links'] = ori['edges']
+                // console.log(ori)
+                // console.log(qGraph)
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                // instance_graph = new Graph(null,'graph-mini','instance');
                 
-        // Loads data based on parameters 
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
+                
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                full_rect.type = 'a-star' // setting type to a-star so it constructs the a star graph
+                // proc_rect.nodeScale = [0, 38]
+                proc_rect.nodeScale = [0, 15]
+                proc_rect.linkScale = [0, 4]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.8);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'rec_100'; // Maybe I need to change this?
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Reset type of full rect to orig - hacky fix
+                full_rect.type = 'orig';
+                
+            })
+
+        }
+
+    }
+    else{
+        // Loads the data - I chose the default view here to have 9 clusters
         Promise.all([
             //reduced
             d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/uncertainty_graph.json`),
@@ -2754,44 +3040,114 @@ function renderCoarseFootball(uncert,file){
             d3.csv(`data/${file}/football_115/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
-            // Loads the data
+            
+            // Loads the data into the graph class
             proc_rect.data = files[0];
             full_rect.data = files[1];
 
-            // handling the zooming of this new data 
+            // Handling this graph's parameters
+            proc_rect.type = 'clust'
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                // RUNNING NODE MAX AND MIN 0.30256182745293475 -0.004258117355327653
+                // RUNNING LINK MAX AND MIN 64 0.30303030303030304
+                proc_rect.nodeScale = [-0.0045,0.4];
+                proc_rect.linkScale = [0.3, 65];
+            }
+
+            full_rect.myGraph
+                .linkVisibility(true);
             proc_rect.myGraph
                 .zoom(2.7);
             full_rect.myGraph
                 .zoom(0.8);
 
+            // Recalculates scales and such for new data passed in
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Draws the graph
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
+
+            // heatmap initializing data
             heatMap.myGraph.nodeVisibility(false)
             heatMap.myGraph.linkVisibility(false)
 
-            heatMap.removeHeatMap()
             heatMap.data = files[2];
+            heatMap.nodeScale = proc_rect.nodeScale;
             heatMap.unif_spars = false;
             heatMap.coOccur = false;
             heatMap.data_name = 'football_115';
             heatMap.active_alg = file;
             heatMap.uncert = uncert;
             heatMap.k = k;
+            heatMap.removeHeatMap()
             heatMap.createHeatMap()
-            
-            // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
-            full_rect.prepGraph(proc_rect);
-            proc_rect.prepGraph(full_rect);
-
             // Pass references to heatmap as well
             heatMap.full_ref = full_rect;
             heatMap.proc_ref = proc_rect;
 
-            // Feeding in graph data like this speeds things up really well!
-            full_rect.myGraph.graphData(full_rect.data)
-            proc_rect.myGraph.graphData(proc_rect.data)
 
         })
 
-    })
+        // detects change on bar and updates data shown accordingly
+        d3.select('#coarse-football').on('input', function(d){
+            let k = k_Bar.activeK;
+            //  console.log('in script',that.k)
+                    
+            // Loads data based on parameters 
+            Promise.all([
+                //reduced
+                d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/uncertainty_graph.json`),
+                //original
+                d3.json(`data/${file}/football_115/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+                // uncertainty matrix
+                d3.csv(`data/${file}/football_115/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+            ]).then(function(files){
+                // Loads the data
+                proc_rect.data = files[0];
+                full_rect.data = files[1];
+
+                // handling the zooming of this new data 
+                proc_rect.myGraph
+                    .zoom(2.7);
+                full_rect.myGraph
+                    .zoom(0.8);
+
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+
+                heatMap.removeHeatMap()
+                heatMap.data = files[2];
+                heatMap.unif_spars = false;
+                heatMap.coOccur = false;
+                heatMap.data_name = 'football_115';
+                heatMap.active_alg = file;
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Feeding in graph data like this speeds things up really well!
+                full_rect.myGraph.graphData(full_rect.data)
+                proc_rect.myGraph.graphData(proc_rect.data)
+
+            })
+
+        })
+    }
     
 }
 
@@ -3355,261 +3711,261 @@ function renderGemsecTv(uncert,file){
 ///////////////////////////////////   DESCRIPTION CODE   /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-//make tooltip div for descriptions
-d3.select("#data-panel")
-    .append("div")
-    .attr("id", "info-tooltip")
-    .style("opacity", 0);
+// //make tooltip div for descriptions
+// d3.select("#data-panel")
+//     .append("div")
+//     .attr("id", "info-tooltip")
+//     .style("opacity", 0);
 
-//Creating descriptive tooltips etc
-let original_description = d3.select("#full-label");
-let reduced_description = d3.select("#processed-label");
-let heatmap_description = d3.select("#heatmap-label");
-let mini_description = d3.select("#mini-label");
-let instances_description = d3.select("#instances-label");
+// //Creating descriptive tooltips etc
+// let original_description = d3.select("#full-label");
+// let reduced_description = d3.select("#processed-label");
+// let heatmap_description = d3.select("#heatmap-label");
+// let mini_description = d3.select("#mini-label");
+// let instances_description = d3.select("#instances-label");
 
-// algorithms
-let njw_description = d3.select("#coarse");
-let spec_spars_description = d3.select("#spars");
-let spec_coarse_description = d3.select("#spec_coarse");
-let unif_coarse_description = d3.select("#unifying_framework_coarse");
-let unif_spars_description = d3.select("#unifying_framework_spars");
-let gemsec_description = d3.select("#gemsec");
+// // algorithms
+// let njw_description = d3.select("#coarse");
+// let spec_spars_description = d3.select("#spars");
+// let spec_coarse_description = d3.select("#spec_coarse");
+// let unif_coarse_description = d3.select("#unifying_framework_coarse");
+// let unif_spars_description = d3.select("#unifying_framework_spars");
+// let gemsec_description = d3.select("#gemsec");
 
-original_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> The original graph with no algorithm applied to it. Highlight the nodes to see how they correspond to the reduced graph. </p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// original_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> The original graph with no algorithm applied to it. Highlight the nodes to see how they correspond to the reduced graph. </p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
-reduced_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> The 'reduced' graph which has had the selected algorithm applied to it. Highlight nodes to see how it corresponds to the original graph. </p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// reduced_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> The 'reduced' graph which has had the selected algorithm applied to it. Highlight nodes to see how it corresponds to the original graph. </p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
-heatmap_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> A heatmap where every row corresponds to a node in the reduced graph and every column corresponds to an individual run using the selected algorithm. Squares are colored by the value of the uncertainty of a node. Click on columns to view the graph associated with that particular run. </p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// heatmap_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> A heatmap where every row corresponds to a node in the reduced graph and every column corresponds to an individual run using the selected algorithm. Squares are colored by the value of the uncertainty of a node. Click on columns to view the graph associated with that particular run. </p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
-instances_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> A row of all the individual instances where each rectangle represents one of the instances used in computing the sparsified graph above. </p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
-
-
-mini_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> The graph of the individual instance selected from the heatmap. Node size in this graph is scaled by weight, unlike the nodes in the reduced graph which are scaled by the uncertainty mean.</p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// instances_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> A row of all the individual instances where each rectangle represents one of the instances used in computing the sparsified graph above. </p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
 
-njw_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Spectral clustering algorithms group clusters of vertices into super-vertices, reducing the size of a graph. The NJW algorithm uses the k largest eigenvalues of the normalized adjacency matrix and k-means clustering to produce a reduced graph. </p>`); 
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// mini_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> The graph of the individual instance selected from the heatmap. Node size in this graph is scaled by weight, unlike the nodes in the reduced graph which are scaled by the uncertainty mean.</p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
 
-spec_spars_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Spectral Sparsification aims to reduce the size of a graph while preserving its spectral properties. It uses the notion of effective resistance to produce a reduced graph with the same number of vertices but a smaller number of edges.</p>`); 
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
-
-spec_coarse_description 
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> Spectral clustering algorithms group clusters of vertices into super-vertices, reducing the size of a graph. The JLJ algorithm uses both the largest and smallest eigenvalues of the normalized graph Laplacian and k-means clustering to produce a reduced graph. </p>`); 
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// njw_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html(`<p> Spectral clustering algorithms group clusters of vertices into super-vertices, reducing the size of a graph. The NJW algorithm uses the k largest eigenvalues of the normalized adjacency matrix and k-means clustering to produce a reduced graph. </p>`); 
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
 
-unif_coarse_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> This unifying framework for spectrum-preserving graph reduction allows users to simultaneously sparsify and coarsen a graph while preserving its large-scale structure. Both sparsification and coarsening are unified as edge actions, where edge deletion achieves sparsification and edge contraction supports coarsening. </p>`); 
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// spec_spars_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html(`<p> Spectral Sparsification aims to reduce the size of a graph while preserving its spectral properties. It uses the notion of effective resistance to produce a reduced graph with the same number of vertices but a smaller number of edges.</p>`); 
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
+
+// spec_coarse_description 
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html(`<p> Spectral clustering algorithms group clusters of vertices into super-vertices, reducing the size of a graph. The JLJ algorithm uses both the largest and smallest eigenvalues of the normalized graph Laplacian and k-means clustering to produce a reduced graph. </p>`); 
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
 
-unif_spars_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> This unifying framework for spectrum-preserving graph reduction allows users to simultaneously sparsify and coarsen a graph while preserving its large-scale structure. Both sparsification and coarsening are unified as edge actions, where edge deletion achieves sparsification and edge contraction supports coarsening. </p>`); 
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// unif_coarse_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html(`<p> This unifying framework for spectrum-preserving graph reduction allows users to simultaneously sparsify and coarsen a graph while preserving its large-scale structure. Both sparsification and coarsening are unified as edge actions, where edge deletion achieves sparsification and edge contraction supports coarsening. </p>`); 
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
 
-gemsec_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html(`<p> GESMEC is.... </p>`); 
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// unif_spars_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html(`<p> This unifying framework for spectrum-preserving graph reduction allows users to simultaneously sparsify and coarsen a graph while preserving its large-scale structure. Both sparsification and coarsening are unified as edge actions, where edge deletion achieves sparsification and edge contraction supports coarsening. </p>`); 
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
 
-// Need to load these when they exist on alg drop
-let k_description = d3.select("#cluster-text");
-let filter_description = d3.select("#filter-text");
-let reduction_description = d3.select("#reduction-text");
+// gemsec_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html(`<p> GESMEC is.... </p>`); 
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
 
-k_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
 
-filter_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// // Need to load these when they exist on alg drop
+// let k_description = d3.select("#cluster-text");
+// let filter_description = d3.select("#filter-text");
+// let reduction_description = d3.select("#reduction-text");
 
-reduction_description
-    .on("mouseover",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 1);
-        d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios... (needs more explanation) </p>");
-            // .style("left",(d3.event.pageX+15) + "px") 
-            // .style("top", (d3.event.pageY+15) + "px");     
-    })
-    .on("mouseout",function(){
-        d3.select("#info-tooltip")
-            .transition()
-            .duration(200)
-            .style("opacity", 0);
-    });
+// k_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> Adjust bar to view different clusterings of the original graph with 'k' clusters. </p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
+
+// filter_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> Adjust bar to filter out edges.</p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
+
+// reduction_description
+//     .on("mouseover",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 1);
+//         d3.select("#info-tooltip").html("<p> Adjust bar to view different reduction ratios... (needs more explanation) </p>");
+//             // .style("left",(d3.event.pageX+15) + "px") 
+//             // .style("top", (d3.event.pageY+15) + "px");     
+//     })
+//     .on("mouseout",function(){
+//         d3.select("#info-tooltip")
+//             .transition()
+//             .duration(200)
+//             .style("opacity", 0);
+//     });
