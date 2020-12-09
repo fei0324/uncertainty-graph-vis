@@ -26,7 +26,7 @@ class kBar {
             // this is rectange, so step is 2 
             step = 2
         }
-        else if (this.range[0] == 9){
+        else if (this.range[0] == 6){
             // lesmes, step = 1
             step = 1
         }
@@ -44,6 +44,9 @@ class kBar {
         }
         else if (this.id == 'unif-spars'){
             step = 0.1
+        }
+        else{
+            step = 1
         }
 
 
@@ -97,6 +100,9 @@ class kBar {
             else if (that.id == 'unif-spars'){
                 // Sets special text if it's sparsification
                 sliderText =  sliderText.text(`reduction ratio: ${this.value}`);
+            }
+            else if (that.id == 'coarse-author'){
+                sliderText =  sliderText.text(`k-clusters: ${this.value}`);
             }
             else{
                 let email_vals = [20,30,40,41,42,43,44,50];

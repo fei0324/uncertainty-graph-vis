@@ -240,6 +240,11 @@ $('#uncertaintyDrop').on('hide.bs.dropdown', function (e) {
                 renderCoarseFootball(target,'njw_spectral_clustering')
 
             }
+            else if(active_data == 'author'){
+                //Render coarse graph for email
+                renderCoarseAuthor(target,'njw_spectral_clustering')
+
+            }
         }
         else if (active_alg == 'spec_coarse'){
             if (active_data == 'rectangle'){
@@ -372,6 +377,11 @@ $('#algDrop').on('hide.bs.dropdown', function (e) {
             else if(active_data == 'football'){
                 //Render coarse graph for email
                 renderCoarseFootball(active_uncertainty,'njw_spectral_clustering')
+
+            }
+            else if(active_data == 'author'){
+                //Render coarse graph for email
+                renderCoarseAuthor(active_uncertainty,'njw_spectral_clustering')
 
             }
 
@@ -970,6 +980,35 @@ $('#datasetDrop').on('hide.bs.dropdown', function (e) {
             $(`#unifying_framework_spars`).addClass('disabled')
             $(`#coarse`).addClass('active')
             renderCoarseFootball(active_uncertainty,'njw_spectral_clustering')
+
+        }
+        else if(target =='author'){
+            // highlights coarse algorithm
+            let kids = $('#algDrop').find('div')
+            kids.removeClass( "active" );
+            // $(`#gemsec`).addClass("disabled")
+            $(`#coarse`).addClass("active")
+            $(`#coarse`).removeClass('disabled')
+
+            //Reenables uncertainty buttons
+            //re-enables buttons that didn't work with sparsification algo
+            //uncertainty button
+            $(`#dropdownMenuButtonUncertainty`).removeClass('disabled')
+            //node vis button
+            $(`#dropdownMenuButtonNode`).removeClass('disabled')
+
+            //Shows minigraph and labels
+            d3.select('#graph-mini').style('visibility','visible')
+            d3.select('#heatmap-label').style('visibility','visible')
+            d3.select('#instances-label').style('visibility','hidden')
+            d3.select('#mini-label').style('visibility','visible')
+
+            $(`#spars`).addClass('disabled')
+            $(`#unifying_framework_coarse`).addClass('disabled')
+            $(`#spec_coarse`).addClass('disabled')
+            $(`#unifying_framework_spars`).addClass('disabled')
+            $(`#coarse`).addClass('active')
+            renderCoarseAuthor(active_uncertainty,'njw_spectral_clustering')
 
         }
     }
@@ -1598,7 +1637,7 @@ function renderCoarseLesmis(uncert,file){
 
     // Loads lesmis data set
     //Sets default k
-    this.k = 9
+    this.k = 6
     let range = [6,16]
     let that = this;
 
@@ -1786,11 +1825,11 @@ function renderCoarseLesmis(uncert,file){
         // Loads the data - I chose the default view here to have 9 clusters
         Promise.all([
             //reduced
-            d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertainty_graph.json`),
+            d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertainty_graph.json`),
             //original
-            d3.json(`data/${file}/lesmis_77/cluster_${9}/${uncert}/ori_graph_with_cluster.json`),
+            d3.json(`data/${file}/lesmis_77/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
             // uncertainty matrix
-            d3.csv(`data/${file}/lesmis_77/cluster_${9}/${uncert}/uncertain_mat.csv`)
+            d3.csv(`data/${file}/lesmis_77/cluster_${k}/${uncert}/uncertain_mat.csv`)
 
         ]).then(function(files){
             
@@ -3013,7 +3052,7 @@ function renderCoarseFootball(uncert,file){
                 heatMap.unif_spars = false;
                 heatMap.coOccur = true;
                 heatMap.active_alg = file;
-                heatMap.data_name = 'rec_100'; // Maybe I need to change this?
+                heatMap.data_name = 'football_115'; // Maybe I need to change this?
                 heatMap.uncert = uncert;
                 heatMap.k = k;
                 heatMap.createHeatMap()
@@ -3127,6 +3166,321 @@ function renderCoarseFootball(uncert,file){
                 heatMap.unif_spars = false;
                 heatMap.coOccur = false;
                 heatMap.data_name = 'football_115';
+                heatMap.active_alg = file;
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Feeding in graph data like this speeds things up really well!
+                full_rect.myGraph.graphData(full_rect.data)
+                proc_rect.myGraph.graphData(proc_rect.data)
+
+            })
+
+        })
+    }
+    
+}
+
+function renderCoarseAuthor(uncert,file){
+
+    // Type of coarsening uncertainty vis
+    this.uncert=uncert;
+
+    // Loads authorship data
+    //Sets default k
+    this.k = 8
+    let range = [8,35]
+    let that = this;
+
+    //Creates k bar
+    let k_Bar = new kBar(this.k,range,'coarse-author');
+
+    // No co-occurence for this one, so I removed it, if I need it back,
+    // copy and past and instert below this comment
+    if (uncert == 'co_occurrence'){
+
+        let k = k_Bar.activeK;
+        // console.log(`data/${file}/rec_100/cluster_${2}/${uncert}/Q_graph/Q_graph_${0}.json`)
+
+        // Creating filter bar
+        //Sets default filter
+        this.f = 0
+        let f_range = [0,1]
+
+        //Creates f bar
+        let f_Bar = new fBar(this.f,f_range,'author-filter');
+
+        this.q = 0;
+        qRange = [0,99]
+        // create q bar
+        let q_Bar = new qBar(this.q,qRange,'qBar');
+        let q = q_Bar.active;
+
+        // default view
+        populateStuff(k,q,uncert,file)
+
+        // detects change on qBar and changes files accordingly
+        d3.select('#qBar').on('mouseup', function(d){
+            let new_q = q_Bar.active;
+            let new_k = k_Bar.activeK;
+            populateStuff(new_k,new_q,uncert,file)
+
+        });
+
+        //detects changes on k bar and changes files accordingly 
+        d3.select('#coarse-author').on('input', function(d){
+            let new_k = k_Bar.activeK;
+            let new_q = q_Bar.active;
+            populateStuff(new_k,new_q,uncert,file)
+
+        })
+
+        // FILTER BAR FUNCTIONALITY
+        // Detects changes and messes with graph edge visibility
+        d3.select('#author-filter').on('input', function(d){
+            that.f = f_Bar.activeF
+            // console.log(that.f)
+
+            let threshold = full_rect.linkRange[1]*that.f;
+            // console.log(threshold)
+            full_rect.myGraph.linkVisibility( (d,i) => (parseFloat(d.weight) >= threshold) ? true : false )
+
+
+        })
+        
+        // Things I need to display:
+        // 1. graph with weight as circle radius and stability as color, edges weight as thickness, instability as color
+        // 2. heatmap area as a selection tool for individual instances --> no, lets just make this a slider bar?
+        // 3. matrix in the mini-graph section -> can put this in heatmap area if I use a slider bar
+
+        // Default view - 2 clusters and first instance
+        function populateStuff(k,q,uncert,file){
+            Promise.all([
+                // Q_graph
+                d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/Q_graph/Q_graph_${q}.json`),
+                // individual instances
+                d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/individual_instances/clustered_graph_${q}.json`),
+                // Q_matrix
+                d3.csv(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/Q_matrix/Q_mat_${q}.csv`),
+                // Also need to load a representative original graph 
+                // d3.json(`data/${file}/football_115/cluster_${k}/local_adjusted_rand_index/ori_graph_with_cluster.json`)
+                // Instead, I'm loading a - star data
+                d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/a_star_graph.json`)
+    
+            ]).then(function(files){
+    
+                // Need to combine individual instance and q graph data
+                let qGraph = files[0];
+                // need to rename edges to links
+                qGraph['links'] = qGraph['edges'];
+                let iInstances = files[1];
+                // need to rename edges to links
+                iInstances['links'] = iInstances['edges']
+                let qMat = files[2];
+                let ori = files[3];
+                // need to rename edges to links here too
+                ori['links'] = ori['edges']
+                // console.log(ori)
+                // console.log(qGraph)
+    
+                // console.log("q graph",qGraph)
+                // console.log("iInstances",iInstances)
+                // console.log("qMat",qMat)
+                // console.log("representative original graph",ori)
+    
+                // Display Q graph
+    
+                // Initialize graphs with new data
+                proc_rect.data = qGraph;
+                full_rect.data = ori;
+                // console.log(iInstances)
+    
+                // Maybe just make completely new graph object here....
+                // Intance graph exclusively for co-occurrence 
+                // instance_graph = new Graph(null,'graph-mini','instance');
+                
+                // Going to make completely new graph object for individual instance data
+                instance_graph.data = iInstances;
+                instance_graph.type = 'instance'; // Don't think this is necessary
+                
+                
+        
+                // Recalculates scales and such for new data passed in - should I go back to making separate graph objects?
+                proc_rect.type = 'qGraph'
+                full_rect.type = 'a-star' // setting type to a-star so it constructs the a star graph
+                // proc_rect.nodeScale = [0, 38]
+                proc_rect.nodeScale = [0, 90]
+                proc_rect.linkScale = [0, 4]
+                full_rect.prepGraph(proc_rect);
+                proc_rect.prepGraph(full_rect);
+                instance_graph.prepGraph();
+    
+    
+                // Handles appropriate zooming on loading
+                proc_rect.myGraph
+                    .zoom(2.8);
+                full_rect.myGraph
+                    .zoom(0.4);
+                instance_graph.myGraph
+                    .zoom(2);
+                
+                // Ensures links are visibile.
+                full_rect.myGraph
+                    .linkVisibility(true);
+                proc_rect.myGraph
+                    .linkVisibility(true);
+                instance_graph.myGraph 
+                    .linkVisibility(true)
+                    .nodeVisibility(true);
+    
+    
+                // Draws the graphs
+                full_rect.drawGraph(proc_rect);
+                proc_rect.drawGraph(instance_graph);
+                instance_graph.drawGraph(proc_rect);
+    
+    
+                // turns off highlighting from full rect
+                full_rect.myGraph.onNodeHover( () => null)
+    
+                // heatmap initial data and initialization
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+    
+               
+                // display q matrix
+    
+                heatMap.removeHeatMap()
+                heatMap.data = qMat;
+                heatMap.instance_ref = instance_graph;
+                heatMap.nodeScale = proc_rect.nodeScale
+                heatMap.linkScale = proc_rect.linkScale
+                heatMap.unif_spars = false;
+                heatMap.coOccur = true;
+                heatMap.active_alg = file;
+                heatMap.data_name = 'coauthorship_379'; // Maybe I need to change this?
+                heatMap.uncert = uncert;
+                heatMap.k = k;
+                heatMap.createHeatMap()
+                // Pass references to heatmap as well
+                heatMap.full_ref = full_rect;
+                heatMap.proc_ref = proc_rect;
+
+                // Reset type of full rect to orig - hacky fix
+                full_rect.type = 'orig';
+                
+            })
+
+        }
+
+    }
+    else{
+        // Loads the data - I chose the default view here to have 9 clusters
+        Promise.all([
+            //reduced
+            d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/uncertainty_graph.json`),
+            //original
+            d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+            // uncertainty matrix
+            d3.csv(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+        ]).then(function(files){
+            
+            // Loads the data into the graph class
+            proc_rect.data = files[0];
+            full_rect.data = files[1];
+
+            // Handling this graph's parameters
+            proc_rect.type = 'clust'
+            if (uncert == 'local_mutual_information'){
+                proc_rect.nodeScale = this.mutual_information_node_scale
+                proc_rect.linkScale = this.mutual_information_link_scale
+            }
+            else{
+                // RUNNING NODE MAX AND MIN 0.30256182745293475 -0.004258117355327653
+                // RUNNING LINK MAX AND MIN 64 0.30303030303030304
+                proc_rect.nodeScale = [-0.0045,0.4];
+                proc_rect.linkScale = [0.3, 65];
+            }
+
+            full_rect.myGraph
+                .linkVisibility(true);
+            proc_rect.myGraph
+                .zoom(2.7);
+            full_rect.myGraph
+                .zoom(0.4);
+
+            // Recalculates scales and such for new data passed in
+            full_rect.prepGraph(proc_rect);
+            proc_rect.prepGraph(full_rect);
+
+            // Draws the graph
+            full_rect.drawGraph(proc_rect);
+            proc_rect.drawGraph(full_rect);
+
+            // heatmap initializing data
+            heatMap.myGraph.nodeVisibility(false)
+            heatMap.myGraph.linkVisibility(false)
+
+            heatMap.data = files[2];
+            heatMap.nodeScale = proc_rect.nodeScale;
+            heatMap.unif_spars = false;
+            heatMap.coOccur = false;
+            heatMap.data_name = 'coauthorship_379';
+            heatMap.active_alg = file;
+            heatMap.uncert = uncert;
+            heatMap.k = k;
+            heatMap.removeHeatMap()
+            heatMap.createHeatMap()
+            // Pass references to heatmap as well
+            heatMap.full_ref = full_rect;
+            heatMap.proc_ref = proc_rect;
+
+
+        })
+
+        // detects change on bar and updates data shown accordingly
+        d3.select('#coarse-author').on('input', function(d){
+            let k = k_Bar.activeK;
+            console.log('in script',k)
+                    
+            // Loads data based on parameters 
+            Promise.all([
+                //reduced
+                d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/uncertainty_graph.json`),
+                //original
+                d3.json(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/ori_graph_with_cluster.json`),
+                // uncertainty matrix
+                d3.csv(`data/${file}/coauthorship_379/cluster_${k}/${uncert}/uncertain_mat.csv`)
+
+            ]).then(function(files){
+                // Loads the data
+                proc_rect.data = files[0];
+                full_rect.data = files[1];
+
+                // handling the zooming of this new data 
+                proc_rect.myGraph
+                    .zoom(2.7);
+                full_rect.myGraph
+                    .zoom(0.4);
+
+                heatMap.myGraph.nodeVisibility(false)
+                heatMap.myGraph.linkVisibility(false)
+
+                heatMap.removeHeatMap()
+                heatMap.data = files[2];
+                heatMap.unif_spars = false;
+                heatMap.coOccur = false;
+                heatMap.data_name = 'coauthorship_379';
                 heatMap.active_alg = file;
                 heatMap.uncert = uncert;
                 heatMap.k = k;
