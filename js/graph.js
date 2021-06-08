@@ -1246,7 +1246,9 @@ class Graph{
                     }
                 
                 })
-                .linkColor(() => d3.color('#878787').copy({opacity:0.7}))
+                // .linkColor(() => d3.color('#878787').copy({opacity:0.7}))
+                // .linkColor(() => d3.color('#FF0000').copy({opacity:0.7}))
+                .linkColor(link => d3.interpolateSpectral(link.weight*(1-link.weight)))
                 .linkWidth(link => that.aStarLinkWidth(link.weight));
         }
 
