@@ -624,6 +624,9 @@ class Graph{
             //thickness scale for edges
             this.aStarLinkWidth = d3.scaleLinear().domain(link_weight_range).range(meanRange);
 
+            // Color scale for links
+            let red_blue = d3.interpolate("#E11D23", "#186EE6")
+            this.aStarLinkColor = d3.scaleSequential(red_blue).domain([0,0.25]);
 
         }
     }
