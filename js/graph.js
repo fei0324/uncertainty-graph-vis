@@ -625,8 +625,8 @@ class Graph{
             this.aStarLinkWidth = d3.scaleLinear().domain(link_weight_range).range(meanRange);
 
             // Color scale for links
-            let red_blue = d3.interpolate("#E11D23", "#186EE6")
-            this.aStarLinkColor = d3.scaleSequential(red_blue).domain([0,0.25]);
+            // let red_blue = d3.interpolate("#E11D23", "#186EE6")
+            this.aStarLinkColor = d3.interpolateSpectral().domain([0,0.25]);
 
         }
     }
@@ -1251,7 +1251,8 @@ class Graph{
                 })
                 // .linkColor(() => d3.color('#878787').copy({opacity:0.7}))
                 // .linkColor(() => d3.color('#FF0000').copy({opacity:0.7}))
-                .linkColor(link => d3.interpolateSpectral(link.weight*(1-link.weight)))
+                // .linkColor(link => d3.interpolateSpectral(link.weight*(1-link.weight)))
+                .linkColor(link => that.aStarLinkColor(link.weight*(1-link.weight)))
                 .linkWidth(link => that.aStarLinkWidth(link.weight));
         }
 
