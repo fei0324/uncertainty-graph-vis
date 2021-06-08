@@ -591,7 +591,8 @@ class Graph{
 
             // Finding max and min for edges
             let link_weight_array = this.data.edges.map( d => d.weight);
-            let link_weight_range = d3.extent(link_weight_array);
+            // let link_weight_range = d3.extent(link_weight_array);
+            let link_weight_range = [0, 0.25];
             this.linkRange = link_weight_range;
 
             // console.log("node weight range: ",weight_range,"link weight range: ",link_weight_range)
@@ -626,8 +627,7 @@ class Graph{
 
             // Color scale for links
             // let red_blue = d3.interpolate("#E11D23", "#186EE6")
-            this.aStarLinkColor = d3.interpolateSpectral().domain([0,0.25]);
-
+            this.aStarLinkColor = d3.scaleSequential(d3.interpolateSpectral).domain([0,0.25]);
         }
     }
 
@@ -1250,10 +1250,9 @@ class Graph{
                 
                 })
                 // .linkColor(() => d3.color('#878787').copy({opacity:0.7}))
-                // .linkColor(() => d3.color('#FF0000').copy({opacity:0.7}))
-                // .linkColor(link => d3.interpolateSpectral(link.weight*(1-link.weight)))
                 .linkColor(link => that.aStarLinkColor(link.weight*(1-link.weight)))
-                .linkWidth(link => that.aStarLinkWidth(link.weight));
+                // .linkWidth(link => that.aStarLinkWidth(link.weight));
+                .linkWidth(link => that.aStarLinkWidth(link.weight*(1-link.weight)));
         }
 
         // This is the original, full, non-reduced graph
