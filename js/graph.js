@@ -628,6 +628,42 @@ class Graph{
             // Color scale for links
             // let red_blue = d3.interpolate("#E11D23", "#186EE6")
             this.aStarLinkColor = d3.scaleSequential(d3.interpolateSpectral).domain([0,0.25]);
+
+            // Create makeshift legend 
+
+            //get dimensions
+            //Setting width and height of canvas object
+            let location = document.getElementById('graph-orig')
+            // console.log("LOCATION",this.LOCATION)
+
+            // Canvas width and height
+            let boundingRect = location.getBoundingClientRect()
+            let WIDTH = boundingRect.width;
+            
+            // Make legend svg in id="graph-orig" div
+
+            let graph_orig = d3.select("#graph-orig")
+            let astar_legend_svg = graph_orig.append("svg")
+                .attr("width",WIDTH)
+                .attr("transform","translate(0,-60)")
+            // Creating legend selection
+            // let legendSVG = d3.select("#legend-SVG");
+
+            // removing if it exists
+            d3.select('#astar-legend').remove()
+
+            // Creating legend
+
+            this.link_legend = astar_legend_svg.append("g")
+                .attr("id","astar-legend")
+                .attr("transform", "translate(10,20)");
+            
+            this.legend(this.link_legend,this,this.aStarLinkColor,'link instability');
+
+
+            // Change original -> a star
+
+
         }
     }
 
